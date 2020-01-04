@@ -189,7 +189,7 @@ function makeMultipleEntry(ch, ress) {
 
 function makeConversion(c) {
 	// 異體字轉換
-	var qiteis = qitei[c] || [];
+	var qiteis = (qitei[c] || []).slice();
 	qiteis.unshift(c);
 	var res = qiteis.map(c => {
 		return query切韻音系(c).map(o => [c, o['小韻號'], o['解釋']]);

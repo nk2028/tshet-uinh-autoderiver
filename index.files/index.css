@@ -4,9 +4,14 @@ html {
 	padding: 0 1em;
 }
 
+@media only screen and (min-width: 600px) {
+	html {
+		padding: 0 200px;
+	}
+}
+
 body {
 	margin: 0 auto;
-	max-width: 68em;
 }
 
 h1 {
@@ -28,6 +33,7 @@ textarea {
 #outputArea {
 	overflow-wrap: break-word;
 	text-align: justify;
+	position: relative;
 }
 
 #outputArea rt {
@@ -35,8 +41,13 @@ textarea {
 }
 
 .entry {
-	display: inline-block;
-	position: relative;
+	display: inline;
+}
+
+@media only screen and (min-width: 600px) {
+	.entry {
+		position: relative;
+	}
 }
 
 .entry-no {
@@ -66,13 +77,22 @@ textarea {
 }
 
 .entry .tooltip-container {
-	background-color: rgba(200,200,200,0.75);
+	background-color: rgba(200,200,200,0.9);
 	border: 1px solid white;
-	bottom: 2.2em;
 	color: #333;
-	left: -250px;
 	position: absolute;
-	width: 600px;
+	left: 0;
+	width: calc(100vw - 3em);
+	z-index: 5;
+}
+
+@media only screen and (min-width: 600px) {
+	.entry .tooltip-container {
+		bottom: 2.3em;
+		left: 50%;
+		margin-left: -200px;
+		width: 400px;
+	}
 }
 
 /* Converter - Selection */
