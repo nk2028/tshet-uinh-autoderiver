@@ -7,6 +7,7 @@ async function handleSchemaClick(val) {
 	handleDefineScript();
 }
 
+// Function that displays a pop-up alert
 function notify(text) {
 	Swal.fire({animation: false, text: text});
 }
@@ -15,28 +16,43 @@ function makeErr(err, i) {
 	return '小韻 ' + i + ': ' + err.message + '\n' + err.stack;
 }
 
-/* CodeMirror - codeInputArea */
-
-let codeInputArea;
+var codeInputArea;
 
 document.addEventListener('DOMContentLoaded', () => {
+	// Initialize codemirror
 	codeInputArea = CodeMirror(schemaInput, {
 		value: 'const is = s => equal音韻地位(小韻號, s);\n\n// Your script goes here\n',
 		mode: 'javascript',
 		lineNumbers: true
 	});
+
+	// Load the selected schema
+	handleSchemaClick(document.forms.schemaSelect.schema.value);
 });
 
 /* Brogue2 function */
 
-let brogue2;
+var brogue2_inner;
 
 function handleDefineScript() {
 	try {
-		brogue2 = new Function('小韻號', '字頭', codeInputArea.getValue());
+		brogue2_inner = new Function('小韻號', '字頭', codeInputArea.getValue());
 	} catch (err) {
 		notify(makeErr(err));
 	}
+}
+
+function brogue2(小韻號, 字頭) {
+	var res;
+	try {
+		res = brogue2_inner(小韻號, 字頭);
+	} catch (err) {
+		notify(makeErr(err, i + 1));
+		throw err;
+	}
+	if (res == null)
+		throw new Error('No result for' + 小韻號);
+	return res;
 }
 
 /* Predefined Options */
@@ -46,26 +62,14 @@ function handlePredefinedOptions() {
 		handleDefineScript();
 
 		outputArea.innerText = [...Array(3874).keys()].map(i => {
-			try {
-				return get音韻(i + 1) + ' ' + brogue2(i + 1);
-			} catch (err) {
-				notify(makeErr(err, i + 1));
-				throw err;
-			}
+			return get音韻(i + 1) + ' ' + brogue2(i + 1);
 		}).join('\n');
-		outputArea.handleArticle = null;
+		outputArea.handleExport = null;
 	} else if (predefinedOptions.value == 'exportAllSyllables') {
 		handleDefineScript();
 
-		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => {
-			try {
-				return brogue2(i + 1);
-			} catch (err) {
-				notify(makeErr(err, i + 1));
-				throw err;
-			}
-		}))].join(', ');
-		outputArea.handleArticle = null;
+		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(i + 1)))].join(', ');
+		outputArea.handleExport = null;
 	} else if (predefinedOptions.value == 'convertArticle') {
 		handleDefineScript();
 
@@ -211,20 +215,11 @@ function handleArticle() {
 	outputArea.innerHTML = '';
 
 	const convertText = articleInput.value;
-	if (convertText.length == 0) {
-		;
-	} else {
-		const newOutputArea = document.createElement('div');
-		convertText.split('').map(n => {
-			newOutputArea.appendChild(makeConversion(n));
-			newOutputArea.appendChild((() => { const n = document.createTextNode(' '); n.handleExport = () => ''; return n; })());
-		});
-		newOutputArea.handleExport = () => [...newOutputArea.childNodes].map(node => node.handleExport()).join('');
-		const oldOutputArea = outputArea;
-		outputArea.id = '';
-		newOutputArea.id = 'outputArea';
-		oldOutputArea.replaceWith(newOutputArea);
-	}
+	convertText.split('').map(n => {
+		outputArea.appendChild(makeConversion(n));
+		outputArea.appendChild((() => { const n = document.createTextNode(' '); n.handleExport = () => ''; return n; })());
+	});
+	outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
 }
 
 function handleCopy() {

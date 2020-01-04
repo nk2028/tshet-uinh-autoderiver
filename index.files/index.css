@@ -5,6 +5,7 @@ html {
 }
 
 body {
+	font-size: initial !important;
 	margin: 0 auto;
 	max-width: 68em;
 }
@@ -37,7 +38,7 @@ textarea {
 }
 
 .entry-no {
-	color: pink;
+	color: #cc3852;
 }
 
 .entry-multiple {
@@ -45,7 +46,7 @@ textarea {
 }
 
 .entry-multiple.unresolved {
-	color: plum;
+	color: #c41fc4;
 }
 
 .entry rt {
@@ -63,9 +64,9 @@ textarea {
 }
 
 .entry .tooltip-container {
-	background-color: rgba(64,64,64,0.75);
+	background-color: rgba(200,200,200,0.75);
 	border: 1px solid white;
-	color: #eee;
+	color: #333;
 	left: 1em;
 	position: absolute;
 	width: calc(100vw - 3em);
@@ -82,9 +83,9 @@ textarea {
 }
 
 .entry-multiple .tooltip-item:hover {
-	color: pink;
+	color: #cc3852;
 }
 
 .entry-multiple .tooltip-item.selected:hover {
-	color: cyan;
+	color: #00b0b0;
 }
