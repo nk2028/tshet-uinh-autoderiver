@@ -1,10 +1,18 @@
 /* Global style */
-@font-face {
-	font-family: 'MingLiU_HKSCS-ExtB';
-	src:
-		local('MingLiU_HKSCS-ExtB'),
-		url(https://cdn.ir.sgn.shn.hk/Ming-Lt-HKSCS-ExtB.woff);
-	unicode-range: U+20000-2A6D6, U+2A700-2B734, U+2B740-2B81D;
+
+.pure-button {
+	padding-top: 0.2em !important;
+	padding-bottom: 0.2em !important;
+}
+
+.pure-form select {
+	height: 1.9em !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+.pure-radio {
+	display: inline !important;
 }
 
 html {
@@ -13,7 +21,7 @@ html {
 
 a {
 	text-decoration: none;
-	color: dodgerblue;
+	color: #0078e7;
 }
 
 a:hover {
@@ -27,7 +35,6 @@ a:hover {
 }
 
 body {
-	font-family: sans-serif, 'MingLiU_HKSCS-ExtB', sans-serif;
 	margin: 0 auto;
 }
 
@@ -35,8 +42,11 @@ h1 {
 	text-align: center;
 }
 
+h1, p {
+	line-height: 1.6;
+}
+
 textarea {
-	font-family: inherit;
 	resize: vertical;
 	width: 100%;
 }
@@ -48,6 +58,7 @@ textarea {
 	margin-bottom: .3em;
 	color: #333;
 	border-bottom: 1px solid #e5e5e5;
+	font-size: 150%;
 }
 
 #schemaInput {
@@ -55,10 +66,23 @@ textarea {
 	box-sizing: border-box;
 	overflow-x: auto;
 	width: 100%;
+	-webkit-box-shadow: inset 0 1px 3px #ddd;
+	box-shadow: inset 0 1px 3px #ddd;
+	border-radius: 4px;
+}
+
+#schemaInput:focus-within {
+	outline: 0;
+	border-color: #129fea;
+}
+
+#schemaInput > .CodeMirror {
+	background-color: transparent;
 }
 
 footer {
 	text-align: center;
+	margin: 2em 0;
 }
 
 /* Converter - Output area */
@@ -67,12 +91,12 @@ footer {
 	overflow-wrap: break-word;
 	text-align: justify;
 	position: relative;
-	font-family: 'Source Han Serif K', 'Source Han Serif HC', 'Source Han Serif TC', 'Source Han Serif SC', serif, 'MingLiU_HKSCS-ExtB', serif;
+	font-family: 'Source Han Serif K', 'Source Han Serif HC', 'Source Han Serif TC', 'Source Han Serif SC', serif;
 	font-size: 105%;
 }
 
 #outputArea :lang(zh-Latn-HK) {
-	font-family: serif, 'MingLiU_HKSCS-ExtB', serif;
+	font-family: serif;
 }
 
 #outputArea rt {
@@ -90,8 +114,10 @@ footer {
 	}
 }
 
-.entry-no {
+.entry.entry-no {
 	color: #cc3852;
+	display: contents;
+	white-space: pre-wrap;
 }
 
 .entry-multiple {
@@ -130,7 +156,7 @@ footer {
 
 @media only screen and (min-width: 600px) {
 	.entry .tooltip-container {
-		bottom: 2.5em;
+		bottom: 2.3em;
 		left: 50%;
 		margin-left: -200px;
 		width: 400px;
@@ -146,7 +172,7 @@ footer {
 	font-size: 125%;
 }
 
-.entry-single .tooltip-item, .entry-multiple .tooltip-item.selected {
+.entry-multiple .tooltip-item.selected {
 	color: DeepSkyBlue;
 }
 

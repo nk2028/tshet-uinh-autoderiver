@@ -24,27 +24,35 @@
   <h1>《切韻》音系自動推導器</h1>
 
   <form class="pure-form" name="schemaSelect" onsubmit="handleSchemaClick(this.schema.value); return false">
-    <p class="legend" style="font-size: 150%;">推導方案</p>
+    <p class="legend">加載推導方案</p>
     <p>
-      <label class="pure-radio" style="display: inline;"><input type="radio" name="schema" value="kuxyonh" checked="checked"/> 古韻羅馬字</label>
-      <label class="pure-radio" style="display: inline;"><input type="radio" name="schema" value="dv8"/> 三日月綾香個人思考用語</label>
+      <label class="pure-radio">
+        <input type="radio" name="schema" value="kuxyonh" checked="checked"/>
+        古韻羅馬字
+      </label>
+      <label class="pure-radio">
+        <input type="radio" name="schema" value="dv8"/>
+        三日月綾香個人思考用語
+      </label>
       <input class="pure-button" type="submit" value="加載"/>
     </p>
-
-    <div id="schemaInput" lang="zh-Latn-HK"></div>
   </form>
+
+  <div id="schemaInput" lang="zh-Latn-HK"></div>
 
   <form class="pure-form">
     <p><textarea id="articleInput" placeholder="輸入框" rows="5" required>遙襟甫暢，逸興遄飛。爽籟發而清風生，纖歌凝而白雲遏。睢園綠竹，氣凌彭澤之樽；鄴水朱華，光照臨川之筆。四美具，二難并。窮睇眄於中天，極娛遊於暇日。天高地迥，覺宇宙之無窮；興盡悲來，識盈虛之有數。望長安於日下，目吳會於雲間。地勢極而南溟深，天柱高而北辰遠。關山難越，誰悲失路之人。萍水相逢，盡是他鄉之客。懷帝閽而不見，奉宣室以何年？</textarea></p>
 
     <p>
-      <label for="predefinedOptions">您想要</label>
-      <select name="predefinedOptions" id="predefinedOptions" style="padding-top: 0; padding-bottom: 0;">
-        <option value="convertArticle">從輸入框中讀取文章，並注音</option>
-        <option value="exportAllSmallRhymes">導出所有小韻</option>
-        <option value="exportAllSyllables">導出所有音節</option>
-      </select>
-      <input class="pure-button" type="button" value="適用" onclick="handlePredefinedOptions()"/>
+      <label>
+        您想要
+        <select name="predefinedOptions" id="predefinedOptions">
+          <option value="convertArticle">從輸入框中讀取文章，並注音</option>
+          <option value="exportAllSmallRhymes">導出所有小韻</option>
+          <option value="exportAllSyllables">導出所有音節</option>
+        </select>
+      </label>
+      <input class="pure-button pure-button-primary" type="button" value="適用" onclick="handlePredefinedOptions()"/>
       <input class="pure-button" type="button" value="以文本形式匯出至剪貼簿" onclick="handleCopy()"/>
     </p>
   </form>

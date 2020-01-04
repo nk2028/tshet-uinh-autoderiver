@@ -89,7 +89,7 @@ function makeNoEntry(ch) {
 	const outerContainer = document.createElement('div');
 	outerContainer.classList.add('entry');
 	outerContainer.classList.add('entry-no');
-	outerContainer.innerText = ch;
+	outerContainer.appendChild(document.createTextNode(ch));
 	outerContainer.handleExport = () => ch;
 
 	return outerContainer;
@@ -105,7 +105,7 @@ function makeSingleEntry(ch, res) {
 
 	const ruby = document.createElement('ruby');
 	const rb = document.createElement('rb');
-	rb.innerText = ch;
+	rb.appendChild(document.createTextNode(ch));
 	ruby.appendChild(rb);
 
 	const tooltipContainer = document.createElement('div');
@@ -135,7 +135,7 @@ function makeMultipleEntry(ch, ress) {
 
 	const ruby = document.createElement('ruby');
 	const rb = document.createElement('rb');
-	rb.innerText = ch;
+	rb.appendChild(document.createTextNode(ch));
 	ruby.appendChild(rb);
 
 	const tooltipContainer = document.createElement('div');
@@ -209,7 +209,6 @@ function handleArticle() {
 	const convertText = articleInput.value;
 	[...convertText].map(n => {
 		outputArea.appendChild(makeConversion(n));
-		outputArea.appendChild((() => { const n = document.createTextNode(' '); n.handleExport = () => ''; return n; })());
 	});
 	outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
 }
