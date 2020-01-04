@@ -1,4 +1,11 @@
 /* Global style */
+@font-face {
+	font-family: 'MingLiU_HKSCS-ExtB';
+	src:
+		local('MingLiU_HKSCS-ExtB'),
+		url(https://cdn.ir.sgn.shn.hk/Ming-Lt-HKSCS-ExtB.woff);
+	unicode-range: U+20000-2A6D6, U+2A700-2B734, U+2B740-2B81D;
+}
 
 html {
 	padding: 0 1em;

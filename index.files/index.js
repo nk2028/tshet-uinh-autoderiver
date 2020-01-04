@@ -207,7 +207,7 @@ function handleArticle() {
 	outputArea.innerHTML = '';
 
 	const convertText = articleInput.value;
-	convertText.split('').map(n => {
+	[...convertText].map(n => {
 		outputArea.appendChild(makeConversion(n));
 		outputArea.appendChild((() => { const n = document.createTextNode(' '); n.handleExport = () => ''; return n; })());
 	});
