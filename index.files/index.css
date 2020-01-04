@@ -5,7 +5,6 @@ html {
 }
 
 body {
-	font-size: initial !important;
 	margin: 0 auto;
 	max-width: 68em;
 }
@@ -15,7 +14,9 @@ h1 {
 }
 
 textarea {
+	font-family: inherit;
 	resize: vertical;
+	width: 100%;
 }
 
 #schemaInput {
@@ -34,7 +35,8 @@ textarea {
 }
 
 .entry {
-	display: contents;
+	display: inline-block;
+	position: relative;
 }
 
 .entry-no {
@@ -66,11 +68,11 @@ textarea {
 .entry .tooltip-container {
 	background-color: rgba(200,200,200,0.75);
 	border: 1px solid white;
+	bottom: 2.2em;
 	color: #333;
-	left: 1em;
+	left: -250px;
 	position: absolute;
-	width: calc(100vw - 3em);
-	z-index: 1;
+	width: 600px;
 }
 
 /* Converter - Selection */

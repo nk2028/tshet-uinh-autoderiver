@@ -4,7 +4,7 @@ async function handleSchemaClick(val) {
 	const response = await fetch('examples/' + val + '.js');
 	const text = await response.text();
 	codeInputArea.setValue(text);
-	handleDefineScript();
+	loadSchema();
 }
 
 // Function that displays a pop-up alert
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 var brogue2_inner;
 
-function handleDefineScript() {
+function loadSchema() {
 	try {
 		brogue2_inner = new Function('小韻號', '字頭', codeInputArea.getValue());
 	} catch (err) {
@@ -59,29 +59,23 @@ function brogue2(小韻號, 字頭) {
 
 function handlePredefinedOptions() {
 	if (predefinedOptions.value == 'exportAllSmallRhymes') {
-		handleDefineScript();
-
-		outputArea.innerText = [...Array(3874).keys()].map(i => {
-			return get音韻(i + 1) + ' ' + brogue2(i + 1);
-		}).join('\n');
+		loadSchema();
+		outputArea.innerText = [...Array(3874).keys()].map(i => get音韻描述(i + 1) + ' ' + brogue2(i + 1)).join('\n');
 		outputArea.handleExport = null;
 	} else if (predefinedOptions.value == 'exportAllSyllables') {
-		handleDefineScript();
-
+		loadSchema();
 		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(i + 1)))].join(', ');
 		outputArea.handleExport = null;
 	} else if (predefinedOptions.value == 'convertArticle') {
-		handleDefineScript();
-
+		loadSchema();
 		handleArticle();
-	} else
-		outputArea.innerHTML = '';
+	}
 }
 
 /* Converter */
 
 function makeLongStr(sr) {
-	return get音韻(sr);
+	return get音韻描述(sr);
 }
 
 function makeTooltip(ch, pronunciation, sr, expl) {
@@ -102,13 +96,8 @@ function makeNoEntry(ch) {
 }
 
 function makeSingleEntry(ch, res) {
-	const [sr, expl] = res;
-	var pronunciation;
-	try {
-		pronunciation = brogue2(sr);
-	} catch (err) {
-		notify(makeErr(err, sr));
-	}
+	const [actual_ch, sr, expl] = res;
+	var pronunciation = brogue2(sr);
 
 	const outerContainer = document.createElement('div');
 	outerContainer.classList.add('entry');
@@ -127,7 +116,7 @@ function makeSingleEntry(ch, res) {
 	rt.innerText = pronunciation;
 	ruby.appendChild(rt);
 
-	const tooltip = makeTooltip(ch, pronunciation, sr, expl);
+	const tooltip = makeTooltip(actual_ch, pronunciation, sr, expl);
 	tooltipContainer.appendChild(tooltip);
 
 	outerContainer.appendChild(ruby);
@@ -152,30 +141,27 @@ function makeMultipleEntry(ch, ress) {
 	const tooltipContainer = document.createElement('div');
 	tooltipContainer.classList.add('tooltip-container');
 
-	let rtArray = [];
+	const rt = document.createElement('rt');
+	rt.lang = 'zh-Latn';
+	ruby.appendChild(rt);
+
+	let rtSpanArray = [];
 	let tooltipArray = [];
 
 	for (let i = 0, len = ress.length; i < len; i++) {
 		const res = ress[i];
-		const [sr, expl] = res;
-		var pronunciation;
-		try {
-			pronunciation = brogue2(sr);
-		} catch (err) {
-			notify(makeErr(err, sr));
-		}
+		const [actual_ch, sr, expl] = res;
+		var pronunciation = brogue2(sr);
 
-		const rt = document.createElement('rt');
-		rt.lang = 'zh-Latn';
-		rt.innerText = pronunciation;
+		const rtSpan = document.createElement('span');
+		rtSpan.innerText = pronunciation;
+		rt.appendChild(rtSpan);
+		rtSpanArray.push(rtSpan);
 
-		ruby.appendChild(rt);
-		rtArray.push(rt);
-
-		const tooltip = makeTooltip(ch, pronunciation, sr, expl);
+		const tooltip = makeTooltip(actual_ch, pronunciation, sr, expl);
 		tooltip.addEventListener('click', () => {
-			rtArray.map(rt => rt.classList.add('hidden'));
-			rt.classList.remove('hidden');
+			rtSpanArray.map(rtSpan => rtSpan.classList.add('hidden'));
+			rtSpan.classList.remove('hidden');
 
 			outerContainer.currentSelection = pronunciation;
 			outerContainer.classList.remove('unresolved');
@@ -190,7 +176,7 @@ function makeMultipleEntry(ch, ress) {
 			outerContainer.currentSelection = pronunciation;
 			tooltip.classList.add('selected');
 		} else {
-			rt.classList.add('hidden');
+			rtSpan.classList.add('hidden');
 		}
 	}
 
@@ -202,8 +188,14 @@ function makeMultipleEntry(ch, ress) {
 }
 
 function makeConversion(c) {
-	const res = char_entities[c];
-	if (!res)
+	// 異體字轉換
+	var qiteis = qitei[c] || [];
+	qiteis.unshift(c);
+	var res = qiteis.map(c => {
+		return query切韻音系(c).map(o => [c, o['小韻號'], o['解釋']]);
+	}).flat();
+
+	if (!res.length)
 		return makeNoEntry(c);
 	else if (res.length == 1)
 		return makeSingleEntry(c, res[0]);

@@ -4,8 +4,6 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>《切韻》音系自動推導器</title>
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
   <!-- qieyun-js -->
   <script src="https://sgalal.github.io/qieyun-js/qieyun.js"></script>
   <!-- Sweetalert2 -->
@@ -14,6 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/javascript/javascript.min.js"></script>
+  <!-- Qitei -->
+  <script src="https://cdn.ir.sgn.shn.hk/qitei.js"></script>
   <!-- index.files -->
   <script src="index.files/index.js"></script>
   <link rel="stylesheet" href="index.files/index.css"/>
@@ -21,21 +21,21 @@
 <body>
   <h1>《切韻》音系自動推導器</h1>
 
-  <form class="form-group" name="schemaSelect" onsubmit="handleSchemaClick(this.schema.value); return false">
+  <form name="schemaSelect" onsubmit="handleSchemaClick(this.schema.value); return false">
     <fieldset>
       <legend>推導方案</legend>
       <p>
         <input type="radio" name="schema" value="kuxyonh" checked="checked"/>古韻羅馬字
         <input type="radio" name="schema" value="dv8"/>三日月綾香的個人思考用語
-        <input class="btn btn-default" type="submit" value="加載"/>
+        <input type="submit" value="加載"/>
       </p>
 
       <div id="schemaInput" lang="zh-Latn-HK"></div>
     </fieldset>
   </form>
 
-  <form class="form-group">
-    <p><textarea class="form-control" id="articleInput" placeholder="輸入框" required>我能吞下短短的玻璃而不傷身體。</textarea></p>
+  <form>
+    <p><textarea id="articleInput" placeholder="輸入框" required>我能吞下短短的玻璃而不傷身體。</textarea></p>
 
     <p>
       <label for="predefinedOptions">您想要</label>
@@ -44,8 +44,8 @@
         <option value="exportAllSmallRhymes">導出所有小韻</option>
         <option value="exportAllSyllables">導出所有音節</option>
       </select>
-      <input class="btn btn-default" type="button" value="適用" onclick="handlePredefinedOptions()"/>
-      <input class="btn btn-default" type="button" value="以文本形式匯出至剪貼簿" onclick="handleCopy()"/>
+      <input type="button" value="適用" onclick="handlePredefinedOptions()"/>
+      <input type="button" value="以文本形式匯出至剪貼簿" onclick="handleCopy()"/>
     </p>
   </form>
 
