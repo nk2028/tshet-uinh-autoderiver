@@ -1,0 +1,90 @@
+/* Global style */
+
+html {
+	padding: 0 1em;
+}
+
+body {
+	margin: 0 auto;
+	max-width: 68em;
+}
+
+h1 {
+	text-align: center;
+}
+
+textarea {
+	resize: vertical;
+}
+
+#schemaInput {
+	border: 1px solid #ccc;
+}
+
+/* Converter - Output area */
+
+#outputArea {
+	overflow-wrap: break-word;
+	text-align: justify;
+}
+
+#outputArea rt {
+	font-size: 85%;
+}
+
+.entry {
+	display: contents;
+}
+
+.entry-no {
+	color: pink;
+}
+
+.entry-multiple {
+	color: orange;
+}
+
+.entry-multiple.unresolved {
+	color: plum;
+}
+
+.entry rt {
+	margin: 0 2px;
+}
+
+.hidden {
+	display: none;
+}
+
+/* Converter - Tooltip style */
+
+.entry:not(:hover) .tooltip-container {
+	visibility: hidden;
+}
+
+.entry .tooltip-container {
+	background-color: rgba(64,64,64,0.75);
+	border: 1px solid white;
+	color: #eee;
+	left: 1em;
+	position: absolute;
+	width: calc(100vw - 3em);
+	z-index: 1;
+}
+
+/* Converter - Selection */
+.tooltip-item {
+	margin: 0.25em 0.5em;
+}
+
+.entry-single .tooltip-item, .entry-multiple .tooltip-item.selected {
+	color: DeepSkyBlue;
+}
+
+.entry-multiple .tooltip-item:hover {
+	color: pink;
+}
+
+.entry-multiple .tooltip-item.selected:hover {
+	color: cyan;
+}
