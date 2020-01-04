@@ -27,6 +27,7 @@ a:hover {
 }
 
 body {
+	font-family: sans-serif, 'MingLiU_HKSCS-ExtB', sans-serif;
 	margin: 0 auto;
 }
 
@@ -40,8 +41,24 @@ textarea {
 	width: 100%;
 }
 
+.legend {
+	display: block;
+	width: 100%;
+	padding: .3em 0;
+	margin-bottom: .3em;
+	color: #333;
+	border-bottom: 1px solid #e5e5e5;
+}
+
 #schemaInput {
 	border: 1px solid #ccc;
+	box-sizing: border-box;
+	overflow-x: auto;
+	width: 100%;
+}
+
+footer {
+	text-align: center;
 }
 
 /* Converter - Output area */
@@ -50,12 +67,12 @@ textarea {
 	overflow-wrap: break-word;
 	text-align: justify;
 	position: relative;
-	font-family: 'Source Han Serif K', 'Source Han Serif HC', 'Source Han Serif TC', 'Source Han Serif SC', serif;
+	font-family: 'Source Han Serif K', 'Source Han Serif HC', 'Source Han Serif TC', 'Source Han Serif SC', serif, 'MingLiU_HKSCS-ExtB', serif;
 	font-size: 105%;
 }
 
 #outputArea :lang(zh-Latn-HK) {
-	font-family: serif;
+	font-family: serif, 'MingLiU_HKSCS-ExtB', serif;
 }
 
 #outputArea rt {

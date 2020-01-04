@@ -24,16 +24,14 @@
   <h1>《切韻》音系自動推導器</h1>
 
   <form class="pure-form" name="schemaSelect" onsubmit="handleSchemaClick(this.schema.value); return false">
-    <fieldset>
-      <legend style="font-size: 150%;">推導方案</legend>
-      <p>
-        <label class="pure-radio" style="display: inline;"><input type="radio" name="schema" value="kuxyonh" checked="checked"/> 古韻羅馬字</label>
-        <label class="pure-radio" style="display: inline;"><input type="radio" name="schema" value="dv8"/> 三日月綾香個人思考用語</label>
-        <input class="pure-button" type="submit" value="加載"/>
-      </p>
+    <p class="legend" style="font-size: 150%;">推導方案</p>
+    <p>
+      <label class="pure-radio" style="display: inline;"><input type="radio" name="schema" value="kuxyonh" checked="checked"/> 古韻羅馬字</label>
+      <label class="pure-radio" style="display: inline;"><input type="radio" name="schema" value="dv8"/> 三日月綾香個人思考用語</label>
+      <input class="pure-button" type="submit" value="加載"/>
+    </p>
 
-      <div id="schemaInput" lang="zh-Latn-HK"></div>
-    </fieldset>
+    <div id="schemaInput" lang="zh-Latn-HK"></div>
   </form>
 
   <form class="pure-form">
@@ -53,6 +51,6 @@
 
   <div id="outputArea"></div>
 
-  <footer><p lang="en-HK" style="text-align: center;">View source code on <a href="https://github.com/sgalal/qieyun-autoderiver">GitHub</a></p></footer>
+  <footer><p lang="en-HK">View source code on <a href="https://github.com/sgalal/qieyun-autoderiver">GitHub</a></p></footer>
 </body>
 </html>
