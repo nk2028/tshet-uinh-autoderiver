@@ -81,7 +81,7 @@ function makeLongStr(sr) {
 function makeTooltip(ch, pronunciation, sr, expl) {
 	const div = document.createElement('div');
 	div.classList.add('tooltip-item');
-	div.innerHTML = ch + ' <span lang="zh-Latn-HK">' + pronunciation + '</span> ' + makeLongStr(sr) + ' ' + expl;
+	div.innerHTML = ch + ' <span lang="zh-Latn-x-output">' + pronunciation + '</span> ' + makeLongStr(sr) + ' ' + expl;
 	return div;
 }
 
@@ -112,7 +112,7 @@ function makeSingleEntry(ch, res) {
 	tooltipContainer.classList.add('tooltip-container');
 
 	const rt = document.createElement('rt');
-	rt.lang = 'zh-Latn-HK';
+	rt.lang = 'zh-Latn-x-output';
 	rt.innerText = pronunciation;
 	ruby.appendChild(rt);
 
@@ -142,7 +142,7 @@ function makeMultipleEntry(ch, ress) {
 	tooltipContainer.classList.add('tooltip-container');
 
 	const rt = document.createElement('rt');
-	rt.lang = 'zh-Latn-HK';
+	rt.lang = 'zh-Latn-x-output';
 	ruby.appendChild(rt);
 
 	let rtSpanArray = [];
