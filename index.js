@@ -85,10 +85,10 @@ function makeTooltip(ch, pronunciation, sr, expl) {
 	return div;
 }
 
-function makeNoEntry(ch) {
+function makeNoneEntry(ch) {
 	const outerContainer = document.createElement('div');
 	outerContainer.classList.add('entry');
-	outerContainer.classList.add('entry-no');
+	outerContainer.classList.add('entry-none');
 	outerContainer.appendChild(document.createTextNode(ch));
 	outerContainer.handleExport = () => ch;
 
@@ -196,7 +196,7 @@ function makeConversion(c) {
 	}).flat();
 
 	if (!res.length)
-		return makeNoEntry(c);
+		return makeNoneEntry(c);
 	else if (res.length == 1)
 		return makeSingleEntry(c, res[0]);
 	else
