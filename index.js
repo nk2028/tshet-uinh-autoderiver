@@ -3,11 +3,25 @@
 /* Global utilities */
 
 function notify(text) {  // Function that displays a pop-up dialog
-	Swal.fire({animation: false, text: text});
+	Swal.fire({animation: false, text: text, confirmButtonText: '確定'});
 }
 
-function notifyError(text) {  // Function that displays a pop-up alert
-	Swal.fire({animation: false, text: text});
+function notifyErrorWithoutStack(err) {  // Function that displays a pop-up alert
+	let msg = '<p lang="en-HK">Error: ' + err.message + '</p>';
+	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
+}
+
+function notifyError(err) {  // Function that displays a pop-up alert
+	let msg = '<p lang="en-HK">Error: ' + err.message + '</p>';
+	if (err.stack)
+		msg += '<pre lang="en-US" style="text-align: left;">' + err.stack + '</pre>';
+	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
+}
+
+function notifyErrorWithError(小韻號, err) {  // Function that displays a pop-up alert
+	let msg = '<p>小韻號 <span lang="en-HK">' + 小韻號 + ', Error: ' + err.message + '</span></p>';
+	msg += '<pre lang="en-US" style="text-align: left;">' + err.stack + '</pre>';
+	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
 function myFlat(arrays) {  // Equals to Array.prototype.flat(), but supports Edge
@@ -40,8 +54,8 @@ function handleLoadSchema(val) {
 	.then(text => {
 		codeInputArea.setValue(text);
 	})
-	.catch((error) => {
-		console.error('Error:', error);
+	.catch(err => {
+		notifyError(err);
 	});
 }
 
@@ -63,31 +77,36 @@ function handleCopy() {
 		? outputArea.innerText
 		: outputArea.handleExport();  // A user-defined attribute
 
-	navigator.clipboard.writeText(text).then(() => {
-		notify('已成功匯出至剪貼簿。');
-	}, () => {
-		notify('匯出至剪貼簿失敗。');
-	});
+	if (!text) {
+		notifyErrorWithoutStack(new Error('請先進行操作，再匯出結果'));
+	} else {
+		navigator.clipboard.writeText(text).then(() => {
+			notify('已成功匯出至剪貼簿');
+		}, err => {
+			notifyError(err);
+		});
+	}
 }
 
 /* Brogue2 function */
 
-let brogue2_inner;
+let userInput;
 
 function loadSchema() {
 	try {
-		brogue2_inner = new Function('小韻號', '字頭', codeInputArea.getValue());
+		userInput = new Function('小韻號', '字頭', codeInputArea.getValue());
 	} catch (err) {
-		notifyError(makeErr(err));
+		notifyError(err);
+		throw err;
 	}
 }
 
 function brogue2(小韻號, 字頭) {
 	let res;
 	try {
-		res = brogue2_inner(小韻號, 字頭);
+		res = userInput(小韻號, 字頭);
 	} catch (err) {
-		notifyError(makeErr(err, i + 1));
+		notifyErrorWithError(小韻號, err);
 		throw err;
 	}
 	if (res == null)
@@ -105,10 +124,6 @@ function handleArticle() {
 		outputArea.appendChild(makeConversion(n));
 	});
 	outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
-}
-
-function makeErr(err, i) {
-	return '小韻 ' + i + ': ' + err.message + '\n' + err.stack;
 }
 
 function makeConversion(ch) {
