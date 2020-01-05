@@ -103,7 +103,6 @@ footer {
 #outputArea {
 	font-size: 105%;
 	overflow-wrap: break-word;
-	position: relative;
 	text-align: justify;
 }
 
@@ -130,7 +129,7 @@ footer {
 	margin-bottom: 6px;
 }
 
-.entry.entry-no {
+.entry.entry-none {
 	display: contents;
 	white-space: pre-wrap;
 }
@@ -140,46 +139,51 @@ footer {
 	margin: 0 2px;
 }
 
-/* Entry positioning */
+/* Tooltip appearance */
 
-@media only screen and (min-width: 768px) {
-	.entry {
-		position: relative;
-	}
-}
-
-/* Converter - Tooltip style */
-
-.entry:not(:hover) .tooltip-container {
-	visibility: hidden;
-}
-
-.tooltip-container {
+.entry .tooltip-container {
 	background-color: rgba(255,255,255,0.95);
 	border-radius: 4px;
 	box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.37);
 	border: 1px solid white;
 	color: #333;
-	position: absolute;
-	left: 0;
-	width: 100%;
-	z-index: 5;
+	visibility: hidden;
 }
 
-@media only screen and (min-width: 768px) {
-	.tooltip-container {
-		bottom: 2.3em;
-		left: 50%;
-		margin-left: -200px;
-		width: 400px;
-	}
+.entry:hover .tooltip-container {
+	visibility: visible;
 }
 
-/* Converter - Selection */
 .tooltip-container .tooltip-item {
 	margin: 0.25em 0.5em;
 }
 
 .tooltip-container .tooltip-item::first-letter {
 	font-size: 125%;
+}
+
+/* Tooltip positioning */
+
+#outputArea {
+	position: relative;
+}
+
+.tooltip-container {
+	left: 0;
+	position: absolute;
+	width: 100%;
+	z-index: 5;
+}
+
+@media only screen and (min-width: 768px) {
+	.entry {
+		position: relative;
+	}
+
+	.tooltip-container {
+		bottom: 2.3em;
+		left: 50%;
+		margin-left: -200px;
+		width: 400px;
+	}
 }
