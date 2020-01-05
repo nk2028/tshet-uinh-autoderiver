@@ -6,21 +6,27 @@ function notify(text) {  // Function that displays a pop-up dialog
 	Swal.fire({animation: false, text: text, confirmButtonText: '確定'});
 }
 
+function HTMLEscape(s) {  // NB: For the following 3 functions only!
+	const pre = document.createElement('pre');
+	pre.innerText = s;
+	return pre.innerHTML;
+}
+
 function notifyErrorWithoutStack(err) {  // Function that displays a pop-up alert
-	let msg = '<p lang="en-HK">Error: ' + err.message + '</p>';
+	let msg = '<p lang="en-HK">Error: ' + HTMLEscape(err.message) + '</p>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
 function notifyError(err) {  // Function that displays a pop-up alert
-	let msg = '<p lang="en-HK">Error: ' + err.message + '</p>';
+	let msg = '<p lang="en-HK">Error: ' + HTMLEscape(err.message) + '</p>';
 	if (err.stack)
-		msg += '<pre lang="en-US" style="text-align: left;">' + err.stack + '</pre>';
+		msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
 function notifyErrorWithError(小韻號, err) {  // Function that displays a pop-up alert
-	let msg = '<p>小韻號 <span lang="en-HK">' + 小韻號 + ', Error: ' + err.message + '</span></p>';
-	msg += '<pre lang="en-US" style="text-align: left;">' + err.stack + '</pre>';
+	let msg = '<p>小韻號 <span lang="en-HK">' + 小韻號 + ', Error: ' + HTMLEscape(err.message) + '</span></p>';
+	msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
@@ -144,24 +150,27 @@ function makeConversion(ch) {
 		return makeMultipleEntry(ch, res);
 }
 
-function makeLongStr(sr) {
-	return get音韻描述(sr);
-}
-
 function makeTooltip(ch, pronunciation, sr, expl) {
-	const div = document.createElement('div');
-	div.classList.add('tooltip-item');
-	div.innerHTML = ch + ' <span lang="zh-Latn-x-output">' + pronunciation + '</span> ' + makeLongStr(sr) + ' ' + expl;
-	return div;
+	const span = document.createElement('span');
+	span.classList.add('tooltip-item');
+	span.appendChild(document.createTextNode(ch + ' '));
+
+	const span_inner = document.createElement('span');
+	span_inner.lang = 'zh-Latn-x-output';
+	span_inner.innerText = pronunciation;
+	span.appendChild(span_inner);
+	span.appendChild(document.createTextNode(' ' + get音韻描述(sr) + ' ' + expl));
+
+	return span;
 }
 
 /* Make entries */
 
 function makeNoneEntry(ch) {
 	/* Format for .entry-none example:
-	<div class="entry entry-none">。</div>
+	<span class="entry entry-none">。</span>
 	*/
-	const outerContainer = document.createElement('div');
+	const outerContainer = document.createElement('span');
 	outerContainer.classList.add('entry');
 	outerContainer.classList.add('entry-none');
 	outerContainer.appendChild(document.createTextNode(ch));
@@ -171,28 +180,28 @@ function makeNoneEntry(ch) {
 
 function makeSingleEntry(ch, res) {
 	/* Format for .entry-single example:
-	<div class="entry entry-single">
+	<span class="entry entry-single">
 		<ruby>
 			年
 			<rp>(</rp>
 			<rt lang="zh-Latn-x-output">den˨˩</rt>
 			<rp>)</rp>
 		</ruby>
-		<div class="tooltip-container">
-			<div class="tooltip-item">年 <span lang="zh-Latn-x-output">nen</span> 泥開四先平 上同</div>
-		</div>
-	</div>
+		<span class="tooltip-container">
+			<span class="tooltip-item">年 <span lang="zh-Latn-x-output">nen</span> 泥開四先平 上同</span>
+		</span>
+	</span>
 	*/
 	const pronunciation = brogue2(res['小韻號']);
 
-	const outerContainer = document.createElement('div');
+	const outerContainer = document.createElement('span');
 	outerContainer.classList.add('entry');
 	outerContainer.classList.add('entry-single');
 
 	const ruby = document.createElement('ruby');
 	ruby.appendChild(document.createTextNode(ch));
 
-	const tooltipContainer = document.createElement('div');
+	const tooltipContainer = document.createElement('span');
 	tooltipContainer.classList.add('tooltip-container');
 
 	const rp_left = document.createElement('rp');
@@ -221,7 +230,7 @@ function makeSingleEntry(ch, res) {
 
 function makeMultipleEntry(ch, ress) {
 	/* Format for .entry-multiple example:
-	<div class="entry entry-multiple unresolved">
+	<span class="entry entry-multiple unresolved">
 		<ruby>
 			盡
 			<rp>(</rp>
@@ -231,13 +240,13 @@ function makeMultipleEntry(ch, ress) {
 			</rt>
 			<rp>)</rp>
 		</ruby>
-		<div class="tooltip-container">
-			<div class="tooltip-item selected">盡 <span lang="zh-Latn-x-output">sin˨˩</span> 從開三眞上 竭也終也慈忍切又即忍切二</div>
-			<div class="tooltip-item">盡 <span lang="zh-Latn-x-output">sin˧˥</span> 精開三眞上 曲禮曰虛坐盡前[-/虚坐盡後虚坐盡前]又慈忍切</div>
-		</div>
-	</div>
+		<span class="tooltip-container">
+			<span class="tooltip-item selected">盡 <span lang="zh-Latn-x-output">sin˨˩</span> 從開三眞上 竭也終也慈忍切又即忍切二</span>
+			<span class="tooltip-item">盡 <span lang="zh-Latn-x-output">sin˧˥</span> 精開三眞上 曲禮曰虛坐盡前[-/虚坐盡後虚坐盡前]又慈忍切</span>
+		</span>
+	</span>
 	*/
-	const outerContainer = document.createElement('div');
+	const outerContainer = document.createElement('span');
 	outerContainer.classList.add('entry');
 	outerContainer.classList.add('entry-multiple');
 	outerContainer.classList.add('unresolved');
@@ -245,7 +254,7 @@ function makeMultipleEntry(ch, ress) {
 	const ruby = document.createElement('ruby');
 	ruby.appendChild(document.createTextNode(ch));
 
-	const tooltipContainer = document.createElement('div');
+	const tooltipContainer = document.createElement('span');
 	tooltipContainer.classList.add('tooltip-container');
 
 	const rp_left = document.createElement('rp');
