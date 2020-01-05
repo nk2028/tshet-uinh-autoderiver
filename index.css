@@ -35,16 +35,16 @@ a:hover {
 }
 
 body {
-	font-family: 'Source Han Serif K', 'Source Han Serif HC', 'Source Han Serif TC', 'Source Han Serif SC', serif;
+	font-family: 'Source Han Serif K', 'Source Han Serif HC', 'Source Han Serif TC', 'Source Han Serif SC', serif, 'HanaMin', serif;
 	margin: 0 auto;
 }
 
 :lang(en-HK) {
-	font-family: serif;
+	font-family: serif, 'HanaMin', serif;
 }
 
 :lang(zh-Latn-x-output) {
-	font-family: serif;
+	font-family: serif, 'HanaMin', serif;
 }
 
 h1 {
