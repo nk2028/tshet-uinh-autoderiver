@@ -1,5 +1,5 @@
 /* 古韻羅馬字
- * https://zh.wikipedia.org/wiki/User_talk:Polyhedron/%E4%B8%AD%E5%8F%A4%E6%BC%A2%E8%AA%9E%E6%8B%BC%E9%9F%B3
+ * https://zh.wikipedia.org/wiki/User:Polyhedron/中古漢語拼音
  *
  * 説明
  * 以下內容為生成古韻羅馬字的函數體
