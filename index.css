@@ -20,9 +20,7 @@
 
 body { font-family: 'Source Han Serif K', 'Source Han Serif HC', 'Source Han Serif TC', 'Source Han Serif SC', serif, 'HanaMin', serif; }
 
-:lang(en-HK) { font-family: serif; }
-
-:lang(zh-Latn-x-output) { font-family: serif, 'HanaMin', serif; }
+:lang(en-HK), :lang(zh-Latn-x-output) { font-family: serif; }
 
 option { font-family: inherit; }
 
@@ -39,6 +37,7 @@ html {
 }
 
 body {
+	line-height: 1.6;
 	margin: 0 auto;
 }
 
@@ -48,10 +47,6 @@ a {
 
 a:hover {
 	color: #708;
-}
-
-h1, p {
-	line-height: 1.6;
 }
 
 h1 {
@@ -117,15 +112,15 @@ footer {
 
 .entry-multiple .tooltip-item.selected { color: #00f; }
 
-.entry-multiple .tooltip-item:hover { color: #a11; }
+.entry-multiple .tooltip-item:hover { color: #0078e7; }
 
-.entry-multiple .tooltip-item.selected:hover { color: #0078e7; }
+.entry-multiple .tooltip-item.selected:hover { color: #a11; }
 
 /* Entry appearance */
 
 .entry {
 	display: inline-block;
-	margin-bottom: 6px;
+	margin: 0 2px 6px 2px;
 }
 
 .entry.entry-none {
