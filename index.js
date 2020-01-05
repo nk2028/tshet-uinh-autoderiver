@@ -26,7 +26,8 @@ function notifyError(err) {  // Function that displays a pop-up alert
 
 function notifyErrorWithError(小韻號, err) {  // Function that displays a pop-up alert
 	let msg = '<p>小韻號 <span lang="en-HK">' + 小韻號 + ', Error: ' + HTMLEscape(err.message) + '</span></p>';
-	msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
+	if (err.stack)
+		msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
@@ -36,12 +37,11 @@ function myFlat(arrays) {  // Equals to Array.prototype.flat(), but supports Edg
 
 /* Page initializer */
 
-let codeInputArea;
+let schemaInputArea;
 
 document.addEventListener('DOMContentLoaded', () => {
 	/* Initialize codemirror */
-	codeInputArea = CodeMirror(schemaInput, {
-		value: 'const is = s => equal音韻地位(小韻號, s);\n\n// Your script goes here\n',
+	schemaInputArea = CodeMirror(schemaInput, {
 		mode: 'javascript',
 		lineNumbers: true
 	});
@@ -54,15 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function handleLoadSchema(val) {
 	fetch('examples/' + val + '.js')
-	.then(response => {
-		return response.text();
-	})
-	.then(text => {
-		codeInputArea.setValue(text);
-	})
-	.catch(err => {
-		notifyError(err);
-	});
+	.then(response => response.text())
+	.then(text => schemaInputArea.setValue(text))
+	.catch(err => notifyError(err));
 }
 
 function handlePredefinedOptions() {
@@ -74,7 +68,11 @@ function handlePredefinedOptions() {
 		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(i + 1)))].join(', ');
 		outputArea.handleExport = null;
 	} else if (predefinedOptions.value == 'convertArticle') {
-		handleArticle();
+		outputArea.classList.add('hidden');
+		outputArea.innerHTML = '';
+		[...articleInput.value].map(n => outputArea.appendChild(makeConversion(n)));
+		outputArea.classList.remove('hidden');
+		outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
 	}
 }
 
@@ -100,7 +98,7 @@ let userInput;
 
 function loadSchema() {
 	try {
-		userInput = new Function('小韻號', '字頭', codeInputArea.getValue());
+		userInput = new Function('小韻號', '字頭', schemaInputArea.getValue());
 	} catch (err) {
 		notifyError(err);
 		throw err;
@@ -115,28 +113,21 @@ function brogue2(小韻號, 字頭) {
 		notifyErrorWithError(小韻號, err);
 		throw err;
 	}
-	if (res == null)
-		throw new Error('No result for' + 小韻號);
+	if (res == null) {
+		const err = new Error('No result for 小韻 ' + 小韻號 + ': ' + get音韻描述(小韻號));
+		notifyErrorWithoutStack(err);
+		throw err;
+	}
 	return res;
 }
 
 /* Make conversion */
 
-function handleArticle() {
-	outputArea.innerHTML = '';
-
-	const convertText = articleInput.value;
-	[...convertText].map(n => {
-		outputArea.appendChild(makeConversion(n));
-	});
-	outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
-}
-
 function makeConversion(ch) {
-	const qiteis = (qitei[ch] || []).slice();  // 得到 ch 的所有異體字
-	qiteis.unshift(ch);  // Include ch itself
-	const res = myFlat(qiteis.map(ch => {
-		return query切韻音系(ch).map(o => {  // 查出 小韻號 和 解釋
+	const yitis = getYitizi(ch).slice();  // 得到 ch 的所有異體字
+	yitis.unshift(ch);  // 包括 ch 本身
+	const res = myFlat(yitis.map(ch => {
+		return query切韻音系(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
 			o['字頭'] = ch;
 			return o;  // { 字頭, 小韻號, 解釋 }
 		});
@@ -149,6 +140,8 @@ function makeConversion(ch) {
 	else
 		return makeMultipleEntry(ch, res);
 }
+
+/* Make tooltip */
 
 function makeTooltip(ch, pronunciation, sr, expl) {
 	const span = document.createElement('span');
@@ -295,10 +288,10 @@ function makeMultipleEntry(ch, ress) {
 		tooltipContainer.appendChild(tooltip);
 		tooltipArray.push(tooltip);
 
-		if (i == 0) {
+		if (i == 0) {  // Select the first item by default
 			outerContainer.currentSelection = pronunciation;
 			tooltip.classList.add('selected');
-		} else {
+		} else {  // Hide other items
 			rtSpan.classList.add('hidden');
 		}
 	}
