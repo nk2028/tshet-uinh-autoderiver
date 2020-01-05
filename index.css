@@ -44,11 +44,10 @@ body {
 
 a {
 	text-decoration: none;
-	color: #0078e7;
 }
 
 a:hover {
-	color: deeppink;
+	color: #708;
 }
 
 h1, p {
@@ -112,15 +111,15 @@ footer {
 
 /* Entry colors */
 
-.entry-multiple { color: orange; }
+.entry-multiple { color: #708; }
 
-.entry-multiple.unresolved { color: #c41fc4; }
+.entry-multiple.unresolved { color: #00f; }
 
-.entry-multiple .tooltip-item.selected { color: DeepSkyBlue; }
+.entry-multiple .tooltip-item.selected { color: #00f; }
 
-.entry-multiple .tooltip-item:hover { color: #cc3852; }
+.entry-multiple .tooltip-item:hover { color: #a11; }
 
-.entry-multiple .tooltip-item.selected:hover { 	color: #00b0b0; }
+.entry-multiple .tooltip-item.selected:hover { color: #0078e7; }
 
 /* Entry appearance */
 
