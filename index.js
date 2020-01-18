@@ -62,7 +62,18 @@ function handleLoadSchema(val) {
 function handlePredefinedOptions() {
 	loadSchema();
 	if (predefinedOptions.value == 'exportAllSmallRhymes') {
-		outputArea.innerText = [...Array(3874).keys()].map(i => get音韻描述(i + 1) + ' ' + brogue2(i + 1)).join('\n');
+		outputArea.classList.add('hidden');
+		[...Array(3874).keys()].map(i => {
+			outputArea.appendChild(document.createTextNode(get音韻描述(i + 1) + ' '));
+
+			const span = document.createElement('span');
+			span.lang = 'zh-Latn-x-output';
+			span.appendChild(document.createTextNode(brogue2(i + 1)));
+			outputArea.appendChild(span);
+
+			outputArea.appendChild(document.createElement('br'));
+		});
+		outputArea.classList.remove('hidden');
 		outputArea.handleExport = null;
 	} else if (predefinedOptions.value == 'exportAllSyllables') {
 		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(i + 1)))].join(', ');
