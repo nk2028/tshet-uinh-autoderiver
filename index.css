@@ -1,3 +1,29 @@
+/* IPA fonts */
+
+@font-face {
+  font-family: CharisSILW;
+  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-R.woff);
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-style: italic;
+  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-I.woff);
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: bold;
+  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-B.woff);
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: bold;
+  font-style: italic;
+  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-BI.woff);
+}
+
 /* Override Pure.css attributes */
 
 .pure-button {
@@ -18,9 +44,9 @@
 
 /* Font style */
 
-body { font-family: 'Source Han Serif K', 'Source Han Serif TC', 'Source Han Serif SC', 'Source Han Serif', serif, 'HanaMin', serif; }
+body { font-family: CharisSILW, 'Source Han Serif K', 'Source Han Serif TC', 'Source Han Serif SC', 'Source Han Serif', serif, 'HanaMin', serif; }
 
-:lang(en-HK), :lang(zh-Latn-x-output) { font-family: serif; }
+:lang(en-HK), :lang(zh-Latn-x-output) { font-family: CharisSILW, serif; }
 
 option { font-family: inherit; }
 
@@ -179,7 +205,7 @@ footer {
 	}
 
 	.tooltip-container {
-		bottom: 2.3em;
+		bottom: 2.9em;
 		left: 50%;
 		margin-left: -200px;
 		width: 400px;
