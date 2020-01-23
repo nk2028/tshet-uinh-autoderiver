@@ -55,13 +55,19 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleLoadSchema(val) {
 	fetch('examples/' + val + '.js')
 	.then(response => response.text())
-	.then(text => schemaInputArea.setValue(text))
+	.then(txt => schemaInputArea.setValue(txt))
 	.catch(err => notifyError(err));
 }
 
 function handlePredefinedOptions() {
 	loadSchema();
-	if (predefinedOptions.value == 'exportAllSmallRhymes') {
+	if (predefinedOptions.value == 'convertArticle') {
+		outputArea.classList.add('hidden');
+		outputArea.innerHTML = '';
+		makeConversions(articleInput.value);
+		outputArea.classList.remove('hidden');
+		outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
+	} else if (predefinedOptions.value == 'exportAllSmallRhymes') {
 		outputArea.classList.add('hidden');
 		[...Array(3874).keys()].map(i => {
 			outputArea.appendChild(document.createTextNode(get音韻描述(i + 1) + ' '));
@@ -78,24 +84,18 @@ function handlePredefinedOptions() {
 	} else if (predefinedOptions.value == 'exportAllSyllables') {
 		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(i + 1)))].join(', ');
 		outputArea.handleExport = null;
-	} else if (predefinedOptions.value == 'convertArticle') {
-		outputArea.classList.add('hidden');
-		outputArea.innerHTML = '';
-		[...articleInput.value].map(n => outputArea.appendChild(makeConversion(n)));
-		outputArea.classList.remove('hidden');
-		outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
 	}
 }
 
 function handleCopy() {
-	const text = !outputArea.handleExport
+	const txt = !outputArea.handleExport
 		? outputArea.innerText
 		: outputArea.handleExport();  // A user-defined attribute
 
-	if (!text) {
+	if (!txt) {
 		notifyErrorWithoutStack(new Error('請先進行操作，再匯出結果'));
 	} else {
-		navigator.clipboard.writeText(text).then(() => {
+		navigator.clipboard.writeText(txt).then(() => {
 			notify('已成功匯出至剪貼簿');
 		}, err => {
 			notifyError(err);
@@ -134,36 +134,67 @@ function brogue2(小韻號, 字頭) {
 
 /* Make conversion */
 
+function makeConversions(txt) {
+	[...txt].map(n => outputArea.appendChild(makeConversion(n)));
+}
+
 function makeConversion(ch) {
 	const yitis = getYitizi(ch).slice();  // 得到 ch 的所有異體字
 	yitis.unshift(ch);  // 包括 ch 本身
-	const res = myFlat(yitis.map(ch => {
-		return query切韻音系(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
-			o['字頭'] = ch;
-			return o;  // { 字頭, 小韻號, 解釋 }
-		});
-	}));
 
-	if (!res.length)
+	let pronunciation_map = {};  // Merge by pronunciation
+
+	yitis.map(ch => {
+		query切韻音系(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
+			o['字頭'] = ch;  // { 字頭, 小韻號, 解釋 }
+
+			const pronunciation = brogue2(o['小韻號']);
+
+			if (!pronunciation_map[pronunciation])
+				pronunciation_map[pronunciation] = [];
+
+			pronunciation_map[pronunciation].push(o);
+		});
+	});
+
+	const len = Object.keys(pronunciation_map).length;
+
+	if (!len)
 		return makeNoneEntry(ch);
-	else if (res.length == 1)
-		return makeSingleEntry(ch, res[0]);
+	else if (len == 1)
+		return makeSingleEntry(ch, pronunciation_map);
 	else
-		return makeMultipleEntry(ch, res);
+		return makeMultipleEntry(ch, pronunciation_map);
 }
 
 /* Make tooltip */
 
-function makeTooltip(ch, pronunciation, sr, expl) {
+function makeTooltip(pronunciation, ress) {
 	const span = document.createElement('span');
 	span.classList.add('tooltip-item');
-	span.appendChild(document.createTextNode(ch + ' '));
 
-	const span_inner = document.createElement('span');
-	span_inner.lang = 'zh-Latn-x-output';
-	span_inner.innerText = pronunciation;
-	span.appendChild(span_inner);
-	span.appendChild(document.createTextNode(' ' + get音韻描述(sr) + ' ' + expl));
+	const span_pronunciation = document.createElement('span');
+	span_pronunciation.lang = 'zh-Latn-x-output';
+	span_pronunciation.innerText = pronunciation;
+	span.appendChild(span_pronunciation);
+	span.appendChild(document.createTextNode(' '));
+
+	for (let [i, res] of ress.entries()) {
+		if (i != 0)
+			span.appendChild(document.createElement('br'));
+
+		const ch = res['字頭'],
+			sr = res['小韻號'],
+			expl = res['解釋'];
+
+		const span_ch = document.createElement('span');
+		span_ch.classList.add('tooltip-ch');
+		span_ch.innerText = ch;
+		span.appendChild(span_ch);
+		span.appendChild(document.createTextNode(' '));
+
+		span.appendChild(document.createTextNode(get音韻描述(sr) + ' ' + expl));
+	}
 
 	return span;
 }
@@ -171,9 +202,6 @@ function makeTooltip(ch, pronunciation, sr, expl) {
 /* Make entries */
 
 function makeNoneEntry(ch) {
-	/* Format for .entry-none example:
-	<span class="entry entry-none">。</span>
-	*/
 	const outerContainer = document.createElement('span');
 	outerContainer.classList.add('entry');
 	outerContainer.classList.add('entry-none');
@@ -182,21 +210,8 @@ function makeNoneEntry(ch) {
 	return outerContainer;
 }
 
-function makeSingleEntry(ch, res) {
-	/* Format for .entry-single example:
-	<span class="entry entry-single">
-		<ruby>
-			年
-			<rp>(</rp>
-			<rt lang="zh-Latn-x-output">den˨˩</rt>
-			<rp>)</rp>
-		</ruby>
-		<span class="tooltip-container">
-			<span class="tooltip-item">年 <span lang="zh-Latn-x-output">nen</span> 泥開四先平 上同</span>
-		</span>
-	</span>
-	*/
-	const pronunciation = brogue2(res['小韻號']);
+function makeSingleEntry(ch, pronunciation_map) {
+	const [pronunciation, ress] = Object.entries(pronunciation_map)[0];
 
 	const outerContainer = document.createElement('span');
 	outerContainer.classList.add('entry');
@@ -221,7 +236,7 @@ function makeSingleEntry(ch, res) {
 	rp_right.appendChild(document.createTextNode(')'));
 	ruby.appendChild(rp_right);
 
-	const tooltip = makeTooltip(res['字頭'], pronunciation, res['小韻號'], res['解釋']);
+	const tooltip = makeTooltip(pronunciation, ress);
 	tooltipContainer.appendChild(tooltip);
 
 	outerContainer.appendChild(ruby);
@@ -232,24 +247,7 @@ function makeSingleEntry(ch, res) {
 	return outerContainer;
 }
 
-function makeMultipleEntry(ch, ress) {
-	/* Format for .entry-multiple example:
-	<span class="entry entry-multiple unresolved">
-		<ruby>
-			盡
-			<rp>(</rp>
-			<rt lang="zh-Latn-x-output">
-				<span>sin˨˩</span>
-				<span class="hidden">sin˧˥</span>
-			</rt>
-			<rp>)</rp>
-		</ruby>
-		<span class="tooltip-container">
-			<span class="tooltip-item selected">盡 <span lang="zh-Latn-x-output">sin˨˩</span> 從開三眞上 竭也終也慈忍切又即忍切二</span>
-			<span class="tooltip-item">盡 <span lang="zh-Latn-x-output">sin˧˥</span> 精開三眞上 曲禮曰虛坐盡前[-/虚坐盡後虚坐盡前]又慈忍切</span>
-		</span>
-	</span>
-	*/
+function makeMultipleEntry(ch, pronunciation_map) {
 	const outerContainer = document.createElement('span');
 	outerContainer.classList.add('entry');
 	outerContainer.classList.add('entry-multiple');
@@ -276,16 +274,13 @@ function makeMultipleEntry(ch, ress) {
 	let rtSpanArray = [];
 	let tooltipArray = [];
 
-	for (let i = 0, len = ress.length; i < len; i++) {
-		const res = ress[i];
-		const pronunciation = brogue2(res['小韻號']);
-
+	for (let [i, [pronunciation, ress]] of Object.entries(pronunciation_map).entries()) {
 		const rtSpan = document.createElement('span');
 		rtSpan.innerText = pronunciation;
 		rt.appendChild(rtSpan);
 		rtSpanArray.push(rtSpan);
 
-		const tooltip = makeTooltip(res['字頭'], pronunciation, res['小韻號'], res['解釋']);
+		const tooltip = makeTooltip(pronunciation, ress);
 		tooltip.addEventListener('click', () => {
 			rtSpanArray.map(rtSpan => rtSpan.classList.add('hidden'));
 			rtSpan.classList.remove('hidden');
