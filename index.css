@@ -202,19 +202,20 @@ footer {
 .tooltip-container {
 	left: 0;
 	position: absolute;
+	transform: translateY(2.9em);
 	width: 100%;
 	z-index: 5;
 }
 
 @media only screen and (min-width: 768px) {
-	.entry {
+	#outputArea .entry {
 		position: relative;
 	}
 
 	.tooltip-container {
 		bottom: 2.9em;
 		left: 50%;
-		margin-left: -200px;
+		transform: translateX(-200px);
 		width: 400px;
 	}
 }
