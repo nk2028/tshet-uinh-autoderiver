@@ -24,7 +24,7 @@ function 聲母規則() {
 	if (is('日母')) return 'z';
 	if (is('見溪羣曉匣母')) return 'k';
 	if (is('疑母')) return 'g';
-	if (is('影云以母')) return '';  // 影母細音 k-，詳後
+	if (is('影云以母')) return '';  // 影母細音 q-，詳後
 	throw new Error('無聲母規則');
 }
  
@@ -151,20 +151,20 @@ let 合口介音 =
 	) ? '' : 'u';
  
 if (is('影母') && 韻母.startsWith('i'))
-	聲母 = 'k';
+	聲母 = 'q';
  
 function 聲調規則() {
 	if (is('幫滂端透知徹精清心莊初生章昌書見溪影曉母')) {  // 全清
-		if (is('平聲')) return '˥';
-		if (is('上聲')) return '˧˥';
-		if (is('去聲')) return '˨˩';
-		if (is('入聲 深臻曾通攝')) return '˥';
-		if (is('入聲')) return '˨˩';
+		if (is('平聲')) return '¹';
+		if (is('上聲')) return '²';
+		if (is('去聲')) return '³';
+		if (is('入聲 深臻曾通攝')) return '¹';
+		if (is('入聲')) return '³';
 	} else {
-		if (is('平聲')) return '˨˩';
-		if (is('去聲 或 並定澄從邪崇俟船常羣匣母 上聲')) return '˨˩';  // 全濁上變去
-		if (is('上聲')) return '˧˥';
-		if (is('入聲')) return '˨˩';
+		if (is('平聲')) return '³';
+		if (is('去聲 或 並定澄從邪崇俟船常羣匣母 上聲')) return '³';  // 全濁上變去
+		if (is('上聲')) return '²';
+		if (is('入聲')) return '³';
 	}
 	throw new Error('無聲調規則');
 }
