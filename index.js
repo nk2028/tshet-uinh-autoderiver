@@ -35,6 +35,43 @@ function myFlat(arrays) {  // Equals to Array.prototype.flat(), but supports Edg
 	return arrays.reduce(function(a, b) { return a.concat(b); }, []);
 }
 
+/* Copy to clipboard */
+
+// From https://stackoverflow.com/a/30810322
+
+function fallbackCopyTextToClipboard(text) {
+	var textArea = document.createElement("textarea");
+	textArea.value = text;
+	textArea.style.position = "fixed";  //avoid scrolling to bottom
+	document.body.appendChild(textArea);
+	textArea.focus();
+	textArea.select();
+
+	try {
+		var successful = document.execCommand('copy');
+		if (successful)
+			notify('已成功匯出至剪貼簿');
+		else
+			notifyErrorWithoutStack(new Error('匯出至剪貼簿失敗'));
+	} catch (err) {
+		notifyError(err);
+	}
+
+	document.body.removeChild(textArea);
+}
+
+function copyTextToClipboard(txt) {
+	if (!navigator.clipboard) {
+		fallbackCopyTextToClipboard(txt);
+		return;
+	}
+	navigator.clipboard.writeText(txt).then(() => {
+		notify('已成功匯出至剪貼簿');
+	}, err => {
+		notifyError(err);
+	});
+}
+
 /* Page initializer */
 
 let schemaInputArea;
@@ -95,11 +132,7 @@ function handleCopy() {
 	if (!txt) {
 		notifyErrorWithoutStack(new Error('請先進行操作，再匯出結果'));
 	} else {
-		navigator.clipboard.writeText(txt).then(() => {
-			notify('已成功匯出至剪貼簿');
-		}, err => {
-			notifyError(err);
-		});
+		copyTextToClipboard(txt);
 	}
 }
 
