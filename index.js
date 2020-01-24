@@ -107,7 +107,7 @@ function handlePredefinedOptions() {
 	} else if (predefinedOptions.value == 'exportAllSmallRhymes') {
 		outputArea.classList.add('hidden');
 		[...Array(3874).keys()].map(i => {
-			outputArea.appendChild(document.createTextNode(get音韻描述(i + 1) + ' '));
+			outputArea.appendChild(document.createTextNode(Qieyun.get音韻描述(i + 1) + ' '));
 
 			const span = document.createElement('span');
 			span.lang = 'zh-Latn-x-output';
@@ -158,7 +158,7 @@ function brogue2(小韻號, 字頭) {
 		throw err;
 	}
 	if (res == null) {
-		const err = new Error('No result for 小韻 ' + 小韻號 + ': ' + get音韻描述(小韻號));
+		const err = new Error('No result for 小韻 ' + 小韻號 + ': ' + Qieyun.get音韻描述(小韻號));
 		notifyErrorWithoutStack(err);
 		throw err;
 	}
@@ -178,7 +178,7 @@ function makeConversion(ch) {
 	let pronunciation_map = {};  // Merge by pronunciation
 
 	yitis.map(ch => {
-		query切韻音系(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
+		Qieyun.query切韻音系(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
 			o['字頭'] = ch;  // { 字頭, 小韻號, 解釋 }
 
 			const pronunciation = brogue2(o['小韻號']);
@@ -226,7 +226,7 @@ function makeTooltip(pronunciation, ress) {
 		span.appendChild(span_ch);
 		span.appendChild(document.createTextNode(' '));
 
-		span.appendChild(document.createTextNode(get音韻描述(sr) + ' ' + expl));
+		span.appendChild(document.createTextNode(Qieyun.get音韻描述(sr) + ' ' + expl));
 	}
 
 	return span;

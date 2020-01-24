@@ -6,7 +6,7 @@
  * 函數接受兩個參數：小韻號、字頭，返回對應的三日月綾香個人思考用語拼音
  */
 
-const is = s => equal音韻地位(小韻號, s);
+const is = s => Qieyun.equal音韻地位(小韻號, s);
  
 function 聲母規則() {
 	if (is('幫滂並母')) return 'h';

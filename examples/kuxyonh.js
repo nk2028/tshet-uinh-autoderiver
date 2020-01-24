@@ -6,7 +6,7 @@
  * 函數接受兩個參數：小韻號、字頭，返回對應的古韻羅馬字
  */
 
-const is = s => equal音韻地位(小韻號, s);
+const is = s => Qieyun.equal音韻地位(小韻號, s);
 
 function 聲母規則() {
 	if (is('幫母')) return 'p';
