@@ -158,7 +158,7 @@ let 韻母 = 韻母規則();
  
 let 合口介音 =
 	!( (is('見組 合 或 曉匣母 合') && (韻母.startsWith('a') || 韻母.startsWith('e')))
-	|| (is('影云以母 合') && 韻母.startsWith('a'))
+	|| (is('精莊章組 合 或 影云以日母 合') && 韻母.startsWith('a'))
 	) ? '' : 'u';
  
 if (is('影母') && 韻母.startsWith('i'))
