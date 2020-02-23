@@ -11,7 +11,7 @@ const is = s => Qieyun.equal音韻地位(小韻號, s);
 function 聲母規則() {
 	if (is('幫滂並母')) return 'h';
 	if (is('明母')) {
-		if (is('梗攝')) return 'm';
+		if (is('梗攝') && !is('庚耕青韻賅上去入 入聲')) return 'm';
 		else return 'b';
 	}
 	if (is('端透定知徹澄母')) return 't';
@@ -52,9 +52,14 @@ function 韻母規則() {
 		}
 	}
 	if (is('遇攝')) {
-		if (is('魚韻賅上去入')) return 'io';
+		if (is('魚韻賅上去入')) {
+			if (is('莊組 三等')) return 'o';
+			else return 'io';
+		}
 		if (is('虞韻賅上去入')) {
-			if (is('端知精莊章組 或 來日母')) return 'iu';
+			if (is('莊組 三等')) return 'u';
+			if (is('端精莊章組 或 以來日母')) return 'iu';
+			if (is('知組')) return 'iui';
 			else return 'u';
 		}
 		if (is('模韻賅上去入')) return 'o';
@@ -100,7 +105,7 @@ function 韻母規則() {
 	if (is('宕攝')) {
 		if (is('唐韻賅上去入')) return !is('入聲') ? 'oun' : 'ak';
 		if (is('陽韻賅上去入 開 三等')) {
-			if (is('幫組')) return !is('入聲') ? 'oun' : 'ak';
+			if (is('幫組 或 莊組 開 三等')) return !is('入聲') ? 'oun' : 'ak';
 			else return !is('入聲') ? 'ioun' : 'iak';
 		}
 		if (is('陽韻賅上去入 合 三等')) {
@@ -118,16 +123,22 @@ function 韻母規則() {
 	}
 	if (is('曾攝')) {
 		if (is('登韻賅上去入')) return !is('入聲') ? 'oun' : 'ok';
-		if (is('蒸韻賅上去入')) return !is('入聲') ? 'ioun' : 'iok';
+		if (is('蒸韻賅上去入')) {
+			if (is('莊組 三等')) return !is('入聲') ? 'oun' : 'ok';
+			else return !is('入聲') ? 'ioun' : 'iok';
+		}
 	}
 	if (is('流攝')) {
 		if (is('侯韻賅上去入')) return 'ou';
 		if (is('尤韻賅上去入')) {
-			if (is('幫滂並母')) return 'u';
+			if (is('幫滂並母')) return 'uu';
 			if (is('明母')) return 'ou';
+			else return 'iui';
+		}
+		if (is('幽韻賅上去入')) {
+			if (is('見組 或 曉匣母')) return 'iui';
 			else return 'iu';
 		}
-		if (is('幽韻賅上去入')) return 'iu';
 	}
 	if (is('深攝'))
 		if (is('侵韻賅上去入')) return !is('入聲') ? 'im' : 'if';
@@ -146,7 +157,7 @@ let 聲母 = 聲母規則();
 let 韻母 = 韻母規則();
  
 let 合口介音 =
-	!( (is('精莊章見組 合 或 日曉匣母 合') && (韻母.startsWith('a') || 韻母.startsWith('e')))
+	!( (is('見組 合 或 曉匣母 合') && (韻母.startsWith('a') || 韻母.startsWith('e')))
 	|| (is('影云以母 合') && 韻母.startsWith('a'))
 	) ? '' : 'u';
  
@@ -171,13 +182,16 @@ function 聲調規則() {
  
 let 聲調 = 聲調規則();
  
+/* 若要使用舊式拼寫，註釋掉以下幾行 */
 if (聲母 == 't' && 韻母.startsWith('u'))
 	聲母 = 'ts';
 else if (聲母 == 't' && 韻母.startsWith('i'))
 	聲母 = 'ch';
 else if (聲母 == 'h' && 韻母.startsWith('u'))
 	聲母 = 'f';
-else if (聲母 == '' && 韻母.startsWith('i')) {
+else
+
+if (聲母 == '' && 韻母.startsWith('i')) {
 	聲母 = 'y';
 	if (韻母.length > 1 && 'aiueo'.includes(韻母[1]))
 		韻母 = 韻母.substr(1);
@@ -186,6 +200,7 @@ else if (聲母 == '' && 韻母.startsWith('u')) {
 	聲母 = 'w';
 	if (韻母.length > 1 && 'aiueo'.includes(韻母[1]))
 		韻母 = 韻母.substr(1);
-}
+} else if (聲母 == '' && 合口介音 == 'u')
+	合口介音 = 'w';
  
 return 聲母 + 合口介音 + 韻母 + 聲調;
