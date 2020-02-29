@@ -104,6 +104,7 @@ function handlePredefinedOptions() {
 		makeConversions(articleInput.value);
 		outputArea.classList.remove('hidden');
 		outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
+		outputArea.handleRuby = () => [...outputArea.childNodes].map(node => node.handleRuby()).join('');
 	} else if (predefinedOptions.value == 'exportAllSmallRhymes') {
 		outputArea.classList.add('hidden');
 		[...Array(3874).keys()].map(i => {
@@ -118,9 +119,11 @@ function handlePredefinedOptions() {
 		});
 		outputArea.classList.remove('hidden');
 		outputArea.handleExport = null;
+		outputArea.handleRuby = null;
 	} else if (predefinedOptions.value == 'exportAllSyllables') {
 		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(i + 1)))].join(', ');
 		outputArea.handleExport = null;
+		outputArea.handleRuby = null;
 	}
 }
 
@@ -128,6 +131,18 @@ function handleCopy() {
 	const txt = !outputArea.handleExport
 		? outputArea.innerText
 		: outputArea.handleExport();  // A user-defined attribute
+
+	if (!txt) {
+		notifyErrorWithoutStack(new Error('請先進行操作，再匯出結果'));
+	} else {
+		copyTextToClipboard(txt);
+	}
+}
+
+function handleRuby() {
+	const txt = !outputArea.handleRuby
+		? outputArea.innerText
+		: outputArea.handleRuby();  // A user-defined attribute
 
 	if (!txt) {
 		notifyErrorWithoutStack(new Error('請先進行操作，再匯出結果'));
@@ -240,6 +255,7 @@ function makeNoneEntry(ch) {
 	outerContainer.classList.add('entry-none');
 	outerContainer.appendChild(document.createTextNode(ch));
 	outerContainer.handleExport = () => ch;
+	outerContainer.handleRuby = () => ch;
 	return outerContainer;
 }
 
@@ -276,6 +292,8 @@ function makeSingleEntry(ch, pronunciation_map) {
 	outerContainer.appendChild(tooltipContainer);
 	const exportText = ch + '(' + pronunciation + ')';
 	outerContainer.handleExport = () => exportText;
+	const rubyText = '<ruby>' + ch + '<rp>(</rp><rt lang="zh-Latn">' + pronunciation + '</rt><rp>)</rp></ruby>';
+	outerContainer.handleRuby = () => rubyText;
 
 	return outerContainer;
 }
@@ -338,6 +356,7 @@ function makeMultipleEntry(ch, pronunciation_map) {
 	outerContainer.appendChild(ruby);
 	outerContainer.appendChild(tooltipContainer);
 	outerContainer.handleExport = () => ch + '(' + outerContainer.currentSelection + ')';
+	outerContainer.handleRuby = () => '<ruby>' + ch + '<rp>(</rp><rt lang="zh-Latn">' + outerContainer.currentSelection + '</rt><rp>)</rp></ruby>';
 
 	return outerContainer;
 }
