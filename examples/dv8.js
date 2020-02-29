@@ -53,11 +53,11 @@ function 韻母規則() {
 	}
 	if (is('遇攝')) {
 		if (is('魚韻賅上去入')) {
-			if (is('莊組 三等')) return 'o';
+			if (is('莊組')) return 'o';
 			else return 'io';
 		}
 		if (is('虞韻賅上去入')) {
-			if (is('莊組 三等')) return 'u';
+			if (is('莊組')) return 'u';
 			if (is('端精莊章組 或 以來日母')) return 'iu';
 			if (is('知組')) return 'iui';
 			else return 'u';
@@ -105,7 +105,7 @@ function 韻母規則() {
 	if (is('宕攝')) {
 		if (is('唐韻賅上去入')) return !is('入聲') ? 'oun' : 'ak';
 		if (is('陽韻賅上去入 開 三等')) {
-			if (is('幫組 或 莊組 開 三等')) return !is('入聲') ? 'oun' : 'ak';
+			if (is('幫莊組')) return !is('入聲') ? 'oun' : 'ak';
 			else return !is('入聲') ? 'ioun' : 'iak';
 		}
 		if (is('陽韻賅上去入 合 三等')) {
@@ -124,7 +124,7 @@ function 韻母規則() {
 	if (is('曾攝')) {
 		if (is('登韻賅上去入')) return !is('入聲') ? 'oun' : 'ok';
 		if (is('蒸韻賅上去入')) {
-			if (is('莊組 三等')) return !is('入聲') ? 'oun' : 'ok';
+			if (is('莊組')) return !is('入聲') ? 'oun' : 'ok';
 			else return !is('入聲') ? 'ioun' : 'iok';
 		}
 	}
