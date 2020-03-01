@@ -58,7 +58,7 @@ function 韻母規則() {
 		}
 		if (is('虞韻賅上去入')) {
 			if (is('莊組')) return 'u';
-			if (is('端精莊章組 或 以來日母')) return 'iu';
+			if (is('端精章組 或 以來日母')) return 'iu';
 			if (is('知組')) return 'iui';
 			else return 'u';
 		}
