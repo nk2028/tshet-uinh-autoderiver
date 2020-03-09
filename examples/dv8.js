@@ -11,7 +11,7 @@ const is = s => Qieyun.equal音韻地位(小韻號, s);
 function 聲母規則() {
 	if (is('幫滂並母')) return 'h';
 	if (is('明母')) {
-		if (is('梗攝') && !is('庚耕青韻賅上去入 入聲')) return 'm';
+		if (is('梗攝') && !is('庚耕青韻 入聲')) return 'm';
 		else return 'b';
 	}
 	if (is('端透定知徹澄母')) return 't';
@@ -30,14 +30,14 @@ function 聲母規則() {
  
 function 韻母規則() {
 	if (is('通攝')) {
-		if (is('東冬韻賅上去入 開 一等')) return !is('入聲') ? 'oun' : 'ok';
-		if (is('東韻賅上去入 開 三等')) {
+		if (is('東冬韻 開口 一等')) return !is('入聲') ? 'oun' : 'ok';
+		if (is('東韻 開口 三等')) {
 			if (is('幫滂並母')) return !is('入聲') ? 'uun' : 'uk';
 			if (is('明母')) return !is('入聲') ? 'oun' : 'ok';
 			if (is('精莊章組')) return !is('入聲') ? 'iuin' : 'iuk';
 			else return !is('入聲') ? 'iuin' : 'ik';
 		}
-		if (is('鍾韻賅上去入')) {
+		if (is('鍾韻')) {
 			if (is('幫組')) return !is('入聲') ? 'oun' : 'ok';
 			else return !is('入聲') ? 'ioun' : 'iok';
 		}
@@ -45,107 +45,107 @@ function 韻母規則() {
 	if (is('江攝'))
 		return !is('入聲') ? 'oun' : 'ak';
 	if (is('止攝')) {
-		if (is('支脂之微韻賅上去入 開 三等')) return 'i';
-		if (is('支脂微韻賅上去入 合 三等')) {
+		if (is('支脂之微韻 開口 三等')) return 'i';
+		if (is('支脂微韻 合口 三等')) {
 			if (is('端知精莊章組 或 來日母')) return 'ui';
 			else return 'i';
 		}
 	}
 	if (is('遇攝')) {
-		if (is('魚韻賅上去入')) {
+		if (is('魚韻')) {
 			if (is('莊組')) return 'o';
 			else return 'io';
 		}
-		if (is('虞韻賅上去入')) {
+		if (is('虞韻')) {
 			if (is('莊組')) return 'u';
 			if (is('端精章組 或 以來日母')) return 'iu';
 			if (is('知組')) return 'iui';
 			else return 'u';
 		}
-		if (is('模韻賅上去入')) return 'o';
+		if (is('模韻')) return 'o';
 	}
 	if (is('蟹攝')) {
-		if (is('齊祭韻賅上去入')) return 'ei';
-		if (is('佳皆灰咍泰夬廢韻賅上去入')) return 'ai';
+		if (is('齊祭韻')) return 'ei';
+		if (is('佳皆灰咍泰夬廢韻')) return 'ai';
 	}
 	if (is('臻攝')) {
-		if (is('眞臻欣韻賅上去入')) return !is('入聲') ? 'in' : 'is';
-		if (is('諄韻賅上去入')) {
+		if (is('眞臻欣韻')) return !is('入聲') ? 'in' : 'is';
+		if (is('諄韻')) {
 			if (is('知精莊章組 或 日母')) return !is('入聲') ? 'iuin' : 'ius';
 			else return !is('入聲') ? 'in' : 'is';
 		}
-		if (is('文韻賅上去入')) return !is('入聲') ? 'un' : 'us';
-		if (is('元韻賅上去入 開 三等')) return !is('入聲') ? 'en' : 'es';
-		if (is('元韻賅上去入 合 三等')) {
+		if (is('文韻')) return !is('入聲') ? 'un' : 'us';
+		if (is('元韻 開口 三等')) return !is('入聲') ? 'en' : 'es';
+		if (is('元韻 合口 三等')) {
 			if (is('幫組')) return !is('入聲') ? 'an' : 'as';
 			else return !is('入聲') ? 'en' : 'es';
 		}
-		if (is('魂痕韻賅上去入')) return !is('入聲') ? 'on' : 'os';
+		if (is('魂痕韻')) return !is('入聲') ? 'on' : 'os';
 	}
 	if (is('山攝')) {
-		if (is('寒桓刪山韻賅上去入')) return !is('入聲') ? 'an' : 'as';
-		if (is('先仙韻賅上去入')) return !is('入聲') ? 'en' : 'es';
+		if (is('寒桓刪山韻')) return !is('入聲') ? 'an' : 'as';
+		if (is('先仙韻')) return !is('入聲') ? 'en' : 'es';
 	}
 	if (is('效攝')) {
-		if (is('蕭宵韻賅上去入')) return 'iou';
-		if (is('肴豪韻賅上去入')) return 'ou';
+		if (is('蕭宵韻')) return 'iou';
+		if (is('肴豪韻')) return 'ou';
 	}
 	if (is('果攝')) {
-		if (is('歌韻賅上去入 或 戈韻賅上去入 合 一等')) return 'a';
-		if (is('戈韻賅上去入 開 三等')) return 'ia';
-		if (is('戈韻賅上去入 合 三等')) {
+		if (is('歌韻 或 戈韻 合口 一等')) return 'a';
+		if (is('戈韻 開口 三等')) return 'ia';
+		if (is('戈韻 合口 三等')) {
 			if (is('見組 或 曉匣母')) return 'a';
 			else return 'ia';
 		}
 	}
 	if (is('假攝')) {
-		if (is('麻韻賅上去入 開 二等 或 麻韻賅上去入 合 二等')) return 'a';
-		if (is('麻韻賅上去入 開 三等')) return 'ia';
+		if (is('麻韻 開口 二等 或 麻韻 合口 二等')) return 'a';
+		if (is('麻韻 開口 三等')) return 'ia';
 	}
 	if (is('宕攝')) {
-		if (is('唐韻賅上去入')) return !is('入聲') ? 'oun' : 'ak';
-		if (is('陽韻賅上去入 開 三等')) {
+		if (is('唐韻')) return !is('入聲') ? 'oun' : 'ak';
+		if (is('陽韻 開口 三等')) {
 			if (is('幫莊組')) return !is('入聲') ? 'oun' : 'ak';
 			else return !is('入聲') ? 'ioun' : 'iak';
 		}
-		if (is('陽韻賅上去入 合 三等')) {
+		if (is('陽韻 合口 三等')) {
 			if (is('見組 或 曉匣母')) return !is('入聲') ? 'ioun' : 'iak';
 			else return !is('入聲') ? 'oun' : 'ak';
 		}
 	}
 	if (is('梗攝')) {
-		if (is('庚韻賅上去入 開 二等')) {
+		if (is('庚韻 開口 二等')) {
 			if (is('莊章組 或 日母')) return !is('入聲') ? 'ein' : 'ak';
 			else return !is('入聲') ? 'oun' : 'ak';
 		}
-		if (is('庚韻賅上去入 合 二等 或 耕韻賅上去入')) return !is('入聲') ? 'oun' : 'ak';
-		if (is('庚韻賅上去入 開 三等 或 庚韻賅上去入 合 三等 或 清青韻賅上去入')) return !is('入聲') ? 'ein' : 'eg';
+		if (is('庚韻 合口 二等 或 耕韻')) return !is('入聲') ? 'oun' : 'ak';
+		if (is('庚韻 開口 三等 或 庚韻 合口 三等 或 清青韻')) return !is('入聲') ? 'ein' : 'eg';
 	}
 	if (is('曾攝')) {
-		if (is('登韻賅上去入')) return !is('入聲') ? 'oun' : 'ok';
-		if (is('蒸韻賅上去入')) {
+		if (is('登韻')) return !is('入聲') ? 'oun' : 'ok';
+		if (is('蒸韻')) {
 			if (is('莊組')) return !is('入聲') ? 'oun' : 'ok';
 			else return !is('入聲') ? 'ioun' : 'iok';
 		}
 	}
 	if (is('流攝')) {
-		if (is('侯韻賅上去入')) return 'ou';
-		if (is('尤韻賅上去入')) {
+		if (is('侯韻')) return 'ou';
+		if (is('尤韻')) {
 			if (is('幫滂並母')) return 'uu';
 			if (is('明母')) return 'ou';
 			else return 'iui';
 		}
-		if (is('幽韻賅上去入')) {
+		if (is('幽韻')) {
 			if (is('見組 或 曉匣母')) return 'iui';
 			else return 'iu';
 		}
 	}
 	if (is('深攝'))
-		if (is('侵韻賅上去入')) return !is('入聲') ? 'im' : 'if';
+		if (is('侵韻')) return !is('入聲') ? 'im' : 'if';
 	if (is('咸攝')) {
-		if (is('覃談咸銜韻賅上去入')) return !is('入聲') ? 'am' : 'af';
-		if (is('鹽添韻賅上去入')) return !is('入聲') ? 'em' : 'ef';
-		if (is('嚴凡韻賅上去入')) {
+		if (is('覃談咸銜韻')) return !is('入聲') ? 'am' : 'af';
+		if (is('鹽添韻')) return !is('入聲') ? 'em' : 'ef';
+		if (is('嚴凡韻')) {
 			if (is('見組 或 曉匣云以母')) return !is('入聲') ? 'em' : 'ef';
 			else return !is('入聲') ? 'am' : 'af';
 		}
@@ -157,8 +157,8 @@ let 聲母 = 聲母規則();
 let 韻母 = 韻母規則();
  
 let 合口介音 =
-	!( (is('見組 合 或 曉匣母 合') && (韻母.startsWith('a') || 韻母.startsWith('e')))
-	|| (is('精莊章組 合 或 影云以日母 合') && 韻母.startsWith('a'))
+	!( (is('見組 合口 或 曉匣母 合口') && (韻母.startsWith('a') || 韻母.startsWith('e')))
+	|| (is('精莊章組 合口 或 影云以日母 合口') && 韻母.startsWith('a'))
 	) ? '' : 'u';
  
 if (is('影母') && 韻母.startsWith('i'))
