@@ -107,6 +107,7 @@ function handlePredefinedOptions() {
 		outputArea.handleRuby = () => [...outputArea.childNodes].map(node => node.handleRuby()).join('');
 	} else if (predefinedOptions.value == 'exportAllSmallRhymes') {
 		outputArea.classList.add('hidden');
+		outputArea.innerHTML = '';
 		[...Array(3874).keys()].map(i => {
 			outputArea.appendChild(document.createTextNode(Qieyun.get音韻描述(i + 1) + ' '));
 
