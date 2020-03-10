@@ -1,29 +1,3 @@
-/* IPA fonts */
-
-@font-face {
-  font-family: CharisSILW;
-  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-R.woff);
-}
-
-@font-face {
-  font-family: CharisSILW;
-  font-style: italic;
-  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-I.woff);
-}
-
-@font-face {
-  font-family: CharisSILW;
-  font-weight: bold;
-  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-B.woff);
-}
-
-@font-face {
-  font-family: CharisSILW;
-  font-weight: bold;
-  font-style: italic;
-  src: url(https://cdn.ir.sgn.shn.hk/CharisSIL/CharisSIL-BI.woff);
-}
-
 /* Override Pure.css attributes */
 
 .pure-button {
