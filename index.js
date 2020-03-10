@@ -7,6 +7,11 @@ function notify(text) {
 	Swal.fire({animation: false, text: text, confirmButtonText: '確定'});
 }
 
+// Function that displays a pop-up dialog (HTML version)
+function notifyHTML(msg) {
+	Swal.fire({animation: false, html: msg, confirmButtonText: '確定'});
+}
+
 // NB: For the following 3 functions only!
 function HTMLEscape(s) {
 	const pre = document.createElement('pre');
@@ -367,4 +372,18 @@ function makeMultipleEntry(ch, pronunciation_map) {
 	outerContainer.handleRuby = () => '<ruby>' + ch + '<rp>(</rp><rt lang="zh-Latn">' + outerContainer.currentSelection + '</rt><rp>)</rp></ruby>';
 
 	return outerContainer;
+}
+
+/* Privacy */
+
+function showPrivacy() {
+	notifyHTML(`<div style="text-align: initial;">
+<h1>私隱權政策</h1>
+<p>《切韻》音系自動推導器（下稱「本網頁」）是一項開源的網絡服務。作為本網頁的開發者，我們對閣下的私隱非常重視。本網頁的開發者不會透過本網頁收集閣下的任何信息。</p>
+<p>下面將具體介紹本網頁能在何種程度上保障閣下的私隱權。</p>
+<h2>閣下鍵入的內容</h2>
+<p>本網頁的開發者不會收集閣下在本網頁中鍵入的任何內容。任何與閣下鍵入的內容相關的運算均在閣下的系統本地完成。本網頁不會將包括待注音的文本、注音結果在內的任何信息傳送至伺服器。</p>
+<h2>閣下的其他信息</h2>
+<p>本網頁使用的內容託管於以下站點：GitHub Pages、jsDelivr、Google Fonts、cdnjs。在閣下訪問本網頁時，閣下的瀏覽器將與這些站點交互。本網頁的開發者並不能讀取閣下訪問這些站點時的信息，亦無法控制這些站點如何使用閣下訪問時的信息。<p>
+</div>`);
 }
