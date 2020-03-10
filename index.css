@@ -19,7 +19,7 @@
 /* Override Codemirror attributes */
 
 .CodeMirror {
-	font-family: monospace, CharisSILW, 'Noto Serif KR', 'Noto Serif SC', HanaMin, monospace !important;
+	font-family: monospace, CharisSILW, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", 'Noto Serif KR', 'Noto Serif SC', HanaMin, monospace !important;
 	font-size: 13px;
 }
 
@@ -38,7 +38,7 @@ body { font-family: "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif
 
 :lang(zh-Latn-x-output) { font-family: CharisSILW, serif; }
 
-:lang(en-HK) { font-family: serif, serif, 'Noto Serif KR', 'Noto Serif SC', HanaMin, serif; }
+:lang(en-HK) { font-family: serif, serif, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", 'Noto Serif KR', 'Noto Serif SC', HanaMin, serif; }
 
 option { font-family: inherit; }
 
