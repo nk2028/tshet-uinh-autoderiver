@@ -45,17 +45,26 @@
 /* Override Codemirror attributes */
 
 .CodeMirror {
-	font-family: monospace, CharisSILW, 'Noto Serif KR', HanaMin, monospace !important;
+	font-family: monospace, CharisSILW, 'Noto Serif KR', 'Noto Serif SC', HanaMin, monospace !important;
 	font-size: 13px;
 }
 
 /* Font style */
 
-body { font-family: "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", 'Noto Serif KR', serif, HanaMin, serif; }
+/* 關於指定字型的説明：
+1. 默認採用 Source Han Serif/Noto Serif CJK 系列字型，而不是使用系統的備援字型，這是由於排版時各 HTML 元素的尺寸是參照此系列字型設計的，故希望能將這些尺寸固定下來。如果更換了其他字型，這些尺寸也會發生變化。
+2. 默認使用用户系統中已安裝的 Source Han Serif/Noto Serif CJK 系列字型。字形順序：韓國 > 中國大陸 > 日本 > 臺灣。若將來支援香港字形，則香港字形應指定於大陸之後、日本之前。
+3. 若系統中找不到 Source Han Serif/Noto Serif CJK 系列字型，不應立即採用系統的備援字型，而是使用 web font 載入此系列字型。這是因為移動端往往缺少 serif 字型，若指定 serif，會回退至 sans-serif，對原有的網頁設計造成改變。
+4. 使用 web font 時，單純地載入 Noto Serif KR 是錯誤的，因為 Noto Serif KR 缺少一些漢字的字圖（如「並」），這部分字需要借助 Noto Serif SC 補充。
+5. HanaMin 字型為 web font，用於顯示生僻字（如「𥬇」），否則在移動端該字符會無法顯示，影響使用。
+6. HanaMin 置於 serif 之後，這是希望如果系統的備援字型能顯示某個字符，則不加載 web font，從而減少網絡請求。
+*/
+
+body { font-family: "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", 'Noto Serif KR', 'Noto Serif SC', serif, HanaMin, serif; }
 
 :lang(zh-Latn-x-output) { font-family: CharisSILW, serif; }
 
-:lang(en-HK) { font-family: serif, serif, 'Noto Serif KR', HanaMin, serif; }
+:lang(en-HK) { font-family: serif, serif, 'Noto Serif KR', 'Noto Serif SC', HanaMin, serif; }
 
 option { font-family: inherit; }
 
