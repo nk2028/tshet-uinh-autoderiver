@@ -2,36 +2,42 @@
 
 /* Global utilities */
 
-function notify(text) {  // Function that displays a pop-up dialog
+// Function that displays a pop-up dialog
+function notify(text) {
 	Swal.fire({animation: false, text: text, confirmButtonText: '確定'});
 }
 
-function HTMLEscape(s) {  // NB: For the following 3 functions only!
+// NB: For the following 3 functions only!
+function HTMLEscape(s) {
 	const pre = document.createElement('pre');
 	pre.innerText = s;
 	return pre.innerHTML;
 }
 
-function notifyErrorWithoutStack(err) {  // Function that displays a pop-up alert
+// Function that displays a pop-up alert
+function notifyErrorWithoutStack(err) {
 	let msg = '<p lang="en-HK">Error: ' + HTMLEscape(err.message) + '</p>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
-function notifyError(err) {  // Function that displays a pop-up alert
+// Function that displays a pop-up alert
+function notifyError(err) {
 	let msg = '<p lang="en-HK">Error: ' + HTMLEscape(err.message) + '</p>';
 	if (err.stack)
 		msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
-function notifyErrorWithError(小韻號, err) {  // Function that displays a pop-up alert
+// Function that displays a pop-up alert
+function notifyErrorWithError(小韻號, err) {
 	let msg = '<p>小韻號 <span lang="en-HK">' + 小韻號 + ', Error: ' + HTMLEscape(err.message) + '</span></p>';
 	if (err.stack)
 		msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
-function myFlat(arrays) {  // Equals to Array.prototype.flat(), but supports Edge
+// Equals to Array.prototype.flat(), but supports Edge
+function myFlat(arrays) {
 	return arrays.reduce(function(a, b) { return a.concat(b); }, []);
 }
 
@@ -89,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* Page event handler */
 
+// Load schema to code area
 function handleLoadSchema(val) {
 	fetch('examples/' + val + '.js')
 	.then(response => response.text())
