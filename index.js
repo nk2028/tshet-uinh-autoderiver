@@ -29,7 +29,7 @@ function notifyErrorWithoutStack(err) {
 function notifyError(err) {
 	let msg = '<p lang="en-HK">Error: ' + HTMLEscape(err.message) + '</p>';
 	if (err.stack)
-		msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
+		msg += '<pre lang="en-HK" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
@@ -37,7 +37,7 @@ function notifyError(err) {
 function notifyErrorWithError(小韻號, err) {
 	let msg = '<p>小韻號 <span lang="en-HK">' + 小韻號 + ', Error: ' + HTMLEscape(err.message) + '</span></p>';
 	if (err.stack)
-		msg += '<pre lang="en-US" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
+		msg += '<pre lang="en-HK" style="text-align: left;">' + HTMLEscape(err.stack) + '</pre>';
 	Swal.fire({animation: false, icon: 'error', html: msg, confirmButtonText: '確定'});
 }
 
@@ -124,7 +124,7 @@ function handlePredefinedOptions() {
 			outputArea.appendChild(document.createTextNode(Qieyun.get音韻描述(i + 1) + ' '));
 
 			const span = document.createElement('span');
-			span.lang = 'zh-Latn-x-output';
+			span.lang = 'en-x-ipa';
 			span.appendChild(document.createTextNode(brogue2(i + 1)));
 			outputArea.appendChild(span);
 
@@ -235,7 +235,7 @@ function makeTooltip(pronunciation, ress) {
 	span.classList.add('tooltip-item');
 
 	const span_pronunciation = document.createElement('span');
-	span_pronunciation.lang = 'zh-Latn-x-output';
+	span_pronunciation.lang = 'en-x-ipa';
 	span_pronunciation.innerText = pronunciation;
 	span.appendChild(span_pronunciation);
 	span.appendChild(document.createTextNode(' '));
@@ -290,7 +290,7 @@ function makeSingleEntry(ch, pronunciation_map) {
 	ruby.appendChild(rp_left);
 
 	const rt = document.createElement('rt');
-	rt.lang = 'zh-Latn-x-output';
+	rt.lang = 'en-x-ipa';
 	rt.innerText = pronunciation;
 	ruby.appendChild(rt);
 
@@ -328,7 +328,7 @@ function makeMultipleEntry(ch, pronunciation_map) {
 	ruby.appendChild(rp_left);
 
 	const rt = document.createElement('rt');
-	rt.lang = 'zh-Latn-x-output';
+	rt.lang = 'en-x-ipa';
 	ruby.appendChild(rt);
 
 	const rp_right = document.createElement('rp');
