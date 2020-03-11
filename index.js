@@ -291,7 +291,11 @@ function makeSingleEntry(ch, pronunciation_map) {
 
 	const rt = document.createElement('rt');
 	rt.lang = 'en-x-ipa';
-	rt.innerText = pronunciation;
+
+	const rtSpan = document.createElement('span');
+	rtSpan.innerText = pronunciation;
+	rt.appendChild(rtSpan);
+
 	ruby.appendChild(rt);
 
 	const rp_right = document.createElement('rp');
