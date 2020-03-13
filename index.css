@@ -132,21 +132,19 @@ footer {
 }
 
 /* 增加 rt 與 ruby 文字的距離：
-在 Firefox 中，直接指定 margin-bottom 即可以令文字位置變高，但在 Chrome 中 margin 的部分會
-與下方的 ruby 文字重疊，從而使設置無效。
-在 Chrome 中，對 rt 中的 span 設置 display: block; 後，如果再設置 margin-bottom，也可以
-令文字位置變高，但在 Firefox 中無效。
-出於兼容性的考量，需要將二者一起設置。
+在 Chrome 中，直接設置 rt 的 padding-bottom: 0.2rem; 無效。
+（Firefox 中有效）
+設置 rt::before 可以解決這個問題。
 */
 
 .entry rt {
 	font-size: 82.5%;
-	margin-bottom: 0.2rem;
+	padding-bottom: 0.2rem;
 }
 
-.entry rt > span {
-	display: block;
-	margin-bottom: 0.2rem;
+.entry rt::before {
+    content: "";
+    display: block;
 }
 
 /* Tooltip appearance */
