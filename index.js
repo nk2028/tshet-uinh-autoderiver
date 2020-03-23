@@ -206,7 +206,7 @@ function makeConversion(ch) {
 	let pronunciation_map = {};  // Merge by pronunciation
 
 	yitis.map(ch => {
-		Qieyun.query切韻音系(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
+		Qieyun.query字頭(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
 			o['字頭'] = ch;  // { 字頭, 小韻號, 解釋 }
 
 			const pronunciation = brogue2(o['小韻號']);
