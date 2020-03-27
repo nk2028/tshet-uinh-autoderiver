@@ -121,11 +121,11 @@ function handlePredefinedOptions() {
 		outputArea.classList.add('hidden');
 		outputArea.innerHTML = '';
 		[...Array(3874).keys()].map(i => {
-			outputArea.appendChild(document.createTextNode(Qieyun.get音韻描述(i + 1) + ' '));
+			outputArea.appendChild(document.createTextNode(Qieyun.get音韻地位(i + 1).get音韻描述() + ' '));
 
 			const span = document.createElement('span');
 			span.lang = 'en-x-ipa';
-			span.appendChild(document.createTextNode(brogue2(i + 1)));
+			span.appendChild(document.createTextNode(brogue2(Qieyun.get音韻地位(i + 1), i + 1)));
 			outputArea.appendChild(span);
 
 			outputArea.appendChild(document.createElement('br'));
@@ -134,7 +134,7 @@ function handlePredefinedOptions() {
 		outputArea.handleExport = null;
 		outputArea.handleRuby = null;
 	} else if (predefinedOptions.value == 'exportAllSyllables') {
-		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(i + 1)))].join(', ');
+		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(Qieyun.get音韻地位(i + 1), i + 1)))].join(', ');
 		outputArea.handleExport = null;
 		outputArea.handleRuby = null;
 	}
@@ -170,23 +170,23 @@ let userInput;
 
 function loadSchema() {
 	try {
-		userInput = new Function('小韻號', '字頭', schemaInputArea.getValue());
+		userInput = new Function('音韻地位', '小韻號', '字頭', schemaInputArea.getValue());
 	} catch (err) {
 		notifyError(err);
 		throw err;
 	}
 }
 
-function brogue2(小韻號, 字頭) {
+function brogue2(音韻地位, 小韻號, 字頭) {
 	let res;
 	try {
-		res = userInput(小韻號, 字頭);
+		res = userInput(音韻地位, 小韻號, 字頭);
 	} catch (err) {
-		notifyErrorWithError(小韻號, err);
+		notifyErrorWithError(音韻地位, err);
 		throw err;
 	}
 	if (res == null) {
-		const err = new Error('No result for 小韻 ' + 小韻號 + ': ' + Qieyun.get音韻描述(小韻號));
+		const err = new Error('No result for 音韻地位 ' + 音韻地位 + ': ' + 音韻地位.get音韻描述());
 		notifyErrorWithoutStack(err);
 		throw err;
 	}
@@ -207,9 +207,9 @@ function makeConversion(ch) {
 
 	yitis.map(ch => {
 		Qieyun.query漢字(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
-			o['字頭'] = ch;  // { 字頭, 小韻號, 解釋 }
-
-			const pronunciation = brogue2(o['小韻號']);
+			o['字頭'] = ch;
+			o['音韻地位'] = Qieyun.get音韻地位(o['小韻號']);  // { 字頭, 小韻號, 解釋, 音韻地位 }
+			const pronunciation = brogue2(o['音韻地位'], o['小韻號'], o['字頭']);
 
 			if (!pronunciation_map[pronunciation])
 				pronunciation_map[pronunciation] = [];
@@ -246,7 +246,8 @@ function makeTooltip(pronunciation, ress) {
 
 		const ch = res['字頭'],
 			sr = res['小韻號'],
-			expl = res['解釋'];
+			expl = res['解釋'],
+			音韻地位 = res['音韻地位'];
 
 		const span_ch = document.createElement('span');
 		span_ch.classList.add('tooltip-ch');
@@ -254,7 +255,7 @@ function makeTooltip(pronunciation, ress) {
 		span.appendChild(span_ch);
 		span.appendChild(document.createTextNode(' '));
 
-		span.appendChild(document.createTextNode(Qieyun.get音韻描述(sr) + ' ' + expl));
+		span.appendChild(document.createTextNode(音韻地位.get音韻描述() + ' ' + expl));
 	}
 
 	return span;
