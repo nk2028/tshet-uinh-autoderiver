@@ -172,10 +172,11 @@ function 聲調規則() {
 		if (is('入聲 深臻曾通攝')) return '¹';
 		if (is('入聲')) return '³';
 	} else {
-		if (is('平聲')) return '³';
-		if (is('去聲 或 並定澄從邪崇俟船常羣匣母 上聲')) return '³';  // 全濁上變去
-		if (is('上聲')) return '²';
-		if (is('入聲')) return '³';
+		if (is('平聲')) return '⁴';
+		if (is('並定澄從邪崇俟船常羣匣母 上聲')) return '⁶';  // 全濁上變去
+		if (is('上聲')) return '⁵';
+		if (is('去聲')) return '⁶';
+		if (is('入聲')) return '⁶';
 	}
 	throw new Error('無聲調規則');
 }
