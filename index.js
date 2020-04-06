@@ -370,7 +370,7 @@ function makeMultipleEntry(ch, pronunciation_map) {
 	outerContainer.appendChild(ruby);
 	outerContainer.appendChild(tooltipContainer);
 	outerContainer.handleExport = () => ch + '(' + outerContainer.currentSelection + ')';
-	outerContainer.handleRuby = () => '<ruby>' + ch + '<rp>(</rp><rt lang="zh-Latn">' + outerContainer.currentSelection + '</rt><rp>)</rp></ruby>';
+	outerContainer.handleRuby = () => '<ruby>' + ch + '<rt>' + outerContainer.currentSelection + '</rt></ruby>';
 
 	return outerContainer;
 }
