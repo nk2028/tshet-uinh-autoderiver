@@ -199,3 +199,9 @@ footer {
 		width: 400px;
 	}
 }
+
+/* 私隱權政策 */
+
+footer + .swal2-container > .swal2-popup {
+	width: 64em;
+}

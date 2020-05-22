@@ -1,6 +1,6 @@
 # 《切韻》音系自動推導器
 
-<https://sgalal.github.io/qieyun-autoderiver/>
+<https://nk2028.shn.hk/qieyun-autoderiver/>
 
 ## 介紹
 
@@ -32,3 +32,7 @@
 ## License
 
 Source code is distributed under MIT license.
+
+## Demo
+
+![demo](demo.png)
