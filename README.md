@@ -35,4 +35,4 @@ Source code is distributed under MIT license.
 
 ## Demo
 
-![demo](demo.png)
+![如圖為《切韻》音系自動推導器推導 unt 切韻朗讀音版《滕王閣序》中的一段。其中「並」字上方顯示多音字的選擇框，可以根據釋義手動選擇多音字](demo.png)
