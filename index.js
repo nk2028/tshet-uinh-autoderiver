@@ -121,7 +121,7 @@ function handlePredefinedOptions() {
 		outputArea.classList.add('hidden');
 		outputArea.innerHTML = '';
 		[...Array(3874).keys()].map(i => {
-			outputArea.appendChild(document.createTextNode(Qieyun.get音韻地位(i + 1).get音韻描述() + ' '));
+			outputArea.appendChild(document.createTextNode(Qieyun.get音韻地位(i + 1).音韻描述 + ' '));
 
 			const span = document.createElement('span');
 			span.lang = 'en-x-ipa';
@@ -186,7 +186,7 @@ function brogue2(音韻地位, 小韻號, 字頭) {
 		throw err;
 	}
 	if (res == null) {
-		const err = new Error('No result for 音韻地位 ' + 音韻地位 + ': ' + 音韻地位.get音韻描述());
+		const err = new Error('No result for 音韻地位 ' + 音韻地位 + ': ' + 音韻地位.音韻描述);
 		notifyErrorWithoutStack(err);
 		throw err;
 	}
@@ -255,7 +255,7 @@ function makeTooltip(pronunciation, ress) {
 		span.appendChild(span_ch);
 		span.appendChild(document.createTextNode(' '));
 
-		span.appendChild(document.createTextNode(音韻地位.get音韻描述() + ' ' + expl));
+		span.appendChild(document.createTextNode(音韻地位.音韻描述 + ' ' + expl));
 	}
 
 	return span;

@@ -22,6 +22,13 @@
 	font-size: 13px;
 }
 
+/* Override serif.css */
+
+:lang(en-x-code) {
+	/* Latin Modern Mono does not fully support IPA ligature, so we use Consolas instead */
+	font-family: Consolas, 'Latin Modern Mono', monospace, CharisSILW, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", 'Noto Serif KR', 'Noto Serif SC', HanaMin, monospace;
+}
+
 /* Font style */
 
 option { font-family: inherit; }
@@ -143,8 +150,8 @@ footer {
 }
 
 .entry rt::before {
-    content: "";
-    display: block;
+	content: "";
+	display: block;
 }
 
 /* Tooltip appearance */

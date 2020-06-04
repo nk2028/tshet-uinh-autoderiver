@@ -6,7 +6,7 @@
  * 函數接受音韻地位，返回對應的 unt 切韻朗讀音
  */
 
-const is = 音韻地位.屬於;
+const is = x => 音韻地位.屬於(x);
 
 function 聲母規則() {
 	if (is('幫母')) return 'p';
