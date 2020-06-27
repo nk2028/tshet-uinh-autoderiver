@@ -124,7 +124,7 @@ function handlePredefinedOptions() {
 			outputArea.appendChild(document.createTextNode(Qieyun.get音韻地位(i + 1).音韻描述 + ' '));
 
 			const span = document.createElement('span');
-			span.lang = 'en-x-ipa';
+			span.lang = 'ltc-Latn-fonipa';
 			span.appendChild(document.createTextNode(brogue2(Qieyun.get音韻地位(i + 1), i + 1)));
 			outputArea.appendChild(span);
 
@@ -235,7 +235,7 @@ function makeTooltip(pronunciation, ress) {
 	span.classList.add('tooltip-item');
 
 	const span_pronunciation = document.createElement('span');
-	span_pronunciation.lang = 'en-x-ipa';
+	span_pronunciation.lang = 'ltc-Latn-fonipa';
 	span_pronunciation.innerText = pronunciation;
 	span.appendChild(span_pronunciation);
 	span.appendChild(document.createTextNode(' '));
@@ -291,7 +291,7 @@ function makeSingleEntry(ch, pronunciation_map) {
 	ruby.appendChild(rp_left);
 
 	const rt = document.createElement('rt');
-	rt.lang = 'en-x-ipa';
+	rt.lang = 'ltc-Latn-fonipa';
 	rt.innerText = pronunciation;
 	ruby.appendChild(rt);
 
@@ -329,7 +329,7 @@ function makeMultipleEntry(ch, pronunciation_map) {
 	ruby.appendChild(rp_left);
 
 	const rt = document.createElement('rt');
-	rt.lang = 'en-x-ipa';
+	rt.lang = 'ltc-Latn-fonipa';
 	ruby.appendChild(rt);
 
 	const rp_right = document.createElement('rp');
