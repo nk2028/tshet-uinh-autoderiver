@@ -1,5 +1,5 @@
 /* 三日月綾香個人思考用語
- * https://sgn.shn.hk/members/~ayaka/dv8/
+ * https://sgn.shn.hk/members/~ayaka/dv9/
  *
  * 説明
  * 以下內容為生成三日月綾香個人思考用語的函數體
@@ -34,8 +34,8 @@ function 韻母規則() {
 	if (is('東韻 開口 三等')) {
 		if (is('幫滂並母')) return !is('入聲') ? 'uun' : 'uk';
 		if (is('明母')) return !is('入聲') ? 'oun' : 'ok';
-		if (is('精莊章組')) return !is('入聲') ? 'iuin' : 'iuk';
-		else return !is('入聲') ? 'iuin' : 'ik';
+		if (is('精莊章組')) return !is('入聲') ? 'yn' : 'iuk';
+		else return !is('入聲') ? 'yn' : 'ik';
 	}
 	if (is('鍾韻')) {
 		if (is('幫組')) return !is('入聲') ? 'oun' : 'ok';
@@ -59,7 +59,7 @@ function 韻母規則() {
 	if (is('虞韻')) {
 		if (is('莊組')) return 'u';
 		if (is('端精章組 或 以來日母')) return 'iu';
-		if (is('知組')) return 'iui';
+		if (is('知組')) return 'y';
 		else return 'u';
 	}
 	if (is('模韻')) return 'o';
@@ -69,7 +69,7 @@ function 韻母規則() {
 	// 臻攝
 	if (is('眞臻欣韻')) return !is('入聲') ? 'in' : 'is';
 	if (is('諄韻')) {
-		if (is('知精莊章組 或 日母')) return !is('入聲') ? 'iuin' : 'ius';
+		if (is('知精莊章組 或 日母')) return !is('入聲') ? 'yn' : 'ius';
 		else return !is('入聲') ? 'in' : 'is';
 	}
 	if (is('文韻')) return !is('入聲') ? 'un' : 'us';
@@ -123,10 +123,10 @@ function 韻母規則() {
 	if (is('尤韻')) {
 		if (is('幫滂並母')) return 'uu';
 		if (is('明母')) return 'ou';
-		else return 'iui';
+		else return 'y';
 	}
 	if (is('幽韻')) {
-		if (is('見組 或 曉匣母')) return 'iui';
+		if (is('見組 或 曉匣母')) return 'y';
 		else return 'iu';
 	}
 	// 深攝
@@ -147,24 +147,18 @@ let 韻母 = 韻母規則();
 let 合口介音 =
 	!( (is('見組 合口 或 曉匣母 合口') && (韻母.startsWith('a') || 韻母.startsWith('e')))
 	|| (is('精莊章組 合口 或 影云以日母 合口') && 韻母.startsWith('a'))
-	) ? '' : 'u';
+	) ? '' : 'w';
 
 if (is('影母') && 韻母.startsWith('i'))
-	聲母 = 'q';
+	聲母 = 'h';
 
 function 聲調規則() {
 	if (is('幫滂端透知徹精清心莊初生章昌書見溪影曉母')) {  // 全清、次清
-		if (is('平聲')) return '¹';
-		if (is('上聲')) return '²';
-		if (is('去聲')) return '³';
-		if (is('入聲 深臻曾通攝')) return '¹';
-		if (is('入聲')) return '³';
+		if (is('平去入聲')) return 'ˉ';
+		if (is('上聲')) return 'ˊ';
 	} else {
-		if (is('平聲')) return '⁴';
-		if (is('並定澄從邪崇俟船常羣匣母 上聲')) return '⁶';  // 全濁上變去
-		if (is('上聲')) return '⁵';
-		if (is('去聲')) return '⁶';
-		if (is('入聲')) return '⁶';
+		if (is('平去入聲')) return 'ˇ';
+		if (is('上聲')) return 'ˊ';
 	}
 	throw new Error('無聲調規則');
 }
@@ -181,15 +175,17 @@ else if (聲母 == 'h' && 韻母.startsWith('u'))
 else
 
 if (聲母 == '' && 韻母.startsWith('i')) {
-	聲母 = 'y';
+	聲母 = 'j';
 	if (韻母.length > 1 && 'aiueo'.includes(韻母[1]))
 		韻母 = 韻母.substr(1);
+}
+else if (聲母 == '' && 韻母.startsWith('y')) {
+	聲母 = 'j';
 }
 else if (聲母 == '' && 韻母.startsWith('u')) {
 	聲母 = 'w';
 	if (韻母.length > 1 && 'aiueo'.includes(韻母[1]))
 		韻母 = 韻母.substr(1);
-} else if (聲母 == '' && 合口介音 == 'u')
-	合口介音 = 'w';
+}
 
 return 聲母 + 合口介音 + 韻母 + 聲調;
