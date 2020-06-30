@@ -165,15 +165,6 @@ function 聲調規則() {
 
 let 聲調 = 聲調規則();
 
-/* 若要使用舊式拼寫，註釋掉以下幾行 */
-if (聲母 == 't' && 韻母.startsWith('u'))
-	聲母 = 'ts';
-else if (聲母 == 't' && 韻母.startsWith('i'))
-	聲母 = 'ch';
-else if (聲母 == 'h' && 韻母.startsWith('u'))
-	聲母 = 'f';
-else
-
 if (聲母 == '' && 韻母.startsWith('i')) {
 	聲母 = 'j';
 	if (韻母.length > 1 && 'aiueo'.includes(韻母[1]))
