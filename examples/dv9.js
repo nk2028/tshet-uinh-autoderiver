@@ -1,5 +1,5 @@
 /* 三日月綾香個人思考用語
- * https://sgn.shn.hk/members/~ayaka/dv9/
+ * https://ayaka.shn.hk/dv9/
  *
  * 説明
  * 以下內容為生成三日月綾香個人思考用語的函數體
