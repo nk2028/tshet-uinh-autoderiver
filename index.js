@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Load schema to code area
 function handleLoadSchema(val) {
-	fetch('examples/' + val + '.js')
+	fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@20200705/' + val + '.js')
 	.then(response => response.text())
 	.then(txt => schemaInputArea.setValue(txt))
 	.catch(err => notifyError(err));
