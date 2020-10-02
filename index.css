@@ -1,3 +1,12 @@
+@font-face {
+	font-family: "dv9-tone";
+	src: url(data:font/woff2;base64,d09GMgABAAAAAAG4AAoAAAAAAwwAAAFvAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmAARAqBRIE2CxIAATYCJAMgBCAFJgcgGzkCII7UXjGbykE8wK/V3p/Z9TsHki0qGkUbEa6RzSQkPLk3t8r40sl5eKN2YUvDOMviwLKIArfhIahXDKKzhDgeE1ZIktyUbE+oMwvj62ZHiACggD4Ag0ePHqxPdKleRWb639tkpkfNC8J2SHRLnlBQEBAhRjWxgGoS2iAjIyK6FF2tV/H/f+SK9bfb366PPwlARrEMCVRHY1SgJqoh/EcJgpBNxFWT86bkpoV8VUkorcrPzKmjZvWJaw/uyP0tX/CrPLdVLtfudY0dy3eovOhZvuFa7V40vnjlKUnKUlLX+jdNF1iWrBG3Su41PPEgvEmxLGoct4rOORFan4ziL23aei4gqj9h77iPw5f2+JqRAec/lLeCh1sWzYK4VQqyIhB46UV82HBj41YC4ky8xMx4qaXxYcuinoavFB+yLFqsSgvIyPqfEARQQkROEECqZctCv4WF0RMG9e9faNOqbZtWHQotWwIx9n++mUDIAAA=) format("woff2");
+}
+
+:lang(och-Latn-fonipa) {
+    font-family: "dv9-tone", CharisSILW, serif, serif;
+}
+
 /* Override Pure.css attributes */
 
 .pure-button {
@@ -146,7 +155,7 @@ footer {
 
 .entry rt {
 	font-size: 82.5%;
-	padding-bottom: 0.2rem;
+	padding-bottom: 0.4rem;
 }
 
 .entry rt::before {
