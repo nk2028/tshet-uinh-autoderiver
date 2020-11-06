@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Load schema to code area
 function handleLoadSchema(val) {
-	fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@20201003/' + val + '.js')
+	fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@20201106/' + val + '.js')
 	.then(response => response.text())
 	.then(txt => schemaInputArea.setValue(txt))
 	.catch(err => notifyError(err));
@@ -110,14 +110,14 @@ function handleLoadSchema(val) {
 
 function handlePredefinedOptions() {
 	loadSchema();
-	if (predefinedOptions.value == 'convertArticle') {
+	if (predefinedOptions.value === 'convertArticle') {
 		outputArea.classList.add('hidden');
 		outputArea.innerHTML = '';
 		makeConversions(articleInput.value);
 		outputArea.classList.remove('hidden');
 		outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
 		outputArea.handleRuby = () => [...outputArea.childNodes].map(node => node.handleRuby()).join('');
-	} else if (predefinedOptions.value == 'exportAllSmallRhymes') {
+	} else if (predefinedOptions.value === 'exportAllSmallRhymes') {
 		outputArea.classList.add('hidden');
 		outputArea.innerHTML = '';
 		[...Array(3874).keys()].map(i => {
@@ -133,7 +133,7 @@ function handlePredefinedOptions() {
 		outputArea.classList.remove('hidden');
 		outputArea.handleExport = null;
 		outputArea.handleRuby = null;
-	} else if (predefinedOptions.value == 'exportAllSyllables') {
+	} else if (predefinedOptions.value === 'exportAllSyllables') {
 		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(Qieyun.get音韻地位(i + 1), i + 1)))].join(', ');
 		outputArea.handleExport = null;
 		outputArea.handleRuby = null;
@@ -222,7 +222,7 @@ function makeConversion(ch) {
 
 	if (!len)
 		return makeNoneEntry(ch);
-	else if (len == 1)
+	else if (len === 1)
 		return makeSingleEntry(ch, pronunciation_map);
 	else
 		return makeMultipleEntry(ch, pronunciation_map);
@@ -359,7 +359,7 @@ function makeMultipleEntry(ch, pronunciation_map) {
 		tooltipContainer.appendChild(tooltip);
 		tooltipArray.push(tooltip);
 
-		if (i == 0) {  // Select the first item by default
+		if (i === 0) {  // Select the first item by default
 			outerContainer.currentSelection = pronunciation;
 			tooltip.classList.add('selected');
 		} else {  // Hide other items
