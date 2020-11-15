@@ -45,7 +45,7 @@ html {
 
 @media only screen and (min-width: 768px) {
 	html {
-		padding: 0 200px;
+		padding: 0 120px;
 	}
 }
 
@@ -142,20 +142,8 @@ footer {
 	white-space: pre-wrap;
 }
 
-/* 增加 rt 與 ruby 文字的距離：
-在 Chrome 中，直接設置 rt 的 padding-bottom: 0.2rem; 無效。
-（Firefox 中有效）
-設置 rt::before 可以解決這個問題。
-*/
-
 .entry rt {
 	font-size: 82.5%;
-	padding-bottom: 0.4rem;
-}
-
-.entry rt::before {
-	content: "";
-	display: block;
 }
 
 /* Tooltip appearance */
@@ -204,7 +192,7 @@ footer {
 	}
 
 	.tooltip-container {
-		bottom: 2.8em;
+		bottom: 2.6rem;
 		left: 50%;
 		transform: translateX(-200px);
 		width: 400px;
