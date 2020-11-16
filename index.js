@@ -200,7 +200,7 @@ function makeConversions(txt) {
 }
 
 function makeConversion(ch) {
-	const yitis = getYitizi(ch).slice();  // 得到 ch 的所有異體字
+	const yitis = Yitizi.get(ch).slice();  // 得到 ch 的所有異體字
 	yitis.unshift(ch);  // 包括 ch 本身
 
 	let pronunciation_map = {};  // Merge by pronunciation
@@ -220,12 +220,13 @@ function makeConversion(ch) {
 
 	const len = Object.keys(pronunciation_map).length;
 
-	if (!len)
+	if (!len) {
 		return makeNoneEntry(ch);
-	else if (len === 1)
+	} else if (len === 1) {
 		return makeSingleEntry(ch, pronunciation_map);
-	else
+	} else {
 		return makeMultipleEntry(ch, pronunciation_map);
+	}
 }
 
 /* Make tooltip */
