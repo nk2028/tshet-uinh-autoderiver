@@ -248,7 +248,8 @@ function makeTooltip(pronunciation, ress) {
 		const ch = res['字頭'],
 			sr = res['小韻號'],
 			expl = res['解釋'],
-			音韻地位 = res['音韻地位'];
+			音韻地位 = res['音韻地位'],
+			反切 = Qieyun.get反切(sr);
 
 		const span_ch = document.createElement('span');
 		span_ch.classList.add('tooltip-ch');
@@ -256,7 +257,7 @@ function makeTooltip(pronunciation, ress) {
 		span.appendChild(span_ch);
 		span.appendChild(document.createTextNode(' '));
 
-		span.appendChild(document.createTextNode(音韻地位.音韻描述 + ' ' + expl));
+		span.appendChild(document.createTextNode(`${音韻地位.音韻描述} ${反切 == null ? '' : 反切 + ' '}${expl}`));
 	}
 
 	return span;
