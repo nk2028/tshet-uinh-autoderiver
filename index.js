@@ -137,6 +137,23 @@ function handlePredefinedOptions() {
 		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(Qieyun.get音韻地位(i + 1), i + 1)))].join(', ');
 		outputArea.handleExport = null;
 		outputArea.handleRuby = null;
+	} else if (predefinedOptions.value === 'exportAllSyllablesWithCount') {
+		const m = new Map();
+		[...Array(3874).keys()].map((i) => {
+			const sr = i + 1;
+			const res = brogue2(Qieyun.get音韻地位(sr), sr);
+			const v = m.get(res);
+			if (v == null) {
+				m.set(res, 1);
+			} else {
+				m.set(res, v + 1);
+			}
+		});
+		const arr = [...m];
+		arr.sort((a, b) => b[1] - a[1]);
+		outputArea.innerText = arr.map((x_y) => `${x_y[0]} (${x_y[1]})`).join(', ');
+		outputArea.handleExport = null;
+		outputArea.handleRuby = null;
 	}
 }
 
