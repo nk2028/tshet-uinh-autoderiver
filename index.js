@@ -12,7 +12,6 @@ function notifyHTML(msg) {
 	Swal.fire({animation: false, html: msg, confirmButtonText: '確定'});
 }
 
-// NB: For the following 3 functions only!
 function HTMLEscape(s) {
 	const pre = document.createElement('pre');
 	pre.innerText = s;
@@ -51,19 +50,20 @@ function myFlat(arrays) {
 // From https://stackoverflow.com/a/30810322
 
 function fallbackCopyTextToClipboard(text) {
-	var textArea = document.createElement("textarea");
+	const textArea = document.createElement('textarea');
 	textArea.value = text;
-	textArea.style.position = "fixed";  //avoid scrolling to bottom
+	textArea.style.position = 'fixed';  //avoid scrolling to bottom
 	document.body.appendChild(textArea);
 	textArea.focus();
 	textArea.select();
 
 	try {
-		var successful = document.execCommand('copy');
-		if (successful)
+		const successful = document.execCommand('copy');
+		if (successful) {
 			notify('已成功匯出至剪貼簿');
-		else
+		} else {
 			notifyErrorWithoutStack(new Error('匯出至剪貼簿失敗'));
+		}
 	} catch (err) {
 		notifyError(err);
 	}
@@ -78,7 +78,7 @@ function copyTextToClipboard(txt) {
 	}
 	navigator.clipboard.writeText(txt).then(() => {
 		notify('已成功匯出至剪貼簿');
-	}, err => {
+	}, (err) => {
 		notifyError(err);
 	});
 }
@@ -103,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load schema to code area
 function handleLoadSchema(val) {
 	fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@9ce4823/' + val + '.js')
-	.then(response => response.text())
-	.then(txt => schemaInputArea.setValue(txt))
-	.catch(err => notifyError(err));
+	.then((response) => response.text())
+	.then((txt) => schemaInputArea.setValue(txt))
+	.catch((err) => notifyError(err));
 }
 
 function handlePredefinedOptions() {
@@ -115,40 +115,40 @@ function handlePredefinedOptions() {
 		outputArea.innerHTML = '';
 		makeConversions(articleInput.value);
 		outputArea.classList.remove('hidden');
-		outputArea.handleExport = () => [...outputArea.childNodes].map(node => node.handleExport()).join('');
-		outputArea.handleRuby = () => [...outputArea.childNodes].map(node => node.handleRuby()).join('');
+		outputArea.handleExport = () => [...outputArea.childNodes].map((node) => node.handleExport()).join('');
+		outputArea.handleRuby = () => [...outputArea.childNodes].map((node) => node.handleRuby()).join('');
 	} else if (predefinedOptions.value === 'exportAllSmallRhymes') {
 		outputArea.classList.add('hidden');
 		outputArea.innerHTML = '';
-		[...Array(3874).keys()].map(i => {
-			outputArea.appendChild(document.createTextNode(Qieyun.get音韻地位(i + 1).音韻描述 + ' '));
+		for (let sr = 1; sr <= 3874; sr++) {
+			outputArea.appendChild(document.createTextNode(Qieyun.get音韻地位(sr).音韻描述 + ' '));
 
 			const span = document.createElement('span');
 			span.lang = 'och-Latn-fonipa';
-			span.appendChild(document.createTextNode(brogue2(Qieyun.get音韻地位(i + 1), i + 1)));
+			span.appendChild(document.createTextNode(brogue2(Qieyun.get音韻地位(sr), sr)));
 			outputArea.appendChild(span);
 
 			outputArea.appendChild(document.createElement('br'));
-		});
+		}
 		outputArea.classList.remove('hidden');
 		outputArea.handleExport = null;
 		outputArea.handleRuby = null;
 	} else if (predefinedOptions.value === 'exportAllSyllables') {
-		outputArea.innerText = [...new Set([...Array(3874).keys()].map(i => brogue2(Qieyun.get音韻地位(i + 1), i + 1)))].join(', ');
+		const s = new Set();
+		for (let sr = 1; sr <= 3874; sr++) {
+			const res = brogue2(Qieyun.get音韻地位(sr), sr);
+			s.add(res);
+		}
+		outputArea.innerText = [...s].join(', ');
 		outputArea.handleExport = null;
 		outputArea.handleRuby = null;
 	} else if (predefinedOptions.value === 'exportAllSyllablesWithCount') {
 		const m = new Map();
-		[...Array(3874).keys()].map((i) => {
-			const sr = i + 1;
+		for (let sr = 1; sr <= 3874; sr++) {
 			const res = brogue2(Qieyun.get音韻地位(sr), sr);
 			const v = m.get(res);
-			if (v == null) {
-				m.set(res, 1);
-			} else {
-				m.set(res, v + 1);
-			}
-		});
+			m.set(res, v == null ? 1 : v + 1);
+		}
 		const arr = [...m];
 		arr.sort((a, b) => b[1] - a[1]);
 		outputArea.innerText = arr.map((x_y) => `${x_y[0]} (${x_y[1]})`).join(', ');
@@ -213,7 +213,7 @@ function brogue2(音韻地位, 小韻號, 字頭) {
 /* Make conversion */
 
 function makeConversions(txt) {
-	[...txt].map(n => outputArea.appendChild(makeConversion(n)));
+	[...txt].map((n) => outputArea.appendChild(makeConversion(n)));
 }
 
 function makeConversion(ch) {
@@ -222,8 +222,8 @@ function makeConversion(ch) {
 
 	let pronunciation_map = {};  // Merge by pronunciation
 
-	yitis.map(ch => {
-		Qieyun.query漢字(ch).map(o => {  // 對每個異體字，查出 小韻號 和 解釋
+	yitis.map((ch) => {
+		Qieyun.query漢字(ch).map((o) => {  // 對每個異體字，查出 小韻號 和 解釋
 			o['字頭'] = ch;
 			o['音韻地位'] = Qieyun.get音韻地位(o['小韻號']);  // { 字頭, 小韻號, 解釋, 音韻地位 }
 			const pronunciation = brogue2(o['音韻地位'], o['小韻號'], o['字頭']);
@@ -366,13 +366,13 @@ function makeMultipleEntry(ch, pronunciation_map) {
 
 		const tooltip = makeTooltip(pronunciation, ress);
 		tooltip.addEventListener('click', () => {
-			rtSpanArray.map(rtSpan => rtSpan.classList.add('hidden'));
+			rtSpanArray.map((rtSpan) => rtSpan.classList.add('hidden'));
 			rtSpan.classList.remove('hidden');
 
 			outerContainer.currentSelection = pronunciation;
 			outerContainer.classList.remove('unresolved');
 
-			tooltipArray.map(tooltip => tooltip.classList.remove('selected'));
+			tooltipArray.map((tooltip) => tooltip.classList.remove('selected'));
 			tooltip.classList.add('selected');
 		});
 		tooltipContainer.appendChild(tooltip);
