@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-HK" dir="ltr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta property="og:image" content="https://avatars3.githubusercontent.com/u/63484757?s=400&amp;v=4"/>
+  <meta name="keywords" content="音韻學, 《切韵》音系, 中古音, 推導器, JavaScript"/>
+  <title>《切韻》音系自動推導器</title>
+  <!-- Yitizi -->
+  <script src="https://cdn.jsdelivr.net/npm/yitizi@0.0.3"></script>
+  <!-- qieyun-js -->
+  <script src="https://cdn.jsdelivr.net/npm/qieyun@0.7.4"></script>
+  <!-- Sweetalert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <!-- Serif fonts -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sugina-dev/cdn@20200628/serif.css"/>
+  <!-- Codemirror -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/javascript/javascript.min.js"></script>
+  <!-- Pure.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.1/pure-min.css"/>
+  <!-- index.files -->
+  <script src="index.min.js"></script>
+  <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+  <h1>《切韻》音系自動推導器</h1>
+
+  <h2>載入推導方案</h2>
+
+  <form class="pure-form" name="schemaSelect" onsubmit="handleLoadSchema(this.schema.value); return false">
+    <p>
+      <label class="pure-radio"><input type="radio" name="schema" value="kyonh" checked="checked"/> 古韻羅馬字</label>
+      <label class="pure-radio"><input type="radio" name="schema" value="baxter"/> 白一平轉寫</label>
+      <label class="pure-radio"><input type="radio" name="schema" value="unt_j"/> <span lang="en">unt</span> 切韻擬音 <span lang="en">J</span></label>
+      <label class="pure-radio"><input type="radio" name="schema" value="putonghua"/> 推導普通話</label>
+      <label class="pure-radio"><input type="radio" name="schema" value="gwongzau"/> 推導廣州音</label>
+      <label class="pure-radio"><input type="radio" name="schema" value="dv9"/> 綾香思考音系</label>
+      <input class="pure-button" type="submit" value="載入"/>
+    </p>
+  </form>
+
+  <div lang="en-x-code" id="schemaInput"></div>
+
+  <form class="pure-form">
+    <p><textarea id="articleInput" placeholder="輸入框" rows="5" required>遙襟甫暢，逸興遄飛。爽籟發而清風生，纖歌凝而白雲遏。睢園綠竹，氣凌彭澤之樽；鄴水朱華，光照臨川之筆。四美具，二難并。窮睇眄於中天，極娛遊於暇日。天高地迥，覺宇宙之無窮；興盡悲來，識盈虛之有數。望長安於日下，目吳會於雲間。地勢極而南溟深，天柱高而北辰遠。關山難越，誰悲失路之人。萍水相逢，盡是他鄉之客。懷帝閽而不見，奉宣室以何年？</textarea></p>
+
+    <p>
+      <label>
+        <select id="predefinedOptions">
+          <option value="convertArticle">從輸入框中讀取文章，並注音</option>
+          <option value="convertPresetArticle">為預設文章注音</option>
+          <option value="exportAllSmallRhymes">導出所有小韻</option>
+          <option value="exportAllSyllables">導出所有音節</option>
+          <option value="exportAllSyllablesWithCount">導出所有音節，並計數</option>
+        </select>
+      </label>
+      <input class="pure-button pure-button-primary" type="button" value="適用" onclick="handlePredefinedOptions()"/>
+      <input class="pure-button" type="button" value="將結果以文本形式匯出至剪貼簿" onclick="handleCopy()"/>
+      <input class="pure-button hidden" type="button" value="匯出為 HTML 程式碼" onclick="handleRuby()"/>
+    </p>
+  </form>
+
+  <output id="outputArea"></output>
+
+  <footer><p><a href="https://github.com/nk2028/qieyun-autoderiver">於 <span lang="en-HK">GitHub</span> 檢視原始碼</a> - <input class="pure-button" type="button" value="私隱權政策" onclick="showPrivacy()"/></p></footer>
+</body>
+</html>
