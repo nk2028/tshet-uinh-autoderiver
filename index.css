@@ -107,11 +107,16 @@ footer {
 
 /* Output area */
 
-output {
+#outputArea {
 	box-sizing: border-box;
+	display: block;
 	font-size: 105%;
 	overflow-wrap: break-word;
 	text-align: justify;
+}
+
+#outputArea h3, #outputArea p {
+	margin: 0;
 }
 
 .hidden {
@@ -174,8 +179,7 @@ rt {
 
 /* Tooltip positioning */
 
-output {
-	display: block;
+#outputArea {
 	position: relative;
 }
 
@@ -188,7 +192,7 @@ output {
 }
 
 @media only screen and (min-width: 768px) {
-	output .entry {
+	#outputArea .entry {
 		position: relative;
 	}
 

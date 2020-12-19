@@ -91,6 +91,13 @@ function copyTextToClipboard(txt) {
 
 let schemaInputArea;
 
+function handleLoadSchema(schema) {
+  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@9ce4823/${schema}.js`)
+  .then((response) => response.text())
+  .then((txt) => schemaInputArea.setValue(txt))
+  .catch((err) => notifyError(err));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   /* 初始化 Codemirror */
   const schemaInput = document.getElementById('schemaInput');
@@ -101,10 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* 載入被選擇的推導方案 */
   const schema = document.forms.schemaSelect.schema.value;
-  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@9ce4823/${schema}.js`)
-  .then((response) => response.text())
-  .then((txt) => schemaInputArea.setValue(txt))
-  .catch((err) => notifyError(err));
+  handleLoadSchema(schema);
 });
 
 /* 4. 處理音韻地位物件的工具 */
@@ -151,10 +155,10 @@ function makeTooltip(pronunciation, ress) {
   const span = document.createElement('span');
   span.classList.add('tooltip-item');
 
-  const span_pronunciation = document.createElement('span');
-  span_pronunciation.lang = 'och-Latn-fonipa';
-  span_pronunciation.innerText = pronunciation;
-  span.appendChild(span_pronunciation);
+  const spanPronunciation = document.createElement('span');
+  spanPronunciation.lang = 'och-Latn-fonipa';
+  spanPronunciation.innerText = pronunciation;
+  span.appendChild(spanPronunciation);
   span.appendChild(document.createTextNode(' '));
 
   for (const [i, { 字頭, 小韻號, 解釋, 音韻地位 }] of ress.entries()) {
@@ -163,10 +167,10 @@ function makeTooltip(pronunciation, ress) {
     let 反切 = Qieyun.get反切(小韻號);
     反切 = 反切 == null ? '' : `${反切} `;
 
-    const span_ch = document.createElement('span');
-    span_ch.classList.add('tooltip-ch');
-    span_ch.innerText = 字頭;
-    span.appendChild(span_ch);
+    const spanCh = document.createElement('span');
+    spanCh.classList.add('tooltip-ch');
+    spanCh.innerText = 字頭;
+    span.appendChild(spanCh);
     span.appendChild(document.createTextNode(' '));
 
     span.appendChild(document.createTextNode(`${音韻地位.音韻描述} ${反切}${解釋}`));
@@ -216,9 +220,9 @@ function makeSingleEntry(ch, pronunciationMap) {
 
   outerContainer.appendChild(ruby);
   outerContainer.appendChild(tooltipContainer);
-  const exportText = ch + '(' + pronunciation + ')';
+  const exportText = `${ch}(${pronunciation})`;
   outerContainer.handleExport = () => exportText;
-  const rubyText = '<ruby>' + ch + '<rp>(</rp><rt lang="zh-Latn">' + pronunciation + '</rt><rp>)</rp></ruby>';
+  const rubyText = `<ruby>${ch}<rp>(</rp><rt lang="zh-Latn">${pronunciation}</rt><rp>)</rp></ruby>`;
   outerContainer.handleRuby = () => rubyText;
 
   return outerContainer;
@@ -259,13 +263,13 @@ function makeMultipleEntry(ch, pronunciationMap) {
 
     const tooltip = makeTooltip(pronunciation, ress);
     tooltip.addEventListener('click', () => {
-      rtSpanArray.map((rtSpan) => rtSpan.classList.add('hidden'));
+      rtSpanArray.map((rtSpanItem) => rtSpanItem.classList.add('hidden'));
       rtSpan.classList.remove('hidden');
 
       outerContainer.currentSelection = pronunciation;
       outerContainer.classList.remove('unresolved');
 
-      tooltipArray.map((tooltip) => tooltip.classList.remove('selected'));
+      tooltipArray.map((tooltipItem) => tooltipItem.classList.remove('selected'));
       tooltip.classList.add('selected');
     });
     tooltipContainer.appendChild(tooltip);
@@ -281,8 +285,8 @@ function makeMultipleEntry(ch, pronunciationMap) {
 
   outerContainer.appendChild(ruby);
   outerContainer.appendChild(tooltipContainer);
-  outerContainer.handleExport = () => ch + '(' + outerContainer.currentSelection + ')';
-  outerContainer.handleRuby = () => '<ruby>' + ch + '<rt>' + outerContainer.currentSelection + '</rt></ruby>';
+  outerContainer.handleExport = () => `${ch}(${outerContainer.currentSelection})`;
+  outerContainer.handleRuby = () => `<ruby>${ch}<rt>${outerContainer.currentSelection}</rt></ruby>`;
 
   return outerContainer;
 }
@@ -392,6 +396,8 @@ function handleExportAllSmallRhymes() {
 }
 
 function handleExportAllSyllables() {
+  const outputArea = document.getElementById('outputArea');
+
   const s = new Set();
   for (let sr = 1; sr <= 3874; sr++) {
     const res = 推導(Qieyun.get音韻地位(sr), sr);
@@ -404,6 +410,8 @@ function handleExportAllSyllables() {
 }
 
 function handleExportAllSyllablesWithCount() {
+  const outputArea = document.getElementById('outputArea');
+
   const counter = new Map();
   for (let sr = 1; sr <= 3874; sr++) {
     const res = 推導(Qieyun.get音韻地位(sr), sr);
