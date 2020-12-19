@@ -1,0 +1,55 @@
+name: Publish
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+    - name: Install dependencies
+      run: npm install
+    - name: Lint with ESLint
+      run: npm run lint
+    - name: Minimize
+      run: npm run minimize
+    - name: Publish to GitHub pages
+      run: |
+        # Create a temporary directory
+        export temp_dir=`mktemp -d -p ~`
+
+        (
+        # Preserve .git
+        mv .git $temp_dir
+        cd $temp_dir
+
+        # Switch branch
+        git fetch
+        git checkout gh-pages
+        )
+
+        # Remove source files and README
+        rm -rf index.js node_modules package.json package-lock.json README.md
+
+        # Remove all dot files except . and ..
+        # https://unix.stackexchange.com/a/77313
+        rm -rf ..?* .[!.]*
+
+        # Restore .git
+        mv $temp_dir/.git .
+        rm -rf $temp_dir
+
+        # Set commit identity
+        git config user.email "ayaka@mail.shn.hk"
+        git config user.name "Ayaka Mikazuki"
+
+        # Publish
+        git add .
+        if [ -n "$(git status --porcelain)" ]; then
+          git commit -m "Publish `TZ='Asia/Hong_Kong' date`"
+          git push origin gh-pages
+        fi
