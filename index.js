@@ -99,14 +99,14 @@ function handleLoadSchema(schema) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  /* 初始化 Codemirror */
+  // 初始化 Codemirror
   const schemaInput = document.getElementById('schemaInput');
   schemaInputArea = CodeMirror(schemaInput, {
     mode: 'javascript',
     lineNumbers: true,
   });
 
-  /* 載入被選擇的推導方案 */
+  // 載入用户選擇的推導方案
   const schema = document.forms.schemaSelect.schema.value;
   handleLoadSchema(schema);
 });
@@ -121,6 +121,21 @@ function 音韻描述2音韻地位(音韻描述) {
   const pattern = /(.)(.)(.)([AB]?)(.)(.)/gu; // 根據音韻描述的格式解析出音韻地位
   const arr = pattern.exec(音韻描述);
   return new Qieyun.音韻地位(arr[1], arr[2], arr[3], arr[4] || null, arr[5], arr[6]);
+}
+
+const 音韻描述2小韻號Map = new Map();
+
+for (let i = 3874; i >= 1; i--) { // 逆序：若有音韻地位相同的小韻，選第一個
+  音韻描述2小韻號Map.set(Qieyun.get音韻地位(i).音韻描述, i);
+}
+
+/**
+ * 將音韻描述轉換為小韻號。
+ * 若有音韻地位相同的小韻，返回第一個。
+ * @param {string} 音韻描述 音韻地位的音韻描述
+ */
+function 音韻描述2小韻號(音韻描述) {
+  return 音韻描述2小韻號Map.get(音韻描述);
 }
 
 /* 5. 推導函數 */
@@ -345,7 +360,7 @@ function handleConvertPresetArticle() {
       const 漢字 = ruby.childNodes[0].textContent;
       const 音韻描述 = rt.innerText;
       const 音韻地位 = 音韻描述2音韻地位(音韻描述);
-      const 小韻號 = null; // TODO FIXME: Get 小韻號 from 音韻描述
+      const 小韻號 = 音韻描述2小韻號(音韻描述);
       const 擬音 = 推導(音韻地位, 小韻號, 漢字);
       rt.lang = 'och-Latn-fonipa';
       rt.innerText = 擬音;
