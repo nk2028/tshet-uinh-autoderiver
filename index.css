@@ -107,7 +107,7 @@ footer {
 
 /* Output area */
 
-#outputArea {
+output {
 	box-sizing: border-box;
 	font-size: 105%;
 	overflow-wrap: break-word;
@@ -134,7 +134,6 @@ footer {
 
 .entry {
 	display: inline-block;
-	margin: 3px;
 }
 
 .entry.entry-none {
@@ -142,8 +141,9 @@ footer {
 	white-space: pre-wrap;
 }
 
-.entry rt {
+rt {
 	font-size: 82.5%;
+	margin: 3px;
 }
 
 /* Tooltip appearance */
@@ -174,7 +174,8 @@ footer {
 
 /* Tooltip positioning */
 
-#outputArea {
+output {
+	display: block;
 	position: relative;
 }
 
@@ -187,7 +188,7 @@ footer {
 }
 
 @media only screen and (min-width: 768px) {
-	#outputArea .entry {
+	output .entry {
 		position: relative;
 	}
 

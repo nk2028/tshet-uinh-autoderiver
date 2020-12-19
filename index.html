@@ -27,7 +27,7 @@
 <body>
   <h1>《切韻》音系自動推導器</h1>
 
-  <h2>加載推導方案</h2>
+  <h2>載入推導方案</h2>
 
   <form class="pure-form" name="schemaSelect" onsubmit="handleLoadSchema(this.schema.value); return false">
     <p>
@@ -37,7 +37,7 @@
       <label class="pure-radio"><input type="radio" name="schema" value="putonghua"/> 推導普通話</label>
       <label class="pure-radio"><input type="radio" name="schema" value="gwongzau"/> 推導廣州音</label>
       <label class="pure-radio"><input type="radio" name="schema" value="dv9"/> 綾香思考音系</label>
-      <input class="pure-button" type="submit" value="加載"/>
+      <input class="pure-button" type="submit" value="載入"/>
     </p>
   </form>
 
@@ -50,6 +50,7 @@
       <label>
         <select id="predefinedOptions">
           <option value="convertArticle">從輸入框中讀取文章，並注音</option>
+          <option value="convertPresetArticle">為預設文章注音</option>
           <option value="exportAllSmallRhymes">導出所有小韻</option>
           <option value="exportAllSyllables">導出所有音節</option>
           <option value="exportAllSyllablesWithCount">導出所有音節，並計數</option>
@@ -61,8 +62,8 @@
     </p>
   </form>
 
-  <div id="outputArea"></div>
+  <output></output>
 
-  <footer><p><a href="https://github.com/nk2028/qieyun-autoderiver">於 <span lang="en-HK">GitHub</span> 檢視原始碼</a> - <input class="pure-button" type="button" value="私隱權政策" onclick="javascript:showPrivacy()"/></p></footer>
+  <footer><p><a href="https://github.com/nk2028/qieyun-autoderiver">於 <span lang="en-HK">GitHub</span> 檢視原始碼</a> - <input class="pure-button" type="button" value="私隱權政策" onclick="showPrivacy()"/></p></footer>
 </body>
 </html>
