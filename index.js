@@ -33,7 +33,7 @@ function notifyHTML(msg) {
  * @param {Error} err 待顯示的錯誤
  */
 function notifyErrorWithoutStack(err) {
-  const msg = `<p lang="en-HK">Error: ${HTMLEscape(err.message)}</p>`;
+  const msg = `<p lang="en">Error: ${HTMLEscape(err.message)}</p>`;
   Swal.fire({ animation: false, icon: 'error', html: msg, confirmButtonText: '確定' });
 }
 
@@ -42,8 +42,8 @@ function notifyErrorWithoutStack(err) {
  * @param {Error} err 待顯示的錯誤
  */
 function notifyError(err) {
-  let msg = `<p lang="en-HK">Error: ${HTMLEscape(err.message)}</p>`;
-  if (err.stack) msg += `<pre lang="en-HK" style="text-align: left;">${HTMLEscape(err.stack)}</pre>`;
+  let msg = `<p lang="en">Error: ${HTMLEscape(err.message)}</p>`;
+  if (err.stack) msg += `<pre lang="en" style="text-align: left;">${HTMLEscape(err.stack)}</pre>`;
   Swal.fire({ animation: false, icon: 'error', html: msg, confirmButtonText: '確定' });
 }
 
@@ -54,8 +54,8 @@ function notifyError(err) {
  * @param {Error} err 待顯示的錯誤
  */
 function notifyErrorWithError(音韻描述, err) {
-  let msg = `<p>音韻地位：<span lang="en-HK">${音韻描述}, Error: ${HTMLEscape(err.message)}</span></p>`;
-  if (err.stack) msg += `<pre lang="en-HK" style="text-align: left;">${HTMLEscape(err.stack)}</pre>`;
+  let msg = `<p>音韻地位：<span lang="en">${音韻描述}, Error: ${HTMLEscape(err.message)}</span></p>`;
+  if (err.stack) msg += `<pre lang="en" style="text-align: left;">${HTMLEscape(err.stack)}</pre>`;
   Swal.fire({ animation: false, icon: 'error', html: msg, confirmButtonText: '確定' });
 }
 
@@ -237,7 +237,7 @@ function makeSingleEntry(ch, pronunciationMap) {
   outerContainer.appendChild(tooltipContainer);
   const exportText = `${ch}(${pronunciation})`;
   outerContainer.handleExport = () => exportText;
-  const rubyText = `<ruby>${ch}<rp>(</rp><rt lang="zh-Latn">${pronunciation}</rt><rp>)</rp></ruby>`;
+  const rubyText = `<ruby>${ch}<rt>${pronunciation}</rt></ruby>`;
   outerContainer.handleRuby = () => rubyText;
 
   return outerContainer;
