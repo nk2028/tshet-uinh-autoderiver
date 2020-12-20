@@ -1,5 +1,21 @@
+/* Font families */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Serif+TC:wght@400;700&family=Old+Standard+TT:wght@400;700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/hanamin@latest/HanaMin.min.css');
+@import url('https://cdn.jsdelivr.net/gh/ayaka14732/syyon-vencie@6b08e67/charissil/CharisSIL.css');
+
+:lang(en), :lang(zh) {
+	font-family: "Old Standard TT", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", serif, HanaMin, serif;
+	font-language-override: "KOR";
+}
+
 :lang(och-Latn-fonipa) {
     font-family: CharisSILW, serif, serif;
+}
+
+:lang(en-x-code) {
+	font-family: monospace, monospace, CharisSILW, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", HanaMin, monospace;
+	font-language-override: "KOR";
 }
 
 /* Override Pure.css attributes */
@@ -24,13 +40,6 @@
 
 .CodeMirror {
 	font-size: 13px;
-}
-
-/* Override serif.css */
-
-:lang(en-x-code) {
-	/* Prefer system monospace fonts */
-	font-family: monospace, monospace, CharisSILW, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", 'Noto Serif KR', 'Noto Serif SC', HanaMin, monospace;
 }
 
 /* Font style */
