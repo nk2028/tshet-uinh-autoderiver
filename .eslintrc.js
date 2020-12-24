@@ -12,7 +12,7 @@ module.exports = {
   rules: {
     'indent': 0,
     'no-new-func': 0,
-    'no-plusplus': 0,
+    'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
     'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
     'no-unused-vars': 0,
     'object-curly-newline': 0,

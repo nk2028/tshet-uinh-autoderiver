@@ -392,16 +392,24 @@ function handleConvertPresetArticle() {
 
 function handleExportAllSmallRhymes() {
   const outputArea = document.getElementById('outputArea');
-  outputArea.innerHTML = '';
+  outputArea.innerHTML = ''; // clear previous contents
+
   const fragment = document.createDocumentFragment();
   for (let sr = 1; sr <= 3874; sr++) {
-    fragment.appendChild(document.createTextNode(`${Qieyun.get音韻地位(sr).音韻描述} `));
+    const 音韻地位 = Qieyun.get音韻地位(sr);
+    const k = `${音韻地位.音韻描述} `;
+    const v = 推導(音韻地位, sr, null);
 
+    // 音韻描述
+    fragment.appendChild(document.createTextNode(k));
+
+    // 推導結果
     const span = document.createElement('span');
     span.lang = 'och-Latn-fonipa';
-    span.appendChild(document.createTextNode(推導(Qieyun.get音韻地位(sr), sr)));
+    span.appendChild(document.createTextNode(v));
     fragment.appendChild(span);
 
+    // 換行
     fragment.appendChild(document.createElement('br'));
   }
   outputArea.appendChild(fragment);
@@ -412,13 +420,18 @@ function handleExportAllSmallRhymes() {
 
 function handleExportAllSyllables() {
   const outputArea = document.getElementById('outputArea');
+  outputArea.innerHTML = ''; // clear previous contents
+  const span = document.createElement('span');
+  span.lang = 'och-Latn-fonipa';
 
   const s = new Set();
   for (let sr = 1; sr <= 3874; sr++) {
-    const res = 推導(Qieyun.get音韻地位(sr), sr);
+    const res = 推導(Qieyun.get音韻地位(sr), sr, null);
     s.add(res);
   }
-  document.getElementById('outputArea').innerText = [...s].join(', ');
+
+  span.innerText = [...s].join(', ');
+  outputArea.appendChild(span);
 
   outputArea.handleExport = null;
   outputArea.handleRuby = null;
@@ -426,16 +439,22 @@ function handleExportAllSyllables() {
 
 function handleExportAllSyllablesWithCount() {
   const outputArea = document.getElementById('outputArea');
+  outputArea.innerHTML = ''; // clear previous contents
+  const span = document.createElement('span');
+  span.lang = 'och-Latn-fonipa';
 
   const counter = new Map();
   for (let sr = 1; sr <= 3874; sr++) {
-    const res = 推導(Qieyun.get音韻地位(sr), sr);
-    const v = counter.get(res);
-    counter.set(res, v == null ? 1 : v + 1);
+    const k = 推導(Qieyun.get音韻地位(sr), sr, null);
+    const v = counter.get(k);
+    counter.set(k, v == null ? 1 : v + 1);
   }
+
   const arr = [...counter];
   arr.sort((a, b) => b[1] - a[1]);
-  document.getElementById('outputArea').innerText = arr.map(([x, y]) => `${x} (${y})`).join(', ');
+
+  span.innerText = arr.map(([k, v]) => `${k} (${v})`).join(', ');
+  outputArea.appendChild(span);
 
   outputArea.handleExport = null;
   outputArea.handleRuby = null;
