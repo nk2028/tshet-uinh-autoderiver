@@ -92,7 +92,7 @@ function copyTextToClipboard(txt) {
 let schemaInputArea;
 
 function handleLoadSchema(schema) {
-  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@319f141/${schema}.js`)
+  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@efddda8/${schema}.js`)
   .then((response) => response.text())
   .then((txt) => schemaInputArea.setValue(txt))
   .catch((err) => notifyError(err));
