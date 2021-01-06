@@ -152,7 +152,7 @@ function makeTooltip(pronunciation, ress) {
   for (const [i, { 字頭, 解釋, 音韻地位 }] of ress.entries()) {
     if (i !== 0) span.appendChild(document.createElement('br'));
 
-    let { 反切 } = 音韻地位;
+    let 反切 = 音韻地位.反切(字頭);
     反切 = 反切 == null ? '' : `${反切}切 `;
 
     const spanCh = document.createElement('span');
