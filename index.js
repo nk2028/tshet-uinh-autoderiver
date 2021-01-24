@@ -92,7 +92,7 @@ function copyTextToClipboard(txt) {
 let schemaInputArea;
 
 function handleLoadSchema(schema) {
-  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@336f2eb/${schema}.js`)
+  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@fc5f850/${schema}.js`)
   .then((response) => response.text())
   .then((txt) => schemaInputArea.setValue(txt))
   .catch((err) => notifyError(err));
@@ -485,7 +485,7 @@ function handleRuby() {
 function showPrivacy() {
   notifyHTML(`<div style="text-align: initial;">
 <h1>私隱權政策</h1>
-<p>《切韻》音系自動推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會透過本頁面收集閣下的任何資料。</p>
+<p>切韻音系自動推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會透過本頁面收集閣下的任何資料。</p>
 <p>下面將具體介紹本頁面能在何種程度上保障閣下的私隱權。</p>
 <h2>閣下鍵入的內容</h2>
 <p>本頁面的開發者不會收集閣下在本頁面中鍵入的任何內容。任何與閣下鍵入的內容相關的運算全部在閣下的系統中完成。本頁面不會將包括待標註的文本、標註結果在內的任何資料傳送至任何伺服器。</p>
