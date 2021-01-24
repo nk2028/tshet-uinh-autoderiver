@@ -335,9 +335,8 @@ function handleConvertPresetArticle() {
     body.querySelectorAll('ruby').forEach((ruby) => {
       const rt = ruby.querySelector('rt');
       const 漢字 = ruby.childNodes[0].textContent;
-      const 音韻編碼 = rt.innerText;
-      const { 母, 呼, 等, 重紐, 韻, 聲 } = Qieyun.decode(音韻編碼);
-      const 音韻地位 = new Qieyun.音韻地位(母, 呼, 等, 重紐, 韻, 聲);
+      const 描述 = rt.innerText;
+      const 音韻地位 = Qieyun.音韻地位.from描述(描述);
       const 擬音 = 推導(音韻地位, 漢字);
       rt.lang = 'och-Latn-fonipa';
       rt.innerText = 擬音;
@@ -361,7 +360,7 @@ function handleConvertPresetArticle() {
     outputArea.handleRuby = null;
   }
 
-  fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@bbee340/index.html')
+  fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@1150f08/index.html')
   .then((response) => response.text())
   .then((txt) => inner(txt))
   .catch((err) => notifyError(err));
@@ -373,17 +372,19 @@ function handleExportAllSmallRhymes() {
 
   const fragment = document.createDocumentFragment();
   for (const 音韻地位 of Qieyun.iter音韻地位()) {
-    const k = `${音韻地位.描述} `;
-    const v = 推導(音韻地位, null);
+    const { 描述, 代表字 } = 音韻地位;
 
     // 音韻描述
-    fragment.appendChild(document.createTextNode(k));
+    fragment.appendChild(document.createTextNode(`${描述} `));
 
     // 推導結果
     const span = document.createElement('span');
     span.lang = 'och-Latn-fonipa';
-    span.appendChild(document.createTextNode(v));
+    span.appendChild(document.createTextNode(推導(音韻地位, null)));
     fragment.appendChild(span);
+
+    // 代表字
+    fragment.appendChild(document.createTextNode(` ${代表字}`));
 
     // 換行
     fragment.appendChild(document.createElement('br'));
@@ -487,8 +488,8 @@ function showPrivacy() {
 <p>《切韻》音系自動推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會透過本頁面收集閣下的任何資料。</p>
 <p>下面將具體介紹本頁面能在何種程度上保障閣下的私隱權。</p>
 <h2>閣下鍵入的內容</h2>
-<p>本頁面的開發者不會收集閣下在本頁面中鍵入的任何內容。任何與閣下鍵入的內容相關的運算均在閣下的系統本地完成。本頁面不會將包括待標註的文本、標註結果在內的任何資料傳送至任何伺服器。</p>
+<p>本頁面的開發者不會收集閣下在本頁面中鍵入的任何內容。任何與閣下鍵入的內容相關的運算全部在閣下的系統中完成。本頁面不會將包括待標註的文本、標註結果在內的任何資料傳送至任何伺服器。</p>
 <h2>閣下的其他資料</h2>
-<p>本頁面使用的內容託管於以下站點：GitHub Pages、jsDelivr、Google Fonts、cdnjs。在閣下訪問本頁面時，閣下的瀏覽器將與這些站點交互。本頁面的開發者並不能讀取閣下訪問這些站點時產生的資料，亦無法控制這些站點如何使用閣下訪問時產生的資料。<p>
+<p>本頁面使用的內容託管於以下站點：GitHub Pages、jsDelivr、Google Fonts、cdnjs。在閣下訪問本頁面時，閣下的瀏覽器將與這些站點交互。本頁面的開發者並不能讀取閣下訪問這些站點時產生的資料，亦無法控制這些站點如何使用閣下訪問時產生的資料。</p>
 </div>`);
 }
