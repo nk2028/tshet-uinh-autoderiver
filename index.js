@@ -48,15 +48,15 @@ function notifyError(err) {
 }
 
 /**
- * 創建一個帶確定按鈕的錯誤窗口，內容為錯誤 `err` 與出現錯誤的音韻地位。
+ * 創建一個帶確定按鈕的錯誤窗口，內容為錯誤 `err` 與錯誤提示。
  * 窗口中會顯示錯誤產生時的堆棧信息。
- * @param {string} 音韻描述 音韻地位的音韻描述
+ * @param {string} msg 錯誤提示
  * @param {Error} err 待顯示的錯誤
  */
-function notifyErrorWithError(音韻描述, err) {
-  let msg = `<p>音韻地位：<span lang="en">${音韻描述}, Error: ${HTMLEscape(err.message)}</span></p>`;
-  if (err.stack) msg += `<pre lang="en" style="text-align: left;">${HTMLEscape(err.stack)}</pre>`;
-  Swal.fire({ animation: false, icon: 'error', html: msg, confirmButtonText: '確定' });
+function notifyErrorWithError(msg, err) {
+  let html = `<p>${msg}, Error: ${HTMLEscape(err.message)}</p>`;
+  if (err.stack) html += `<pre lang="en" style="text-align: left;">${HTMLEscape(err.stack)}</pre>`;
+  Swal.fire({ animation: false, icon: 'error', html, confirmButtonText: '確定' });
 }
 
 /* 2. 匯出至剪貼簿的工具 */
@@ -92,7 +92,7 @@ function copyTextToClipboard(txt) {
 let schemaInputArea;
 
 function handleLoadSchema(schema) {
-  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@336f2eb/${schema}.js`)
+  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@fc5f850/${schema}.js`)
   .then((response) => response.text())
   .then((txt) => schemaInputArea.setValue(txt))
   .catch((err) => notifyError(err));
@@ -111,60 +111,33 @@ document.addEventListener('DOMContentLoaded', () => {
   handleLoadSchema(schema);
 });
 
-/* 4. 處理音韻地位物件的工具 */
-
-/**
- * 將音韻描述轉換為音韻地位物件。
- * @param {string} 音韻描述 音韻地位的音韻描述
- */
-function 音韻描述2音韻地位(音韻描述) {
-  const pattern = /(.)(.)(.)([AB]?)(.)(.)/gu; // 根據音韻描述的格式解析出音韻地位
-  const arr = pattern.exec(音韻描述);
-  return new Qieyun.音韻地位(arr[1], arr[2], arr[3], arr[4] || null, arr[5], arr[6]);
-}
-
-const 音韻描述2小韻號Map = new Map();
-
-for (let i = 3874; i >= 1; i--) { // 逆序：若有音韻地位相同的小韻，選第一個
-  音韻描述2小韻號Map.set(Qieyun.get音韻地位(i).音韻描述, i);
-}
-
-/**
- * 將音韻描述轉換為小韻號。
- * 若有音韻地位相同的小韻，返回第一個。
- * @param {string} 音韻描述 音韻地位的音韻描述
- */
-function 音韻描述2小韻號(音韻描述) {
-  return 音韻描述2小韻號Map.get(音韻描述);
-}
-
-/* 5. 推導函數 */
+/* 4. 推導函數 */
 
 let userInput;
 
 function loadSchema() {
   try {
-    userInput = new Function('音韻地位', '小韻號', '字頭', schemaInputArea.getValue());
+    userInput = new Function('音韻地位', '字頭', schemaInputArea.getValue());
   } catch (err) {
     notifyError(err);
     throw err;
   }
 }
 
-function 推導(音韻地位, 小韻號, 字頭) {
+function 推導(音韻地位, 字頭) {
   try {
-    const res = userInput(音韻地位, 小韻號, 字頭);
+    const res = userInput(音韻地位, 字頭);
     if (res == null) {
       throw new Error('Result is null');
     }
     return res;
   } catch (err) {
-    notifyErrorWithError(音韻地位.音韻描述, err);
+    notifyErrorWithError(`音韻地位：${音韻地位.描述}`, err);
     throw err;
   }
 }
 
-/* 6. 處理「從輸入框中讀取文章，並注音」的輔助函數 */
+/* 5. 處理「從輸入框中讀取文章，並注音」的輔助函數 */
 
 function makeTooltip(pronunciation, ress) {
   const span = document.createElement('span');
@@ -176,11 +149,11 @@ function makeTooltip(pronunciation, ress) {
   span.appendChild(spanPronunciation);
   span.appendChild(document.createTextNode(' '));
 
-  for (const [i, { 字頭, 小韻號, 解釋, 音韻地位 }] of ress.entries()) {
+  for (const [i, { 字頭, 解釋, 音韻地位 }] of ress.entries()) {
     if (i !== 0) span.appendChild(document.createElement('br'));
 
-    let 反切 = Qieyun.get反切(小韻號);
-    反切 = 反切 == null ? '' : `${反切} `;
+    let 反切 = 音韻地位.反切(字頭);
+    反切 = 反切 == null ? '' : `${反切}切 `;
 
     const spanCh = document.createElement('span');
     spanCh.classList.add('tooltip-ch');
@@ -188,7 +161,7 @@ function makeTooltip(pronunciation, ress) {
     span.appendChild(spanCh);
     span.appendChild(document.createTextNode(' '));
 
-    span.appendChild(document.createTextNode(`${音韻地位.音韻描述} ${反切}${解釋}`));
+    span.appendChild(document.createTextNode(`${音韻地位.描述} ${反切}${解釋}`));
   }
 
   return span;
@@ -306,18 +279,22 @@ function makeMultipleEntry(ch, pronunciationMap) {
   return outerContainer;
 }
 
-function makeConversion(ch) {
-  const 所有異體字 = Yitizi.get(ch);
-  所有異體字.unshift(ch); // include ch itself
+function makeConversion(ch, shouldConvYitizi) {
+  let 所有異體字;
+  if (!shouldConvYitizi) {
+    所有異體字 = [ch];
+  } else {
+    所有異體字 = Yitizi.get(ch);
+    所有異體字.unshift(ch); // include ch itself
+  }
 
   const pronunciationMap = new Map(); // { 擬音: [{ 字頭, 小韻號, 解釋, 音韻地位 }] }
 
   for (const 字頭 of 所有異體字) {
-    for (const { 小韻號, 解釋 } of Qieyun.query漢字(字頭)) {
-      const 音韻地位 = Qieyun.get音韻地位(小韻號);
-      const 擬音 = 推導(音韻地位, 小韻號, 字頭);
+    for (const { 音韻地位, 解釋 } of Qieyun.query字頭(字頭)) {
+      const 擬音 = 推導(音韻地位, 字頭);
       if (pronunciationMap.get(擬音) == null) pronunciationMap.set(擬音, []);
-      pronunciationMap.get(擬音).push({ 字頭, 小韻號, 解釋, 音韻地位 });
+      pronunciationMap.get(擬音).push({ 字頭, 解釋, 音韻地位 });
     }
   }
 
@@ -328,9 +305,9 @@ function makeConversion(ch) {
   }
 }
 
-/* 7. 處理用户選擇的函數 */
+/* 6. 處理用户選擇的函數 */
 
-function handleConvertArticle() {
+function handleConvertArticle(shouldConvYitizi) {
   const outputArea = document.getElementById('outputArea');
   const articleInput = document.getElementById('articleInput');
 
@@ -338,7 +315,7 @@ function handleConvertArticle() {
 
   const fragment = document.createDocumentFragment();
   for (const ch of articleInput.value) {
-    fragment.appendChild(makeConversion(ch));
+    fragment.appendChild(makeConversion(ch, shouldConvYitizi));
   }
   outputArea.appendChild(fragment);
 
@@ -358,10 +335,9 @@ function handleConvertPresetArticle() {
     body.querySelectorAll('ruby').forEach((ruby) => {
       const rt = ruby.querySelector('rt');
       const 漢字 = ruby.childNodes[0].textContent;
-      const 音韻描述 = rt.innerText;
-      const 音韻地位 = 音韻描述2音韻地位(音韻描述);
-      const 小韻號 = 音韻描述2小韻號(音韻描述);
-      const 擬音 = 推導(音韻地位, 小韻號, 漢字);
+      const 描述 = rt.innerText;
+      const 音韻地位 = Qieyun.音韻地位.from描述(描述);
+      const 擬音 = 推導(音韻地位, 漢字);
       rt.lang = 'och-Latn-fonipa';
       rt.innerText = 擬音;
     });
@@ -384,7 +360,7 @@ function handleConvertPresetArticle() {
     outputArea.handleRuby = null;
   }
 
-  fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@7350432/index.html')
+  fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@1150f08/index.html')
   .then((response) => response.text())
   .then((txt) => inner(txt))
   .catch((err) => notifyError(err));
@@ -395,19 +371,20 @@ function handleExportAllSmallRhymes() {
   outputArea.innerHTML = ''; // clear previous contents
 
   const fragment = document.createDocumentFragment();
-  for (let sr = 1; sr <= 3874; sr++) {
-    const 音韻地位 = Qieyun.get音韻地位(sr);
-    const k = `${音韻地位.音韻描述} `;
-    const v = 推導(音韻地位, sr, null);
+  for (const 音韻地位 of Qieyun.iter音韻地位()) {
+    const { 描述, 代表字 } = 音韻地位;
 
     // 音韻描述
-    fragment.appendChild(document.createTextNode(k));
+    fragment.appendChild(document.createTextNode(`${描述} `));
 
     // 推導結果
     const span = document.createElement('span');
     span.lang = 'och-Latn-fonipa';
-    span.appendChild(document.createTextNode(v));
+    span.appendChild(document.createTextNode(推導(音韻地位, null)));
     fragment.appendChild(span);
+
+    // 代表字
+    fragment.appendChild(document.createTextNode(` ${代表字}`));
 
     // 換行
     fragment.appendChild(document.createElement('br'));
@@ -425,8 +402,8 @@ function handleExportAllSyllables() {
   span.lang = 'och-Latn-fonipa';
 
   const s = new Set();
-  for (let sr = 1; sr <= 3874; sr++) {
-    const res = 推導(Qieyun.get音韻地位(sr), sr, null);
+  for (const 音韻地位 of Qieyun.iter音韻地位()) {
+    const res = 推導(音韻地位, null);
     s.add(res);
   }
 
@@ -444,8 +421,8 @@ function handleExportAllSyllablesWithCount() {
   span.lang = 'och-Latn-fonipa';
 
   const counter = new Map();
-  for (let sr = 1; sr <= 3874; sr++) {
-    const k = 推導(Qieyun.get音韻地位(sr), sr, null);
+  for (const 音韻地位 of Qieyun.iter音韻地位()) {
+    const k = 推導(音韻地位, null);
     const v = counter.get(k);
     counter.set(k, v == null ? 1 : v + 1);
   }
@@ -463,7 +440,8 @@ function handleExportAllSyllablesWithCount() {
 function handlePredefinedOptions() {
   loadSchema();
   switch (document.getElementById('predefinedOptions').value) {
-    case 'convertArticle': handleConvertArticle(); break;
+    case 'convertArticle': handleConvertArticle(false); break;
+    case 'convertArticleWithYitiziConvert': handleConvertArticle(true); break;
     case 'convertPresetArticle': handleConvertPresetArticle(); break;
     case 'exportAllSmallRhymes': handleExportAllSmallRhymes(); break;
     case 'exportAllSyllables': handleExportAllSyllables(); break;
@@ -472,7 +450,7 @@ function handlePredefinedOptions() {
   }
 }
 
-/* 8. 處理匯出的函數 */
+/* 7. 處理匯出的函數 */
 
 function handleCopy() {
   const outputArea = document.getElementById('outputArea');
@@ -487,7 +465,7 @@ function handleCopy() {
   }
 }
 
-/* 9. 處理匯出為 HTML 程式碼的函數 */
+/* 8. 處理匯出為 HTML 程式碼的函數 */
 
 function handleRuby() {
   const outputArea = document.getElementById('outputArea');
@@ -502,16 +480,16 @@ function handleRuby() {
   }
 }
 
-/* 10. 顯示私隱權政策 */
+/* 9. 顯示私隱權政策 */
 
 function showPrivacy() {
   notifyHTML(`<div style="text-align: initial;">
 <h1>私隱權政策</h1>
-<p>《切韻》音系自動推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會透過本頁面收集閣下的任何資料。</p>
+<p>切韻音系自動推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會透過本頁面收集閣下的任何資料。</p>
 <p>下面將具體介紹本頁面能在何種程度上保障閣下的私隱權。</p>
 <h2>閣下鍵入的內容</h2>
-<p>本頁面的開發者不會收集閣下在本頁面中鍵入的任何內容。任何與閣下鍵入的內容相關的運算均在閣下的系統本地完成。本頁面不會將包括待標註的文本、標註結果在內的任何資料傳送至任何伺服器。</p>
+<p>本頁面的開發者不會收集閣下在本頁面中鍵入的任何內容。任何與閣下鍵入的內容相關的運算全部在閣下的系統中完成。本頁面不會將包括待標註的文本、標註結果在內的任何資料傳送至任何伺服器。</p>
 <h2>閣下的其他資料</h2>
-<p>本頁面使用的內容託管於以下站點：GitHub Pages、jsDelivr、Google Fonts、cdnjs。在閣下訪問本頁面時，閣下的瀏覽器將與這些站點交互。本頁面的開發者並不能讀取閣下訪問這些站點時產生的資料，亦無法控制這些站點如何使用閣下訪問時產生的資料。<p>
+<p>本頁面使用的內容託管於以下站點：GitHub Pages、jsDelivr、Google Fonts、cdnjs。在閣下訪問本頁面時，閣下的瀏覽器將與這些站點交互。本頁面的開發者並不能讀取閣下訪問這些站點時產生的資料，亦無法控制這些站點如何使用閣下訪問時產生的資料。</p>
 </div>`);
 }

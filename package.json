@@ -1,20 +1,9 @@
 {
-  "name": "qieyun-autoderiver",
-  "version": "0.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nk2028/qieyun-autoderiver.git"
-  },
+  "private": true,
   "scripts": {
     "lint": "eslint index.js",
     "minimize": "terser --compress --mangle --source-map \"url=index.min.js.map\" -o index.min.js index.js"
   },
-  "author": "Ngiox Khyen 2028 Project",
-  "license": "CC0-1.0",
-  "bugs": {
-    "url": "https://github.com/nk2028/qieyun-autoderiver/issues"
-  },
-  "homepage": "https://github.com/nk2028/qieyun-autoderiver#readme",
   "devDependencies": {
     "eslint": "^7.16.0",
     "eslint-config-airbnb-base": "^14.2.1",
