@@ -1,4 +1,6 @@
-# 切韻音系自動推導器 ![](https://github.com/nk2028/qieyun-autoderiver/workflows/Publish/badge.svg?branch=main)
+# qieyun-autoderiver ![](https://github.com/nk2028/qieyun-autoderiver/workflows/Publish/badge.svg?branch=main)
+
+An automatic tool to generate the derivatives of the Qieyun phonological system
 
 網頁[見此](https://nk2028.shn.hk/qieyun-autoderiver/)。
 
