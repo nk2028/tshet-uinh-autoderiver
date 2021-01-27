@@ -1,220 +1,77 @@
-/* Font families */
+body { line-height: 1.6; }
+a:link { border-bottom: 1px solid; color: inherit; text-decoration: none; }
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Serif+TC:wght@400;700&family=Old+Standard+TT:wght@400;700&display=swap');
-@import url('https://cdn.jsdelivr.net/npm/hanamin@latest/HanaMin.min.css');
-@import url('https://cdn.jsdelivr.net/gh/ayaka14732/syyon-vencie@6b08e67/charissil/CharisSIL.css');
+:lang(en), :lang(zh) { font-family: Jomolhari, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", serif, HanaMin, serif; font-language-override: "KOR"; }
+:lang(och-Latn-fonipa) { font-family: CharisSILW, serif, serif; }
+:lang(en-x-code) { font-family: monospace, monospace, CharisSILW, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", HanaMin, monospace; font-language-override: "KOR"; }
 
-:lang(en), :lang(zh) {
-	font-family: "Old Standard TT", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", serif, HanaMin, serif;
-	font-language-override: "KOR";
+.pure-button { padding-top: .2em; padding-bottom: .2em; }
+.pure-form select { background-color: rgba(255,255,255,.5); padding-top: 0; padding-bottom: 0; height: 1.9em; }
+.pure-form textarea { background-color: rgba(255,255,255,.5); }
+.pure-form .pure-radio { display: inline-block; margin: 0; vertical-align: middle; }
+
+.CodeMirror { background-color: rgba(255,255,255,.5); font-size: 13px; }
+
+.large-tooltip-inner { background-color: rgba(255,255,255,.95); }
+
+.tingle-modal { background: rgba(0,0,0,.70); -ms-user-select: text; -webkit-user-select: text; user-select: text; }
+@media (max-width :540px) {
+  .tingle-modal__close { background-color: #f0f0e7; border-bottom: 1px solid #ccc; box-shadow: 0 1px 2px #aaa; }
+  .tingle-modal__close svg * { fill: #5c5c5c; }
 }
+.tingle-modal-box__content p, .tingle-modal-box__content ul { color: #5c5c5c; }
+.tingle-modal-box__content p a:link:hover { border-bottom: 1px solid black; color: initial; transition: .5s; }
 
-:lang(och-Latn-fonipa) {
-    font-family: CharisSILW, serif, serif;
-}
+nav { padding: 0 2em; }
+nav h1 { font-size: 1.75rem; text-align: center; margin: 1.25rem 0; padding-bottom: 25px; border-bottom: 1px solid #ccc; }
 
-:lang(en-x-code) {
-	font-family: monospace, monospace, CharisSILW, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", HanaMin, monospace;
-	font-language-override: "KOR";
-}
+.main-container { padding: 0 2em; }
 
-/* Override Pure.css attributes */
+.ruby-wrapper { display: inline-block; padding: 0 3px; }
+ruby { margin: 0 3px; }
+.ruby-wrapper ruby { margin: 0; }
 
-.pure-button {
-	padding-top: 0.2em !important;
-	padding-bottom: 0.2em !important;
-}
-
-.pure-form select {
-	height: 1.9em !important;
-	padding-top: 0 !important;
-	padding-bottom: 0 !important;
-}
-
-.pure-radio {
-	display: inline !important;
-	vertical-align: middle;
-}
-
-/* Override Codemirror attributes */
-
-.CodeMirror {
-	font-size: 13px;
-}
-
-/* Font style */
-
-option { font-family: inherit; }
-
-/* Basic page style */
-
-html {
-	padding: 0 20px;
-}
-
-@media only screen and (min-width: 768px) {
-	html {
-		padding: 0 200px;
-	}
-}
-
-body {
-	line-height: 1.6;
-	margin: 0 auto;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	color: #708;
-}
-
-h1 {
-	text-align: center;
-}
-
-h2 {
-	border-bottom: 1px solid #e5e5e5;
-	color: #333;
-	font-weight: normal;
-	margin-bottom: 0.3em;
-	padding: 0.3em 0;
-}
-
-textarea {
-	resize: vertical;
-	width: 100%;
-}
-
-footer {
-	text-align: center;
-	margin: 2em 0;
-}
-
-/* Schema input */
+textarea { resize: vertical; width: 100%; }
+rt { font-size: 82.5%; }
 
 #schemaInput {
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 3px #ddd;
-	box-shadow: inset 0 1px 3px #ddd;
-	box-sizing: border-box;
-	overflow-x: auto;
-	width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 3px #ddd;
+  box-shadow: inset 0 1px 3px #ddd;
+  box-sizing: border-box;
+  overflow-x: auto;
+  width: 100%;
 }
 
 #schemaInput:focus-within {
-	outline: 0;
-	border-color: #129fea;
+  outline: 0;
+  border-color: #129fea;
 }
 
-#schemaInput > .CodeMirror {
-	background-color: transparent;
+output {
+  display: block;
+  font-size: 105%;
+  overflow-wrap: break-word;
+  padding-bottom: 1em;
+  white-space: pre-line;
 }
 
-/* Output area */
-
-#outputArea {
-	box-sizing: border-box;
-	display: block;
-	font-size: 105%;
-	overflow-wrap: break-word;
-	text-align: justify;
-}
-
-#outputArea h3, #outputArea p {
-	margin: 0;
-}
-
-.hidden {
-	display: none;
-}
-
-/* Entry colors */
+output h3, output p { display: inline; }
+.hidden { display: none; }
 
 .entry-multiple { color: #708; }
+.entry-multiple.entry-unresolved { color: #00f; }
 
-.entry-multiple.unresolved { color: #00f; }
+.tooltip-item.selected { color: #00f; }
+.tooltip-item:hover { color: #0078e7; }
+.tooltip-item.selected:hover { color: #a11; }
+.tooltip-item { margin: 2px 10px; }
+.tooltip-ch { font-size: 125%; }
 
-.entry-multiple .tooltip-item.selected { color: #00f; }
+.tooltip-items-wrapper { padding-bottom: 3px; }
 
-.entry-multiple .tooltip-item:hover { color: #0078e7; }
+.ruby-wrapper { -ms-user-select: none; -webkit-user-select: none; user-select: none; }
 
-.entry-multiple .tooltip-item.selected:hover { color: #a11; }
-
-/* Entry appearance */
-
-.entry {
-	display: inline-block;
-}
-
-.entry.entry-none {
-	display: contents;
-	white-space: pre-wrap;
-}
-
-rt {
-	font-size: 82.5%;
-	margin: 3px;
-}
-
-/* Tooltip appearance */
-
-.entry .tooltip-container {
-	background-color: rgba(255,255,255,0.95);
-	border-radius: 4px;
-	box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.37);
-	box-sizing: border-box;
-	border: 1px solid white;
-	color: #333;
-	padding-bottom: 2px;
-	visibility: hidden;
-}
-
-.entry:hover .tooltip-container {
-	visibility: visible;
-}
-
-.tooltip-container > .tooltip-item {
-	display: block;
-	margin: 2px 10px;
-}
-
-.tooltip-container > .tooltip-item .tooltip-ch {
-	font-size: 125%;
-}
-
-/* Tooltip positioning */
-
-#outputArea {
-	position: relative;
-}
-
-.tooltip-container {
-	left: 0;
-	position: absolute;
-	transform: translateY(2.5em);
-	width: 100%;
-	z-index: 5;
-}
-
-@media only screen and (min-width: 768px) {
-	#outputArea .entry {
-		position: relative;
-	}
-
-	.tooltip-container {
-		bottom: 2.6rem;
-		left: 50%;
-		transform: translateX(-200px);
-		width: 400px;
-	}
-}
-
-/* 私隱權政策 */
-
-footer + .swal2-container > .swal2-popup {
-	width: 64em;
-}
+h1 > span { border-bottom: 1px dashed #aaa; cursor: pointer; }
+h1 > span:hover { color: #333; }
