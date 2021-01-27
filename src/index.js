@@ -1,8 +1,6 @@
 /* global CodeMirror */
+/* global Qieyun, Yitizi, tingle */
 
-import Qieyun from 'qieyun';
-import Yitizi from 'yitizi';
-import tingle from 'tingle.js';
 import { notifyErrorWithoutStack, notifyError, notifyErrorWithError } from './swal-utils';
 import copyToClipboard from './to-clipboard';
 import LargeTooltip from 'large-tooltip';
