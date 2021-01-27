@@ -18,8 +18,8 @@ jobs:
       run: npm install
     - name: Lint with ESLint
       run: npm run lint
-    - name: Minimize
-      run: npm run minimize
+    - name: Build
+      run: npm run build
     - name: Publish to GitHub pages
       run: |
         # Create a temporary directory
@@ -27,28 +27,28 @@ jobs:
 
         (
         # Preserve .git
-        mv .git $temp_dir
-        cd $temp_dir
+        mkdir $temp_dir/tmp
+        mv .git $temp_dir/tmp
+        cd $temp_dir/tmp
 
         # Switch branch
         git fetch
         git checkout gh-pages
+
+        # Move .git to destination directory
+        cd ..
+        mv tmp/.git .
+        rm -rf tmp
         )
 
-        # Remove source files and README
-        rm -rf index.js node_modules package.json package-lock.json README.md
-
-        # Remove all dot files except . and ..
-        # https://unix.stackexchange.com/a/77313
-        rm -rf ..?* .[!.]*
-
-        # Restore .git
-        mv $temp_dir/.git .
-        rm -rf $temp_dir
+        (
+        # Move build artifacts
+        mv index.html index.min.js index.css LICENSE $temp_dir
+        cd $temp_dir
 
         # Set commit identity
-        git config user.email "ayaka@mail.shn.hk"
-        git config user.name "Ayaka Mikazuki"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config user.name "github-actions[bot]"
 
         # Publish
         git add .
@@ -56,3 +56,4 @@ jobs:
           git commit -m "Publish `TZ='Asia/Hong_Kong' date`"
           git push origin gh-pages
         fi
+        )
