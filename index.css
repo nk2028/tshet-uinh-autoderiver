@@ -66,7 +66,7 @@ output h3, output p { display: inline; }
 .tooltip-item.selected { color: #00f; }
 .tooltip-item:not(:only-child):hover { color: #0078e7; }
 .tooltip-item.selected:hover { color: #a11; }
-.tooltip-item { margin: 2px 10px; }
+.tooltip-item { margin: 2px 10px; white-space: pre-line; }
 .tooltip-ch { font-size: 125%; }
 
 .tooltip-items-wrapper { padding-bottom: 3px; }
