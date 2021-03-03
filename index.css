@@ -71,7 +71,5 @@ output h3, output p { display: inline; }
 
 .tooltip-items-wrapper { padding-bottom: 3px; }
 
-.ruby-wrapper { -ms-user-select: none; -webkit-user-select: none; user-select: none; }
-
 h1 > span { border-bottom: 1px dashed #aaa; cursor: pointer; }
 h1 > span:hover { color: #333; }
