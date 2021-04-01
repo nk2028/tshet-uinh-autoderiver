@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta property="og:image" content="https://avatars3.githubusercontent.com/u/63484757?s=400&amp;v=4"/>
-<meta name="keywords" content="音韻學, 切韻音系, 中古漢語, 中古音, 推導器, JavaScript, 有女羅馬字, 白一平轉寫, 古韻羅馬字, 隋拼, 潘悟雲擬音, unt 切韻擬音 J, 推導普通話, 推導廣州音"/>
+<meta name="keywords" content="音韻學, 切韻音系, 中古漢語, 中古音, 白一平轉寫, 有女羅馬字, 古韻羅馬字, 隋拼, 潘悟雲擬音, unt 切韻擬音 J, 推導普通話, 推導廣州音"/>
 <title>切韻音系自動推導器</title>
 <!-- Sweetalert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -41,8 +41,8 @@
     <form class="pure-form" id="schemaSelect" onsubmit="Autoderiver.handleLoadSchema(this.schema.value); return false">
       <p>
         <b style="vertical-align: middle;">預設推導方案：</b>
-        <label class="pure-radio"><input type="radio" name="schema" value="blankego" checked="checked"/> 有女羅馬字</label>
-        <label class="pure-radio"><input type="radio" name="schema" value="baxter"/> 白一平轉寫</label>
+        <label class="pure-radio"><input type="radio" name="schema" value="baxter" checked="checked"/> 白一平轉寫</label>
+        <label class="pure-radio"><input type="radio" name="schema" value="blankego"/> 有女羅馬字</label>
         <label class="pure-radio"><input type="radio" name="schema" value="kyonh"/> 古韻羅馬字</label>
         <label class="pure-radio"><input type="radio" name="schema" value="zyepheng"/> 隋拼</label>
         <label class="pure-radio"><input type="radio" name="schema" value="panwuyun"/> 潘悟雲擬音</label>
