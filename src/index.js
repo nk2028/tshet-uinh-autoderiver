@@ -75,7 +75,7 @@ function makeTooltip(pronunciation, ress) {
 
   const spanPronunciation = document.createElement('span');
   spanPronunciation.lang = 'och-Latn-fonipa';
-  spanPronunciation.innerText = pronunciation.replace(/\n/g, '');
+  spanPronunciation.innerText = pronunciation;
   tooltipItem.appendChild(spanPronunciation);
   tooltipItem.appendChild(document.createTextNode(' '));
 
@@ -298,7 +298,7 @@ function handleExportAllSmallRhymes() {
     // 推導結果
     const span = document.createElement('span');
     span.lang = 'och-Latn-fonipa';
-    span.appendChild(document.createTextNode(callDeriver(音韻地位, null).replace(/\n/g, '')));
+    span.appendChild(document.createTextNode(callDeriver(音韻地位, null)));
     fragment.appendChild(span);
 
     // 代表字 + 換行
@@ -319,7 +319,7 @@ function handleExportAllSyllables() {
     s.add(res);
   }
 
-  span.innerText = [...s].join(', ').replace(/\n/g, '');
+  span.innerText = [...s].join(', ');
   outputArea.appendChild(span);
 }
 
@@ -339,7 +339,7 @@ function handleExportAllSyllablesWithCount() {
   const arr = [...counter];
   arr.sort((a, b) => b[1] - a[1]);
 
-  span.innerText = arr.map(([k, v]) => `${k} (${v})`).join(', ').replace(/\n/g, '');
+  span.innerText = arr.map(([k, v]) => `${k} (${v})`).join(', ');
   outputArea.appendChild(span);
 }
 

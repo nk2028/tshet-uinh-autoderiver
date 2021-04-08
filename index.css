@@ -58,6 +58,8 @@ output {
 }
 
 output h3, output p { display: inline; }
+output :lang(och-Latn-fonipa) { white-space: initial; }
+output :not(rt):lang(och-Latn-fonipa) br, .tooltip-item :lang(och-Latn-fonipa) br { display: none; }
 .hidden { display: none; }
 
 .entry-multiple { color: #708; }
