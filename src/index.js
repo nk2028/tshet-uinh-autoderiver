@@ -8,7 +8,7 @@ import LargeTooltip from 'large-tooltip';
 // load schema
 
 export function handleLoadSchema(schema) {
-  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@54f844d/${schema}.js`)
+  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@8b34593/${schema}.js`)
   .then((response) => response.text())
   .then((txt) => schemaInputArea.setValue(txt))
   .catch((err) => notifyError(err));
@@ -75,7 +75,7 @@ function makeTooltip(pronunciation, ress) {
 
   const spanPronunciation = document.createElement('span');
   spanPronunciation.lang = 'och-Latn-fonipa';
-  spanPronunciation.innerText = pronunciation;
+  spanPronunciation.innerText = pronunciation.replace(/\n/g, '');
   tooltipItem.appendChild(spanPronunciation);
   tooltipItem.appendChild(document.createTextNode(' '));
 
@@ -298,7 +298,7 @@ function handleExportAllSmallRhymes() {
     // 推導結果
     const span = document.createElement('span');
     span.lang = 'och-Latn-fonipa';
-    span.appendChild(document.createTextNode(callDeriver(音韻地位, null)));
+    span.appendChild(document.createTextNode(callDeriver(音韻地位, null).replace(/\n/g, '')));
     fragment.appendChild(span);
 
     // 代表字 + 換行
@@ -319,7 +319,7 @@ function handleExportAllSyllables() {
     s.add(res);
   }
 
-  span.innerText = [...s].join(', ');
+  span.innerText = [...s].join(', ').replace(/\n/g, '');
   outputArea.appendChild(span);
 }
 
@@ -339,7 +339,7 @@ function handleExportAllSyllablesWithCount() {
   const arr = [...counter];
   arr.sort((a, b) => b[1] - a[1]);
 
-  span.innerText = arr.map(([k, v]) => `${k} (${v})`).join(', ');
+  span.innerText = arr.map(([k, v]) => `${k} (${v})`).join(', ').replace(/\n/g, '');
   outputArea.appendChild(span);
 }
 

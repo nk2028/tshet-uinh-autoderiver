@@ -32,7 +32,7 @@ ruby { margin: 0 3px; }
 .ruby-wrapper ruby { margin: 0; }
 
 textarea { resize: vertical; width: 100%; }
-rt { font-size: 82.5%; }
+rt { font-size: 82.5%; line-height: 1.1; }
 
 #schemaInput {
   border: 1px solid #ccc;
