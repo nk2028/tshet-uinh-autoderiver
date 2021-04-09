@@ -75,7 +75,8 @@ function makeTooltip(pronunciation, ress) {
 
   const spanPronunciation = document.createElement('span');
   spanPronunciation.lang = 'och-Latn-fonipa';
-  spanPronunciation.innerText = pronunciation;
+  spanPronunciation.classList.add('nowrap');
+  spanPronunciation.appendChild(document.createTextNode(pronunciation));
   tooltipItem.appendChild(spanPronunciation);
   tooltipItem.appendChild(document.createTextNode(' '));
 
@@ -119,7 +120,7 @@ function makeSingleEntry(ch, pronunciationMap) {
 
   const rt = document.createElement('rt');
   rt.lang = 'och-Latn-fonipa';
-  rt.innerText = pronunciation;
+  rt.appendChild(document.createTextNode(pronunciation));
   ruby.appendChild(rt);
 
   const rpRight = document.createElement('rp');
@@ -165,7 +166,8 @@ function makeMultipleEntry(ch, pronunciationMap) {
   for (const [i, [pronunciation, ress]] of [...pronunciationMap].entries()) {
     const tooltip = makeTooltip(pronunciation, ress);
     tooltip.addEventListener('click', () => {
-      rt.innerText = pronunciation;
+      rt.innerHTML = '';
+      rt.appendChild(document.createTextNode(pronunciation));
 
       ruby.classList.remove('entry-unresolved');
 
@@ -176,7 +178,8 @@ function makeMultipleEntry(ch, pronunciationMap) {
     tooltipArray.push(tooltip);
 
     if (i === 0) { // Select the first item by default
-      rt.innerText = pronunciation;
+      rt.innerHTML = '';
+      rt.appendChild(document.createTextNode(pronunciation));
       tooltip.classList.add('selected');
     }
   }
@@ -245,7 +248,8 @@ function handleConvertPresetArticle() {
       const 音韻地位 = Qieyun.音韻地位.from描述(描述);
       const 擬音 = callDeriver(音韻地位, 漢字);
       rt.lang = 'och-Latn-fonipa';
-      rt.innerText = 擬音;
+      rt.innerText = '';
+      rt.appendChild(document.createTextNode(擬音));
     });
 
     // Change h1 to h3
