@@ -314,8 +314,6 @@ function handleExportAllSmallRhymes() {
 function handleExportAllSyllables() {
   const outputArea = document.getElementById('outputArea');
   outputArea.innerHTML = ''; // clear previous contents
-  const span = document.createElement('span');
-  span.lang = 'och-Latn-fonipa';
 
   const s = new Set();
   for (const 音韻地位 of Qieyun.iter音韻地位()) {
@@ -323,7 +321,9 @@ function handleExportAllSyllables() {
     s.add(res);
   }
 
-  span.innerText = [...s].join(', ');
+  const span = document.createElement('span');
+  span.lang = 'och-Latn-fonipa';
+  span.appendChild(document.createTextNode([...s].join(', ')));
   outputArea.appendChild(span);
 }
 
