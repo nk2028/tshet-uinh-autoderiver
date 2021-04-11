@@ -60,6 +60,7 @@ output {
 output h3, output p { display: inline; }
 .hidden { display: none; }
 .nowrap { white-space: nowrap; }
+output :not(rt):lang(och-Latn-fonipa) { white-space: initial; }
 
 .entry-multiple { color: #708; }
 .entry-multiple.entry-unresolved { color: #00f; }
