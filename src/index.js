@@ -8,7 +8,7 @@ import LargeTooltip from 'large-tooltip';
 // load schema
 
 export function handleLoadSchema(schema) {
-  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@161f2ad/${schema}.js`)
+  fetch(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@bbe8eca/${schema}.js`)
   .then((response) => response.text())
   .then((txt) => schemaInputArea.setValue(txt))
   .catch((err) => notifyError(err));
