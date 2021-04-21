@@ -282,7 +282,7 @@ function handleConvertPresetArticle() {
     outputArea.appendChild(fragment);
   }
 
-  fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@1150f08/index.html')
+  fetch('https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@3547b9c/index.html')
   .then((response) => response.text())
   .then((txt) => inner(txt))
   .catch((err) => notifyError(err));
