@@ -5,10 +5,12 @@ a:link { border-bottom: 1px solid; color: inherit; text-decoration: none; }
 :lang(och-Latn-fonipa) { font-family: CharisSILW, serif, serif; }
 :lang(en-x-code) { font-family: monospace, monospace, CharisSILW, "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", HanaMin, monospace; font-language-override: "KOR"; }
 
-.pure-button { padding-top: .2em; padding-bottom: .2em; }
+.pure-button { padding-top: .2em; padding-bottom: .2em; margin: 0 .3em; }
 .pure-form select { background-color: rgba(255,255,255,.5); padding-top: 0; padding-bottom: 0; height: 1.9em; }
-.pure-form textarea { background-color: rgba(255,255,255,.5); }
+.pure-form textarea { background-color: rgba(255,255,255,.5); line-height: 1.6; }
+.pure-form b { vertical-align: middle; }
 .pure-form .pure-radio { display: inline-block; margin: 0; vertical-align: middle; }
+.pure-form input[type="radio"], .pure-form input[type="checkbox"] { margin: 0 .3em; }
 
 .CodeMirror { background-color: rgba(255,255,255,.5); font-size: 13px; }
 
@@ -57,7 +59,7 @@ output {
   white-space: pre-line;
 }
 
-output h3, output p { display: inline; }
+output h3, output p { margin: 0; line-height: 1; }
 .hidden { display: none; }
 .nowrap { white-space: nowrap; }
 output :not(rt):lang(och-Latn-fonipa) { white-space: initial; }
