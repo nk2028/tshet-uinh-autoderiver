@@ -3,15 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^12.20.13",
-    "@types/react": "^17.0.5",
-    "@types/react-dom": "^17.0.5",
     "codemirror": "^5.61.0",
-    "large-tooltip": "^0.0.2",
+    "jshint": "^2.12.0",
     "purecss": "^2.0.6",
     "qieyun": "^0.12.2",
     "react": "^17.0.2",
@@ -19,7 +12,7 @@
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "sweetalert2": "^11.0.0",
-    "tingle.js": "^0.16.0",
+    "sweetalert2-react-content": "^4.0.1",
     "typescript": "^4.2.4",
     "web-vitals": "^1.1.2",
     "yitizi": "^0.1.1"
@@ -49,8 +42,15 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
     "@types/codemirror": "^5.60.0",
-    "@types/tingle.js": "^0.13.1"
+    "@types/jest": "^26.0.23",
+    "@types/jshint": "^2.12.0",
+    "@types/node": "^12.20.13",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.5"
   },
   "homepage": "https://nk2028.shn.hk/qieyun-autoderiver"
 }
