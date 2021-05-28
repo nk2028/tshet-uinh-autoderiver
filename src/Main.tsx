@@ -400,21 +400,13 @@ class Main extends React.Component<any, MainState> {
                 ))}
               </select>
             </label>
-            <label>
+            <label className={this.state.option === "convertArticle" ? "" : "hidden"}>
               <input
                 type="checkbox"
                 checked={this.state.convertVariant}
                 onChange={event => changeValue("convertVariant", event.target.checked)}
               />
               轉換異體字
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={this.state.autocomplete}
-                onChange={event => changeValue("autocomplete", event.target.checked)}
-              />
-              顯示自動完成
             </label>
             <input
               className="pure-button pure-button-primary"
@@ -423,6 +415,14 @@ class Main extends React.Component<any, MainState> {
               onClick={() => this.handlePredefinedOptions()}
             />
             <input className="pure-button" type="button" value="匯出至剪貼簿" onClick={() => this.handleCopy()} />
+            <label className="autocomplete">
+              <input
+                type="checkbox"
+                checked={this.state.autocomplete}
+                onChange={event => changeValue("autocomplete", event.target.checked)}
+              />
+              顯示自動完成
+            </label>
           </p>
         </form>
 

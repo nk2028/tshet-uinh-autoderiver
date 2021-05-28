@@ -2,6 +2,5 @@
     "arrowParens": "avoid",
     "printWidth": 120,
     "jsxBracketSameLine": true,
-    "quoteProps": "consistent",
-    "endOfLine": "crlf"
+    "quoteProps": "consistent"
 }

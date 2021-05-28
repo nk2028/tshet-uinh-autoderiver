@@ -255,7 +255,9 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
           key="reset"
         />
       ) : (
-        <span key="hint">傳回物件以使用「選項」功能。</span>
+        <span key="hint" className="hint">
+          傳回物件以使用「選項」功能。
+        </span>
       )
     );
 
@@ -316,7 +318,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               this.props.setSchemaState(newProp);
             }}
             onCursorActivity={cm => cm.hasFocus() && cm.showHint()}
-            onFocus={cm => cm.showHint()}
+            onFocus={cm => setTimeout(() => cm.showHint(), 100)}
           />
         </div>
         <form className="pure-form">
