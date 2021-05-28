@@ -1,5 +1,5 @@
 import "purecss/build/pure.css";
-import "./App.css";
+import "./App.scss";
 import Main from "./Main";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -12,7 +12,7 @@ function showAbout() {
     hideClass: { popup: "" },
     customClass: {
       container: "about-modal",
-      htmlContainer: "about-modal-content"
+      htmlContainer: "about-modal-content",
     },
     width: "60vw",
     showCloseButton: true,
@@ -32,7 +32,9 @@ function showAbout() {
         </p>
 
         <h2>私隱權政策</h2>
-        <p>本頁面是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會透過本頁面收集閣下的任何資料。</p>
+        <p>
+          本頁面是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對閣下的私隱非常重視。本頁面的開發者不會透過本頁面收集閣下的任何資料。
+        </p>
         <p>下面將具體介紹本頁面能在何種程度上保障閣下的私隱權。</p>
         <b>閣下鍵入的內容</b>
         <p>
@@ -44,13 +46,13 @@ function showAbout() {
           Fonts、cdnjs。在閣下訪問本頁面時，閣下的瀏覽器將與這些站點交互。本頁面的開發者並不能讀取閣下訪問這些站點時產生的資料，亦無法控制這些站點如何使用閣下訪問時產生的資料。
         </p>
       </>
-    )
+    ),
   });
 }
 
 function App() {
   return (
-    <div className="tingle-content-wrapper">
+    <div>
       <header>
         <nav>
           <h1>

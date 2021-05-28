@@ -24,48 +24,43 @@ function init() {
 
   return {
     addTooltip: (content: React.ReactElement, relativeToNode: Element) => {
-      relativeToNode.addEventListener(
-        "mouseenter",
-        () => {
-          const relativeToNodeBox = relativeToNode.getBoundingClientRect();
-          const relativeToNodeTop = relativeToNodeBox.top + window.pageYOffset;
-          const relativeToNodeLeft = relativeToNodeBox.left + window.pageXOffset;
+      function showTooltip() {
+        const relativeToNodeBox = relativeToNode.getBoundingClientRect();
+        const relativeToNodeTop = relativeToNodeBox.top + window.pageYOffset;
+        const relativeToNodeLeft = relativeToNodeBox.left + window.pageXOffset;
 
-          ReactDOM.render(content, divInner);
+        ReactDOM.render(content, divInner);
 
-          const divInnerBox = divInner.getBoundingClientRect();
-          const divInnerHeight = divInnerBox.height;
-          const divInnerWidth = divInnerBox.width;
+        const divInnerBox = divInner.getBoundingClientRect();
+        const divInnerHeight = divInnerBox.height;
+        const divInnerWidth = divInnerBox.width;
 
-          const targetTop = relativeToNodeTop - divInnerHeight;
+        const targetTop = relativeToNodeTop - divInnerHeight;
 
-          let targetLeft = relativeToNodeLeft - divInnerWidth / 2; // align center by default
-          const oneEmSize = parseFloat(getComputedStyle(document.body).fontSize);
-          // the distance to left margin of the page should be 1em or greater
-          const miniumLeft = oneEmSize;
-          // if left overflow, align left
-          targetLeft = targetLeft < miniumLeft ? miniumLeft : targetLeft;
-          // the distance to right margin of the page should be 1em or greater
-          const maximumRight = getPageWidth() - oneEmSize - divInnerWidth;
-          // if right overflow, align right
-          targetLeft = targetLeft > maximumRight ? maximumRight : targetLeft;
+        let targetLeft = relativeToNodeLeft - divInnerWidth / 2; // align center by default
+        const oneEmSize = parseFloat(getComputedStyle(document.body).fontSize);
+        // the distance to left margin of the page should be 1em or greater
+        const miniumLeft = oneEmSize;
+        // if left overflow, align left
+        targetLeft = targetLeft < miniumLeft ? miniumLeft : targetLeft;
+        // the distance to right margin of the page should be 1em or greater
+        const maximumRight = getPageWidth() - oneEmSize - divInnerWidth;
+        // if right overflow, align right
+        targetLeft = targetLeft > maximumRight ? maximumRight : targetLeft;
 
-          divInner.style.top = targetTop + "px";
-          divInner.style.left = targetLeft + "px";
+        divInner.style.top = targetTop + "px";
+        divInner.style.left = targetLeft + "px";
 
-          divInner.classList.remove("large-tooltip-hidden");
-        },
-        false
-      );
-
-      relativeToNode.addEventListener(
-        "mouseleave",
-        () => {
-          divInner.classList.add("large-tooltip-hidden");
-        },
-        false
-      );
-    }
+        divInner.classList.remove("large-tooltip-hidden");
+      }
+      function hideTooltip() {
+        divInner.classList.add("large-tooltip-hidden");
+      }
+      relativeToNode.addEventListener("mouseenter", showTooltip, false);
+      relativeToNode.addEventListener("touchstart", showTooltip, false);
+      relativeToNode.addEventListener("mouseleave", hideTooltip, false);
+      relativeToNode.addEventListener("touchend", hideTooltip, false);
+    },
   };
 }
 

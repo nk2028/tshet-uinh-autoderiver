@@ -1,9 +1,9 @@
 import React from "react";
-import { 音韻地位 } from "qieyun";
+import { EntryItem } from "./Main";
 
 interface EntryProps {
   ch: string;
-  pronunciationMap: Map<string[], { 字頭: string; 解釋: string; 音韻地位: 音韻地位 }[]>;
+  pronunciationMap: Map<string[], EntryItem[]>;
   tooltip: any;
 }
 
@@ -18,7 +18,7 @@ class Entry extends React.Component<EntryProps, EntryState> {
     if (this.props.pronunciationMap.size) {
       this.state = {
         rubyClass: this.props.pronunciationMap.size > 1 ? "entry-multiple entry-unresolved" : "",
-        pronunciation: this.props.pronunciationMap.keys().next().value
+        pronunciation: this.props.pronunciationMap.keys().next().value,
       };
     }
   }
@@ -26,7 +26,7 @@ class Entry extends React.Component<EntryProps, EntryState> {
   handleClick(pronunciation: string[]) {
     this.setState((state: any) => ({
       pronunciation,
-      rubyClass: state.rubyClass.replace(" entry-unresolved", "")
+      rubyClass: state.rubyClass.replace(" entry-unresolved", ""),
     }));
   }
 
@@ -38,15 +38,16 @@ class Entry extends React.Component<EntryProps, EntryState> {
         {Array.from(this.props.pronunciationMap).map(([pronunciation, ress], i) => (
           <p
             key={i}
-            className={"tooltip-item" + (this.props.pronunciationMap.size > 1 && pronunciation === this.state.pronunciation ? " selected" : "")}
-            onClick={() => this.handleClick(pronunciation)}
-          >
+            className={
+              "tooltip-item" +
+              (this.props.pronunciationMap.size > 1 && pronunciation === this.state.pronunciation ? " selected" : "")
+            }
+            onClick={() => this.handleClick(pronunciation)}>
             <span className="nowrap" lang="och-Latn-fonipa">
               {pronunciation.join(" / ")}
             </span>{" "}
             {ress.map((res, index) => {
               const { 字頭, 解釋, 音韻地位 } = res;
-
               let 反切 = 音韻地位.反切(字頭);
               反切 = 反切 == null ? "" : `${反切}切 `;
               return (

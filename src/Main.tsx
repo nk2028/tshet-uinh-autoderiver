@@ -1,7 +1,6 @@
 import React from "react";
 import { query字頭, 音韻地位 as class音韻地位, iter音韻地位 } from "qieyun";
 import Yitizi from "yitizi";
-import copyToClipboard from "./to-clipboard";
 import LargeTooltip from "./large-tooltip";
 import Entry from "./Entry";
 import SchemaEditor from "./SchemaEditor";
@@ -10,21 +9,61 @@ import withReactContent from "sweetalert2-react-content";
 
 const SwalReact = withReactContent(Swal);
 
-export function notifyError(msg: string, err?: Error) {
-  SwalReact.fire({
+function notifyError(msg: string, err?: Error) {
+  if (err?.stack)
+    SwalReact.fire({
+      showClass: { popup: "" },
+      hideClass: { popup: "" },
+      icon: "error",
+      title: "錯誤",
+      customClass: "error-with-stack" as any,
+      html: (
+        <>
+          <p>{msg}</p>
+          <pre lang="en-x-code">{err.stack.replace(/\n +at eval[^]+/, "")}</pre>
+        </>
+      ),
+      confirmButtonText: "確定",
+    });
+  else
+    Swal.fire({
+      showClass: { popup: "" },
+      hideClass: { popup: "" },
+      icon: "error",
+      title: "錯誤",
+      text: msg,
+      confirmButtonText: "確定",
+    });
+}
+
+function copyFailed() {
+  notifyError("瀏覽器不支援匯出至剪貼簿，操作失敗");
+}
+
+function copySuccess() {
+  Swal.fire({
     showClass: { popup: "" },
     hideClass: { popup: "" },
-    icon: "error",
-    title: "錯誤",
-    customClass: (err?.stack ? "error-with-stack" : "") as any,
-    html: (
-      <>
-        <p>{msg}</p>
-        {!!err?.stack && <pre lang="en-x-code">{err.stack}</pre>}
-      </>
-    ),
-    confirmButtonText: "確定"
+    icon: "success",
+    title: "成功",
+    text: "已成功匯出至剪貼簿",
+    confirmButtonText: "確定",
   });
+}
+
+function copyFallback(txt: string) {
+  const textArea = document.createElement("textarea");
+  textArea.value = txt;
+  textArea.style.position = "fixed";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand("copy") ? copySuccess() : copyFailed();
+  } catch (err) {
+    copyFailed();
+  }
+  document.body.removeChild(textArea);
 }
 
 export const schemas = {
@@ -39,7 +78,7 @@ export const schemas = {
   fanwan: "推導《分韻撮要》擬音",
   putonghua: "推導普通話",
   gwongzau: "推導廣州音",
-  ayaka_v8: "綾香思考音系"
+  ayaka_v8: "綾香思考音系",
 };
 
 const options = {
@@ -47,7 +86,7 @@ const options = {
   convertPresetArticle: "為預設文章注音",
   exportAllSmallRhymes: "導出所有小韻",
   exportAllSyllables: "導出所有音節",
-  exportAllSyllablesWithCount: "導出所有音節，並計數"
+  exportAllSyllablesWithCount: "導出所有音節，並計數",
 };
 
 type Schema = keyof typeof schemas;
@@ -67,14 +106,27 @@ export interface SchemaState {
   name: Schema;
   input: string;
   original: string;
-  parameters: { [parameter: string]: any };
+  parameters: Parameter;
+  id: number;
 }
+
+export interface EntryItem {
+  字頭: string;
+  解釋: string;
+  音韻地位: class音韻地位;
+}
+
+export type Parameter = { [parameter: string]: any };
 
 export function fetchFile(input: string, callback: (text: string) => void) {
   fetch(input, { cache: "no-cache" })
     .then(response => response.text())
     .then(callback)
     .catch(err => notifyError("載入檔案失敗", err));
+}
+
+function schemaCopy(): SchemaState {
+  return { name: "baxter", input: "", original: "", parameters: {}, id: +new Date() };
 }
 
 let presetArticle: string;
@@ -89,12 +141,18 @@ class Main extends React.Component<any, MainState> {
 
     const schemaNames: Schema[] = JSON.parse(localStorage.getItem("schemas") || "[]");
     const schemaInputs: string[] = JSON.parse(localStorage.getItem("inputs") || "[]");
-    const schemaParameters: { [parameter: string]: any }[] = JSON.parse(localStorage.getItem("parameters") || "[]");
+    const schemaParameters: Parameter[] = JSON.parse(localStorage.getItem("parameters") || "[]");
 
     this.state = {
       schemas: schemaNames.length
-        ? schemaNames.map((name, index) => ({ name, input: schemaInputs[index], original: "", parameters: schemaParameters[index] }))
-        : [{ name: "baxter", input: "", original: "", parameters: [] }],
+        ? schemaNames.map((name, id) => ({
+            name,
+            input: schemaInputs[id],
+            original: "",
+            parameters: schemaParameters[id],
+            id,
+          }))
+        : [schemaCopy()],
       article:
         localStorage.getItem("article") ||
         "遙襟甫暢，逸興遄飛。爽籟發而清風生，纖歌凝而白雲遏。睢園綠竹，氣凌彭澤之樽；鄴水朱華，光照臨川之筆。" +
@@ -104,16 +162,12 @@ class Main extends React.Component<any, MainState> {
       convertVariant: localStorage.getItem("convertVariant") === "true",
       autocomplete: localStorage.getItem("autocomplete") !== "false",
       output: [],
-      isApplied: false
+      isApplied: false,
     };
   }
 
   componentDidMount() {
     this.largeTooltip = LargeTooltip.init();
-  }
-
-  addSchema() {
-    this.setState(({ schemas }) => ({ schemas: [...schemas, { name: "baxter", input: "", original: "", parameters: [] }] }));
   }
 
   handlePredefinedOptions() {
@@ -132,7 +186,12 @@ class Main extends React.Component<any, MainState> {
       try {
         return userInputs.map((input, index) => input(音韻地位, 字頭, parameters[index]));
       } catch (err) {
-        notifyError(`推導「${字頭}」字（音韻地位：${音韻地位.描述}）時發生錯誤`, err);
+        notifyError(
+          字頭
+            ? `推導「${字頭}」字（音韻地位：${音韻地位.描述}）時發生錯誤`
+            : `推導「${音韻地位.描述}」音韻地位（字為 null）時發生錯誤`,
+          err
+        );
         throw err;
       }
     };
@@ -149,19 +208,19 @@ class Main extends React.Component<any, MainState> {
       convertArticle: () =>
         Array.from(this.state.article).map((ch, i) => {
           let 所有異體字 = [ch].concat(this.state.convertVariant ? Yitizi.get(ch) : []);
-          const pronunciations = new Map();
-          const pronunciationMap = new Map();
+          const pronunciations: [string[], EntryItem[]][] = [];
 
           for (const 字頭 of 所有異體字) {
             for (const { 音韻地位, 解釋 } of query字頭(字頭)) {
-              let 擬音 = JSON.stringify(callDeriver(音韻地位, 字頭));
-              if (pronunciations.get(擬音) == null) pronunciationMap.set(擬音, []);
-              pronunciationMap.get(擬音).push({ 字頭, 解釋, 音韻地位 });
+              let 擬音 = callDeriver(音韻地位, 字頭);
+              const entry = pronunciations.find(key => key[0].every((pronunciation, i) => pronunciation === 擬音[i]));
+              if (entry) entry[1].push({ 字頭, 解釋, 音韻地位 });
+              else pronunciations.push([擬音, [{ 字頭, 解釋, 音韻地位 }]]);
             }
           }
-
-          const map = new Map(Array.from(pronunciationMap).map(([key, value]) => [JSON.parse(key), value]));
-          return <Entry key={id + i} ch={ch} pronunciationMap={map} tooltip={this.largeTooltip}></Entry>;
+          return (
+            <Entry key={id + i} ch={ch} pronunciationMap={new Map(pronunciations)} tooltip={this.largeTooltip}></Entry>
+          );
         }),
 
       convertPresetArticle: () =>
@@ -200,14 +259,17 @@ class Main extends React.Component<any, MainState> {
       exportAllSmallRhymes: () =>
         Array.from(iter音韻地位()).map((音韻地位, i) => (
           <p key={id + i}>
-            {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, null).join(" / ")}</span> {音韻地位.代表字}
+            {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, null).join(" / ")}</span>{" "}
+            {音韻地位.代表字}
           </p>
         )),
 
       exportAllSyllables: () => [
         <span lang="och-Latn-fonipa" key={id + 0}>
-          {Array.from(new Set(Array.from(iter音韻地位()).map(音韻地位 => callDeriver(音韻地位, null).join(" / ")))).join(", ")}
-        </span>
+          {Array.from(
+            new Set(Array.from(iter音韻地位()).map(音韻地位 => callDeriver(音韻地位, null).join(" / ")))
+          ).join(", ")}
+        </span>,
       ],
 
       exportAllSyllablesWithCount: () => [
@@ -222,8 +284,8 @@ class Main extends React.Component<any, MainState> {
             .sort((a, b) => b[1] - a[1])
             .map(([k, v]) => `${k} (${v})`)
             .join(", ")}
-        </span>
-      ]
+        </span>,
+      ],
     };
 
     try {
@@ -240,25 +302,19 @@ class Main extends React.Component<any, MainState> {
 
   handleCopy() {
     const txt = this.outputArea?.textContent;
-    txt
-      ? copyToClipboard(txt)
-      : Swal.fire({
-          showClass: { popup: "" },
-          hideClass: { popup: "" },
-          icon: "error",
-          title: "錯誤",
-          text: "請先進行操作，再匯出結果",
-          confirmButtonText: "確定"
-        });
+    if (txt) {
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(copySuccess, () => copyFallback(txt));
+      else copyFallback(txt);
+    } else notifyError("請先進行操作，再匯出結果");
   }
 
   scrollToOutput(element: HTMLElement | null) {
-    if (this.state.isApplied) {
-      if (element) {
-        this.outputArea = element;
+    if (element) {
+      this.outputArea = element;
+      if (this.state.isApplied) {
         element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        this.setState({ isApplied: false });
       }
-      this.setState({ isApplied: false });
     }
   }
 
@@ -275,31 +331,48 @@ class Main extends React.Component<any, MainState> {
       localStorage.setItem("parameters", JSON.stringify(this.state.schemas.map(schemas => schemas.parameters)));
     };
 
-    const setSchemaState = (index: number) => (state: SchemaState) => {
+    const addSchema = (id: number | null) => {
       this.setState(({ schemas }) => {
-        schemas[index] = state;
+        schemas = [...schemas];
+        schemas.splice(schemas.findIndex(schema => schema.id === id) + 1, 0, schemaCopy());
+        return { schemas };
+      });
+    };
+
+    const setSchemaState = (state: SchemaState) => {
+      this.setState(({ schemas }) => {
+        schemas = [...schemas];
+        schemas[schemas.findIndex(schema => schema.id === state.id)] = state;
         return { schemas };
       }, storeSchemas);
     };
 
-    const deleteSchema = (index: number) => () => {
-      this.setState(({ schemas }) => ({ schemas: schemas.filter((schema, i) => index !== i) }), storeSchemas);
+    const deleteSchema = (state: SchemaState) => {
+      this.setState(({ schemas }) => ({ schemas: schemas.filter(schema => schema.id !== state.id) }), storeSchemas);
     };
 
     return (
       <div className="main-container">
-        {this.state.schemas.map((state, index, array) => (
-          <SchemaEditor
-            name={state.name}
-            input={state.input}
-            original={state.original}
-            parameters={state.parameters}
-            setSchemaState={setSchemaState(index)}
-            deleteSchema={deleteSchema(index)}
-            single={array.length === 1}
-            autocomplete={this.state.autocomplete}
-            key={index}
-          />
+        <form className="add-schema">
+          <input type="button" value="+" title="新增方案" onClick={() => addSchema(null)} />
+        </form>
+        {this.state.schemas.map((schema, index, array) => (
+          <React.Fragment key={schema.id}>
+            <SchemaEditor
+              name={schema.name}
+              input={schema.input}
+              original={schema.original}
+              id={schema.id}
+              parameters={schema.parameters}
+              setSchemaState={setSchemaState}
+              deleteSchema={deleteSchema}
+              single={array.length === 1}
+              autocomplete={this.state.autocomplete}
+            />
+            <form className="add-schema">
+              <input type="button" value="+" title="新增方案" onClick={() => addSchema(schema.id)} />
+            </form>
+          </React.Fragment>
         ))}
 
         <form className="pure-form">
@@ -328,16 +401,28 @@ class Main extends React.Component<any, MainState> {
               </select>
             </label>
             <label>
-              <input type="checkbox" checked={this.state.convertVariant} onChange={event => changeValue("convertVariant", event.target.checked)} />
+              <input
+                type="checkbox"
+                checked={this.state.convertVariant}
+                onChange={event => changeValue("convertVariant", event.target.checked)}
+              />
               轉換異體字
             </label>
             <label>
-              <input type="checkbox" checked={this.state.autocomplete} onChange={event => changeValue("autocomplete", event.target.checked)} />
+              <input
+                type="checkbox"
+                checked={this.state.autocomplete}
+                onChange={event => changeValue("autocomplete", event.target.checked)}
+              />
               顯示自動完成
             </label>
-            <input className="pure-button pure-button-primary" type="button" value="適用" onClick={() => this.handlePredefinedOptions()} />
+            <input
+              className="pure-button pure-button-primary"
+              type="button"
+              value="適用"
+              onClick={() => this.handlePredefinedOptions()}
+            />
             <input className="pure-button" type="button" value="匯出至剪貼簿" onClick={() => this.handleCopy()} />
-            <input className="pure-button" type="button" value="新增方案" onClick={() => this.addSchema()} />
           </p>
         </form>
 

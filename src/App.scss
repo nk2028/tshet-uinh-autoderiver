@@ -1,0 +1,285 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Serif+TC:wght@400;700&family=Jomolhari&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/hanamin@latest/HanaMin.min.css");
+@import url("https://cdn.jsdelivr.net/gh/ayaka14732/syyon-vencie@6b08e67/charissil/CharisSIL.css");
+body {
+  line-height: 1.6;
+  a:link {
+    border-bottom: 1px solid;
+    color: inherit;
+    text-decoration: none;
+  }
+  :lang(en),
+  :lang(zh) {
+    font-family: "Jomolhari", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC",
+      "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR",
+      "Noto Serif SC", "Noto Serif TC", "HanaMin", serif;
+    font-language-override: "KOR";
+  }
+  :lang(och-Latn-fonipa) {
+    font-family: "CharisSILW", serif;
+  }
+  :lang(en-x-code) {
+    font-family: monospace, "CharisSILW", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", monospace;
+    font-language-override: "KOR";
+  }
+  nav {
+    padding: 0 2em;
+    h1 {
+      font-size: 1.75rem;
+      text-align: center;
+      margin: 1.2rem 0 1.6rem;
+      span {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        &:after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 2px;
+          border-bottom: 1px dashed #aaa;
+        }
+        &:hover {
+          color: #444;
+        }
+      }
+    }
+  }
+  .add-schema {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    background-color: #aaa;
+    input {
+      position: absolute;
+      top: -0.75em;
+      left: calc(50% - 0.75em);
+      width: 1.5em;
+      height: 1.5em;
+      padding: 0;
+      margin: 0;
+      font-size: 1.3em;
+      color: white;
+      background-color: #aaa;
+      text-align: center;
+      border-radius: 50%;
+      border: 4px solid white;
+      cursor: pointer;
+      &:hover {
+        background-color: #bbb;
+        transition: 0.2s;
+      }
+    }
+  }
+  .pure-button {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    margin-right: 0.3em;
+    vertical-align: baseline;
+  }
+  .pure-form {
+    p {
+      margin: 1.2em 0 1em;
+    }
+    select {
+      background-color: rgba(255, 255, 255, 0.5);
+      padding: 0 0.8em 0 0.4em;
+      height: 2em;
+      vertical-align: baseline;
+      margin-left: 0.3em;
+    }
+    textarea {
+      background-color: rgba(255, 255, 255, 0.5);
+      line-height: 1.6;
+    }
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 0.3em;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100px;
+      height: 2em;
+      vertical-align: baseline;
+      margin-left: 0.3em;
+      padding: 0 0 0 0.6em;
+    }
+    label {
+      margin-right: 0.8em;
+      white-space: nowrap;
+      &:first-child select {
+        margin: 0;
+      }
+    }
+    b + label {
+      input[type="radio"],
+      input[type="checkbox"] {
+        margin-left: 0.2em;
+      }
+    }
+  }
+  .CodeMirror {
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    .CodeMirror-matchingbracket,
+    .CodeMirror-nonmatchingbracket {
+      display: inline-block;
+      position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border: 1px solid #ddd;
+      }
+    }
+    .CodeMirror-activeline-background {
+      background-color: transparent;
+      right: -8px;
+    }
+    &.CodeMirror-focused .CodeMirror-activeline-background {
+      background-color: #f6faff;
+    }
+    .CodeMirror-placeholder.CodeMirror-line-like {
+      color: #888;
+    }
+  }
+  .swal2-container.swal2-center {
+    grid-template-columns: auto auto auto;
+  }
+  .about-modal.swal2-backdrop-show {
+    background: rgba(0, 0, 0, 0.7);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+  .about-modal-content {
+    &.swal2-html-container {
+      text-align: left;
+      padding: 1.5rem 3rem;
+      line-height: 1.6;
+    }
+    h2,
+    b {
+      color: black;
+    }
+    p {
+      color: #5c5c5c;
+      font-size: 16px;
+      a:link:hover {
+        border-bottom: 1px solid black;
+        color: initial;
+        transition: 0.5s;
+      }
+    }
+  }
+  .swal2-close {
+    font-size: 3.5em;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  .error-with-stack {
+    width: 60vw;
+    display: block !important;
+    p {
+      margin: 0;
+    }
+    pre {
+      text-align: left;
+      overflow: auto;
+      max-height: 70vh;
+    }
+  }
+  .main-container {
+    padding: 0 2em;
+  }
+  #schemaInput {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 3px #ddd;
+    box-shadow: inset 0 1px 3px #ddd;
+    box-sizing: border-box;
+    overflow-x: auto;
+    width: 100%;
+    &:focus-within {
+      outline: 0;
+      border-color: #129fea;
+    }
+  }
+  textarea {
+    resize: vertical;
+    width: 100%;
+  }
+  output {
+    display: block;
+    font-size: 105%;
+    overflow-wrap: break-word;
+    padding-bottom: 1em;
+    white-space: pre-line;
+    h3,
+    p {
+      margin: 0;
+      line-height: 1.4;
+    }
+    :not(rt):lang(och-Latn-fonipa) {
+      white-space: initial;
+    }
+    ruby {
+      margin: 0 3px;
+    }
+    .ruby-wrapper {
+      display: inline-block;
+      padding: 0 3px;
+      ruby {
+        margin: 0;
+      }
+    }
+    rt {
+      font-size: 82.5%;
+      line-height: 1.1;
+    }
+  }
+  .hidden {
+    display: none;
+  }
+  .nowrap {
+    white-space: nowrap;
+  }
+  .entry-multiple {
+    color: #708;
+    &.entry-unresolved {
+      color: #00f;
+    }
+  }
+  .tooltip-item {
+    margin: 2px 10px;
+    white-space: pre-line;
+    &.selected {
+      color: #00f;
+      &:hover {
+        color: #a11;
+      }
+    }
+    &:not(:only-child) {
+      cursor: pointer;
+      &:hover {
+        color: #0078e7;
+      }
+    }
+  }
+  .large-tooltip-inner {
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 10;
+  }
+  .tooltip-ch {
+    font-size: 125%;
+  }
+  .tooltip-items-wrapper {
+    padding-bottom: 3px;
+  }
+}

@@ -24,19 +24,23 @@ import "codemirror/mode/javascript/javascript";
 import { 音韻地位 } from "qieyun";
 import { Pos, ShowHintOptions } from "codemirror";
 import Swal from "sweetalert2";
-import { fetchFile, schemas, SchemaState } from "./Main";
+import { fetchFile, schemas, SchemaState, Parameter } from "./Main";
+import prettier from "prettier/standalone";
+import parserBabel from "prettier/parser-babel";
 
 (window as any).JSHINT = JSHINT;
 
 interface SchemaProps extends SchemaState {
   setSchemaState: (state: SchemaState) => void;
-  deleteSchema: () => void;
+  deleteSchema: (state: SchemaState) => void;
   single: boolean;
   autocomplete: boolean;
 }
 
 const 音韻地位example = 音韻地位.from描述("幫三凡入");
-const 音韻地位properties = Object.getOwnPropertyNames(音韻地位example).concat(Object.getOwnPropertyNames(Object.getPrototypeOf(音韻地位example)).slice(1));
+const 音韻地位properties = Object.getOwnPropertyNames(音韻地位example).concat(
+  Object.getOwnPropertyNames(Object.getPrototypeOf(音韻地位example)).slice(1)
+);
 const deriverParameters = ["音韻地位", "字頭"];
 
 class SchemaEditor extends React.Component<SchemaProps, any> {
@@ -86,14 +90,14 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
           icon: "warning",
           showCancelButton: true,
           confirmButtonText: "確定",
-          cancelButtonText: "取消"
+          cancelButtonText: "取消",
         }).then(result => {
           if (result.isConfirmed) {
             this.props.setSchemaState({
-              name: this.props.name,
+              ...this.props,
               input,
               original: input,
-              parameters: this.setParameters(input) || {}
+              parameters: this.setParameters(input) || {},
             });
           }
         });
@@ -122,32 +126,46 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "確定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
       }).then(result => {
         if (result.isConfirmed) {
-          this.props.deleteSchema();
+          this.props.deleteSchema(this.props);
         }
       });
     } else {
-      this.props.deleteSchema();
+      this.props.deleteSchema(this.props);
     }
   }
 
-  setParameters(input: string): any {
+  setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
     try {
       // eslint-disable-next-line no-new-func
       const parameters = new Function("音韻地位", "字頭", "選項", input)(null, null, null);
+      if (typeof parameters !== "object") return;
       Object.keys(parameters).forEach(key => {
         if (Array.isArray(parameters[key])) {
-          if (key in this.props.parameters && Array.isArray(this.props.parameters[key]) && parameters[key].slice(1).includes(this.props.parameters[key][0]))
-            parameters[key][0] = this.props.parameters[key][0];
-          else if (typeof parameters[key][0] === "number" && parameters[key][0] >= 1 && parameters[key][0] < parameters[key].length)
+          if (
+            key in oldParameters &&
+            Array.isArray(oldParameters[key]) &&
+            parameters[key].slice(1).includes(oldParameters[key][0])
+          )
+            parameters[key][0] = oldParameters[key][0];
+          else if (
+            typeof parameters[key][0] === "number" &&
+            parameters[key][0] >= 1 &&
+            parameters[key][0] < parameters[key].length
+          )
             parameters[key][0] = parameters[key][parameters[key][0]];
           else if (!parameters[key].slice(1).includes(parameters[key][0])) parameters[key][0] = parameters[key][1];
-        } else if (key in this.props.parameters && typeof this.props.parameters[key] === typeof parameters[key]) parameters[key] = this.props.parameters[key];
+        } else if (key in oldParameters && typeof oldParameters[key] === typeof parameters[key])
+          parameters[key] = oldParameters[key];
       });
       return parameters;
     } catch (err) {}
+  }
+
+  resetParameters() {
+    this.props.setSchemaState({ ...this.props, parameters: this.setParameters(this.props.input, {}) || {} });
   }
 
   render() {
@@ -157,13 +175,31 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
       this.props.setSchemaState({ ...this.props });
     };
 
+    const formatCode = (cm: CodeMirror.Editor) => {
+      const cursor = cm.getCursor();
+      const { left, top } = cm.getScrollInfo();
+      const line = cm.lineAtHeight(top, "local");
+      const offset = top - cm.heightAtLine(line, "local");
+      const { formatted, cursorOffset } = prettier.formatWithCursor(cm.getValue(), {
+        cursorOffset: cm.indexFromPos(cursor),
+        parser: "babel",
+        plugins: [parserBabel],
+      });
+      cm.setValue(formatted);
+      const position = cm.posFromIndex(cursorOffset);
+      cm.scrollTo(left, cm.heightAtLine(position.line - cursor.line + line, "local") + offset);
+      cm.setCursor(position);
+    };
+
     let parameters = Object.entries(this.props.parameters)
       .map(([key, value], index) => {
         if (Array.isArray(value))
           return (
             <label key={index}>
               {key}
-              <select onChange={event => changeParameter(key, JSON.parse(event.target.value))} value={JSON.stringify(value[0])}>
+              <select
+                onChange={event => changeParameter(key, JSON.parse(event.target.value))}
+                value={JSON.stringify(value[0])}>
                 {value.slice(1).map((option, i) => (
                   <option key={i + 1} value={JSON.stringify(option)}>
                     {option + ""}
@@ -177,7 +213,11 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
             case "boolean":
               return (
                 <label key={index}>
-                  <input type="checkbox" checked={value} onChange={event => changeParameter(key, event.target.checked)} />
+                  <input
+                    type="checkbox"
+                    checked={value}
+                    onChange={event => changeParameter(key, event.target.checked)}
+                  />
                   {key}
                 </label>
               );
@@ -185,7 +225,12 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               return (
                 <label key={index}>
                   {key}
-                  <input type="number" value={value} step="any" onChange={event => changeParameter(key, +event.target.value)} />
+                  <input
+                    type="number"
+                    value={value}
+                    step="any"
+                    onChange={event => changeParameter(key, +event.target.value)}
+                  />
                 </label>
               );
             case "string":
@@ -200,7 +245,19 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
           }
       })
       .filter(parameter => parameter);
-    if (!parameters.length) parameters = [<span key={0}>傳回物件以使用「選項」功能。</span>];
+    parameters.push(
+      parameters.length ? (
+        <input
+          className="pure-button"
+          type="button"
+          value="恢復預設值"
+          onClick={() => this.resetParameters()}
+          key="reset"
+        />
+      ) : (
+        <span key="hint">傳回物件以使用「選項」功能。</span>
+      )
+    );
 
     return (
       <div className="schema-editor">
@@ -209,12 +266,24 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
             <b>預設推導方案：</b>
             {Object.entries(schemas).map(([value, label], index) => (
               <label key={index}>
-                <input type="radio" name="schema" value={value} checked={this.props.name === value} onChange={event => this.changeSchema(event)} />
+                <input
+                  type="radio"
+                  name="schema"
+                  value={value}
+                  checked={this.props.name === value}
+                  onChange={event => this.changeSchema(event)}
+                />
                 {label}
               </label>
             ))}
             <input className="pure-button" type="submit" value="載入" />
-            <input className="pure-button" type="button" value="刪除方案" disabled={this.props.single} onClick={() => this.deleteSchema()} />
+            <input
+              className="pure-button"
+              type="button"
+              value="刪除方案"
+              disabled={this.props.single}
+              onClick={() => this.deleteSchema()}
+            />
           </p>
         </form>
         <div lang="en-x-code" id="schemaInput">
@@ -226,8 +295,10 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               scrollbarStyle: "overlay",
               extraKeys: {
                 F11: cm => cm.setOption("fullScreen", !cm.getOption("fullScreen")),
-                Esc: cm => cm.setOption("fullScreen", false)
+                Esc: cm => cm.setOption("fullScreen", false),
+                F9: formatCode,
               },
+              maxHighlightLength: Infinity,
               viewportMargin: 16,
               placeholder: "以 JavaScript 輸入推導方案……",
               styleActiveLine: true,
@@ -236,7 +307,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               foldGutter: true,
               lint: { esversion: Infinity } as any,
               gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
-              hintOptions: { hint: this.autocomplete.bind(this), completeSingle: false }
+              hintOptions: { hint: this.autocomplete.bind(this), completeSingle: false },
             }}
             onBeforeChange={(cm, data, input) => {
               const newProp = { ...this.props, input };
