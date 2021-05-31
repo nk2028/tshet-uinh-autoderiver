@@ -256,7 +256,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         />
       ) : (
         <span key="hint" className="hint">
-          傳回物件以使用「選項」功能。
+          此推導方案無可用選項，請回傳物件以使用「選項」功能。
         </span>
       )
     );
