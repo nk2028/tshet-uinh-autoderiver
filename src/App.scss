@@ -51,8 +51,11 @@ body {
   .add-schema {
     position: relative;
     width: 100%;
-    height: 1px;
-    background-color: #aaa;
+    border-bottom: 1px solid #aaa;
+    &:hover {
+      border-bottom-color: #129fea;
+      transition: 0.25s;
+    }
     input {
       position: absolute;
       top: -0.75em;
@@ -108,8 +111,7 @@ body {
       padding: 0 0 0 0.6em;
     }
     label {
-      margin-right: 0.8em;
-      white-space: nowrap;
+      margin-right: 0.4em;
       &:first-child select {
         margin: 0;
       }
