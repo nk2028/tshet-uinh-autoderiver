@@ -1,4 +1,4 @@
-# qieyun-autoderiver ![](https://github.com/nk2028/qieyun-autoderiver/workflows/Publish/badge.svg?branch=main)
+# qieyun-autoderiver
 
 An automatic tool to generate the derivatives of the Qieyun phonological system
 
