@@ -1,0 +1,55 @@
+name: Publish to gh-pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - run: npm install
+      - run: npm run build
+      - name: Publish
+        run: |
+          # Create a temporary directory
+          export temp_dir=`mktemp -d -p ~`
+
+          (
+          # Preserve .git
+          mkdir $temp_dir/temp
+          mv .git $temp_dir/temp
+          cd $temp_dir/temp
+
+          # Switch branch
+          git fetch
+          git checkout gh-pages
+          git reset --hard gh-pages
+          )
+
+          (
+          # Move .git
+          mv $temp_dir/temp/.git $temp_dir
+          rm -rf $temp_dir/temp
+          mv build/* $temp_dir
+          mv LICENSE $temp_dir
+
+          # Go to the temporary directory
+          cd $temp_dir
+
+          # Set commit identity
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+          # Publish
+          git add .
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Publish `TZ='Asia/Hong_Kong' date`"
+            git push -f origin gh-pages
+          fi
+          )
