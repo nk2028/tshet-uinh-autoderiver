@@ -85,7 +85,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         Swal.fire({
           showClass: { popup: "" },
           hideClass: { popup: "" },
-          title: "您確定要載入嗎？",
+          title: "是否確定載入？",
           text: "您會遺失所有變更。",
           icon: "warning",
           showCancelButton: true,
@@ -121,7 +121,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
       Swal.fire({
         showClass: { popup: "" },
         hideClass: { popup: "" },
-        title: "您確定要刪除嗎？",
+        title: "是否確定刪除？",
         text: "您會遺失所有變更。",
         icon: "warning",
         showCancelButton: true,
