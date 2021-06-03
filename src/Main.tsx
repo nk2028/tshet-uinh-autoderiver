@@ -421,7 +421,7 @@ class Main extends React.Component<any, MainState> {
                 checked={this.state.autocomplete}
                 onChange={event => changeValue("autocomplete", event.target.checked)}
               />
-              編輯程式碼時顯示自動完成
+              編輯推導方案時顯示自動完成
             </label>
           </p>
         </form>
