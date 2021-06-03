@@ -111,6 +111,7 @@ body {
       padding: 0 0 0 0.6em;
     }
     label {
+      display: inline;
       margin-right: 0.4em;
       &:first-child select {
         margin: 0;
