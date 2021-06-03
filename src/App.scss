@@ -10,18 +10,18 @@ body {
   }
   :lang(en),
   :lang(zh) {
-    font-family: "Jomolhari", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC", "Noto Serif CJK SC",
-      "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC", "Noto Serif KR",
-      "Noto Serif SC", "Noto Serif TC", "HanaMin", serif;
+    font-family: "Jomolhari", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", serif;
     font-language-override: "KOR";
   }
   :lang(och-Latn-fonipa) {
     font-family: "CharisSILW", serif;
   }
   :lang(en-x-code) {
-    font-family: monospace, "CharisSILW", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
-      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
-      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", monospace;
+    font-family: monospace, "CharisSILW", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR",
+      "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC",
+      "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", monospace, monospace;
     font-language-override: "KOR";
   }
   nav {
