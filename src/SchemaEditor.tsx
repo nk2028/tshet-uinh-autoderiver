@@ -139,7 +139,6 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
 
   setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
     try {
-      // eslint-disable-next-line no-new-func
       const parameters = new Function("音韻地位", "字頭", "選項", input)(null, null, null);
       if (typeof parameters !== "object") return;
       Object.keys(parameters).forEach(key => {

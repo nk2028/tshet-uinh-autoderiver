@@ -1,9 +1,9 @@
 import React from "react";
-import { EntryItem } from "./Main";
+import { Entries, joinWithBr } from "./Main";
 
 interface EntryProps {
   ch: string;
-  pronunciationMap: Map<string[], EntryItem[]>;
+  entries: Entries;
   tooltip: any;
 }
 
@@ -15,10 +15,10 @@ interface EntryState {
 class Entry extends React.Component<EntryProps, EntryState> {
   constructor(props: any) {
     super(props);
-    if (this.props.pronunciationMap.size) {
+    if (this.props.entries.length) {
       this.state = {
-        rubyClass: this.props.pronunciationMap.size > 1 ? "entry-multiple entry-unresolved" : "",
-        pronunciation: this.props.pronunciationMap.keys().next().value,
+        rubyClass: this.props.entries.length > 1 ? "entry-multiple entry-unresolved" : "",
+        pronunciation: this.props.entries[0][0],
       };
     }
   }
@@ -31,16 +31,16 @@ class Entry extends React.Component<EntryProps, EntryState> {
   }
 
   render() {
-    if (!this.props.pronunciationMap.size) return <>{this.props.ch}</>;
+    if (!this.props.entries.length) return <>{this.props.ch}</>;
 
     const tooltip = (
       <div className="tooltip-items-wrapper">
-        {Array.from(this.props.pronunciationMap).map(([pronunciation, ress], i) => (
+        {this.props.entries.map(([pronunciation, ress], i) => (
           <p
             key={i}
             className={
               "tooltip-item" +
-              (this.props.pronunciationMap.size > 1 && pronunciation === this.state.pronunciation ? " selected" : "")
+              (this.props.entries.length > 1 && pronunciation === this.state.pronunciation ? " selected" : "")
             }
             onClick={() => this.handleClick(pronunciation)}>
             <span className="nowrap" lang="och-Latn-fonipa">
@@ -67,7 +67,7 @@ class Entry extends React.Component<EntryProps, EntryState> {
         <ruby className={this.state.rubyClass}>
           {this.props.ch}
           <rp>(</rp>
-          <rt lang="och-Latn-fonipa">{this.state.pronunciation.join("\n")}</rt>
+          <rt lang="och-Latn-fonipa">{joinWithBr(this.state.pronunciation)}</rt>
           <rp>)</rp>
         </ruby>
       </span>

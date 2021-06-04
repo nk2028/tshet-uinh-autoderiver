@@ -98,7 +98,7 @@ interface MainState {
   option: Option;
   convertVariant: boolean;
   autocomplete: boolean;
-  output: React.ReactElement[];
+  output: JSX.Element[];
   isApplied: boolean;
 }
 
@@ -110,16 +110,12 @@ export interface SchemaState {
   id: number;
 }
 
-export interface EntryItem {
-  字頭: string;
-  解釋: string;
-  音韻地位: class音韻地位;
-}
+export type Entries = [string[], { 字頭: string; 解釋: string; 音韻地位: class音韻地位 }[]][];
 
 export type Parameter = { [parameter: string]: any };
 
 export function fetchFile(input: string, callback: (text: string) => void) {
-  fetch(input, { cache: "no-cache" })
+  fetch(input)
     .then(response => response.text())
     .then(callback)
     .catch(err => notifyError("載入檔案失敗", err));
@@ -127,6 +123,15 @@ export function fetchFile(input: string, callback: (text: string) => void) {
 
 function schemaCopy(): SchemaState {
   return { name: "baxter", input: "", original: "", parameters: {}, id: +new Date() };
+}
+
+export function joinWithBr(array: (string | JSX.Element)[]) {
+  return array.map((item, index) => (
+    <React.Fragment key={index}>
+      {index !== 0 && <br />}
+      {item}
+    </React.Fragment>
+  ));
 }
 
 let presetArticle: string;
@@ -208,19 +213,17 @@ class Main extends React.Component<any, MainState> {
       convertArticle: () =>
         Array.from(this.state.article).map((ch, i) => {
           let 所有異體字 = [ch].concat(this.state.convertVariant ? Yitizi.get(ch) : []);
-          const pronunciations: [string[], EntryItem[]][] = [];
+          const entries: Entries = [];
 
           for (const 字頭 of 所有異體字) {
             for (const { 音韻地位, 解釋 } of query字頭(字頭)) {
               let 擬音 = callDeriver(音韻地位, 字頭);
-              const entry = pronunciations.find(key => key[0].every((pronunciation, i) => pronunciation === 擬音[i]));
+              const entry = entries.find(key => key[0].every((pronunciation, i) => pronunciation === 擬音[i]));
               if (entry) entry[1].push({ 字頭, 解釋, 音韻地位 });
-              else pronunciations.push([擬音, [{ 字頭, 解釋, 音韻地位 }]]);
+              else entries.push([擬音, [{ 字頭, 解釋, 音韻地位 }]]);
             }
           }
-          return (
-            <Entry key={id + i} ch={ch} pronunciationMap={new Map(pronunciations)} tooltip={this.largeTooltip}></Entry>
-          );
+          return <Entry key={id + i} ch={ch} entries={entries} tooltip={this.largeTooltip}></Entry>;
         }),
 
       convertPresetArticle: () =>
@@ -244,7 +247,7 @@ class Main extends React.Component<any, MainState> {
                     <ruby key={id + j}>
                       {字頭}
                       <rp>(</rp>
-                      <rt lang="och-Latn-fonipa">{擬音.join("\n")}</rt>
+                      <rt lang="och-Latn-fonipa">{joinWithBr(擬音)}</rt>
                       <rp>)</rp>
                     </ruby>
                   );
@@ -289,7 +292,6 @@ class Main extends React.Component<any, MainState> {
     };
 
     try {
-      // eslint-disable-next-line no-new-func
       userInputs = this.state.schemas.map(({ input }) => new Function("音韻地位", "字頭", "選項", input));
     } catch (err) {
       notifyError("程式碼錯誤", err);
@@ -308,13 +310,11 @@ class Main extends React.Component<any, MainState> {
     } else notifyError("請先進行操作，再匯出結果");
   }
 
-  scrollToOutput(element: HTMLElement | null) {
-    if (element) {
-      this.outputArea = element;
-      if (this.state.isApplied) {
-        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        this.setState({ isApplied: false });
-      }
+  scrollToOutput(element: HTMLElement) {
+    this.outputArea = element;
+    if (this.state.isApplied) {
+      element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      this.setState({ isApplied: false });
     }
   }
 
@@ -336,7 +336,7 @@ class Main extends React.Component<any, MainState> {
         schemas = [...schemas];
         schemas.splice(schemas.findIndex(schema => schema.id === id) + 1, 0, schemaCopy());
         return { schemas };
-      });
+      }, storeSchemas);
     };
 
     const setSchemaState = (state: SchemaState) => {
@@ -426,7 +426,7 @@ class Main extends React.Component<any, MainState> {
           </p>
         </form>
 
-        <output ref={element => this.scrollToOutput(element)}>{this.state.output}</output>
+        <output ref={element => element && this.scrollToOutput(element)}>{this.state.output}</output>
       </div>
     );
   }
