@@ -29,7 +29,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "no-new-func": "off"
+    }
   },
   "browserslist": {
     "production": [

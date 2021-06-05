@@ -52,9 +52,10 @@ body {
     position: relative;
     width: 100%;
     border-bottom: 1px solid #aaa;
+    transition: 0.2s;
+    pointer-events: none;
     &:hover {
       border-bottom-color: #129fea;
-      transition: 0.25s;
     }
     input {
       position: absolute;
@@ -71,9 +72,10 @@ body {
       border-radius: 50%;
       border: 4px solid white;
       cursor: pointer;
+      transition: 0.2s;
+      pointer-events: all;
       &:hover {
-        background-color: #bbb;
-        transition: 0.2s;
+        background-color: #129fea;
       }
     }
   }
