@@ -24,7 +24,14 @@ jobs:
           node-version: "14"
       - run: npm install
       - run: npm run build
-      - name: Publish
+      - name: Publish static files to COS
+        run: |
+          coscmd upload -rs --delete -f ./build/static/ /
+          rm -rf build/static
+
+          # Rewrite links to static files
+          sed -i 's|"/qieyun-autoderiver/static/|"https://qieyun-autoderiver-1305783649.cos.ap-guangzhou.myqcloud.com/|g' build/*.*
+      - name: Publish to GitHub Pages
         run: |
           # Create a temporary directory
           export temp_dir=`mktemp -d -p ~`
@@ -45,15 +52,6 @@ jobs:
           # Move .git
           mv $temp_dir/temp/.git $temp_dir
           rm -rf $temp_dir/temp
-
-          # Publish static files to COS
-          coscmd upload -rs --delete -f ./build/static/ /
-          rm -rf build/static
-
-          # Rewrite links to static files
-          sed -i 's|"/qieyun-autoderiver/static/|"https://qieyun-autoderiver-1305783649.cos.ap-guangzhou.myqcloud.com/|g' build/*.*
-
-          # Publish to GitHub pages
           mv build/* $temp_dir
           mv LICENSE $temp_dir
 
