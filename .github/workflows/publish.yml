@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
       - name: Install coscmd
         run: sudo pip install coscmd
       - name: Configure coscmd
@@ -19,11 +22,10 @@ jobs:
           BUCKET: ${{ secrets.Bucket }}
           REGION: ${{ secrets.Region }}
         run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14"
       - run: npm install
       - run: npm run build
+      - name: Run after-build script
+        run: node afterBuild.js
       - name: Publish static files to COS
         run: |
           coscmd upload -rs --delete -f ./build/static/ /
