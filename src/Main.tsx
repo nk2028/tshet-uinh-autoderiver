@@ -355,7 +355,7 @@ class Main extends React.Component<any, MainState> {
     return (
       <div className="main-container">
         <form className="add-schema">
-          <input type="button" value="+" title="新增方案" onClick={() => addSchema(null)} />
+          <input type="button" title="新增方案" onClick={() => addSchema(null)} />
         </form>
         {this.state.schemas.map((schema, index, array) => (
           <React.Fragment key={schema.id}>
@@ -371,7 +371,7 @@ class Main extends React.Component<any, MainState> {
               autocomplete={this.state.autocomplete}
             />
             <form className="add-schema">
-              <input type="button" value="+" title="新增方案" onClick={() => addSchema(schema.id)} />
+              <input type="button" title="新增方案" onClick={() => addSchema(schema.id)} />
             </form>
           </React.Fragment>
         ))}

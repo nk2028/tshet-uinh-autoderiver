@@ -56,16 +56,13 @@ body {
     }
     input {
       position: absolute;
-      top: -0.75em;
-      left: calc(50% - 0.75em);
-      width: 1.5em;
-      height: 1.5em;
+      top: -1em;
+      left: calc(50% - 1em);
+      width: 2em;
+      height: 2em;
       padding: 0;
       margin: 0;
-      font-size: 1.3em;
-      color: white;
       background-color: #aaa;
-      text-align: center;
       border-radius: 50%;
       border: 4px solid white;
       cursor: pointer;
@@ -74,6 +71,27 @@ body {
       &:hover {
         background-color: #129fea;
       }
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      top: -0.5em;
+      left: calc(50% - 1px);
+      width: 2px;
+      height: 1em;
+      border-radius: 1px;
+      background-color: white;
+      z-index: 1;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: -1px;
+      left: calc(50% - 0.5em);
+      width: 1em;
+      height: 2px;
+      border-radius: 1px;
+      background-color: white;
     }
   }
   .pure-button {
@@ -121,6 +139,9 @@ body {
       input[type="checkbox"] {
         margin-left: 0.2em;
       }
+    }
+    .autocomplete {
+      margin-left: 0.2em;
     }
   }
   .CodeMirror {
