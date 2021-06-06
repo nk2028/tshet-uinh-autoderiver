@@ -1,3 +1,6 @@
+/*
+Bug! Don't use this script!
+
 import { readdirSync, readFileSync, writeFileSync } from "fs";
 
 // This script aims to replace the escaped UTF-8 string to plain UTF-8 characters.
@@ -16,3 +19,4 @@ readdirSync("./build/static/js")
   .filter(filename => filename.endsWith(".js"))
   .map(filename => `./build/static/js/${filename}`)
   .forEach(replaceOneFile);
+*/
