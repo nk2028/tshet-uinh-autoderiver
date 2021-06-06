@@ -64,17 +64,22 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
     let to = Pos(cursor.line, token.end);
     const filter = () => (list = list.filter(prop => prop.startsWith(token.string) && prop !== token.string));
 
-    if (cm.getTokenAt(Pos(cursor.line, token.start - 1)).string === "音韻地位") {
-      list = 音韻地位properties;
-      if (token.string === ".") from = to;
-      else if (cm.getTokenAt(from).string === ".") filter();
-      else return;
-    } else {
-      list = deriverParameters;
-      if (cursor.ch === token.end && /[\s!-#%-/:-@[-^`{-~]$/.test(token.string)) from = to;
-      else filter();
+    switch (cm.getTokenAt(Pos(cursor.line, token.start - 1)).string) {
+      case "音韻地位":
+        list = 音韻地位properties;
+        break;
+      case "選項":
+        list = Object.keys(this.props.parameters);
+        break;
+      default:
+        list = deriverParameters.concat(Object.keys(this.props.parameters).length ? ["選項"] : []);
+        if (cursor.ch === token.end && /[\s!-#%-/:-@[-^`{-~]$/.test(token.string)) from = to;
+        else filter();
+        return { list, from, to };
     }
-
+    if (token.string === ".") from = to;
+    else if (cm.getTokenAt(from).string === ".") filter();
+    else return;
     return { list, from, to };
   }
 
@@ -255,7 +260,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         />
       ) : (
         <span key="hint" className="hint">
-          此推導方案無可用選項，請於推導程式中回傳物件以使用「選項」功能。
+          此推導方案無可用選項，請於推導程式中回傳 Object.entries() 形式的陣列以使用「選項」功能。
         </span>
       )
     );

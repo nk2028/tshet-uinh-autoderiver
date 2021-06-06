@@ -134,14 +134,12 @@ body {
         margin: 0;
       }
     }
-    b + label {
+    b + label,
+    input[type="button"] + label {
       input[type="radio"],
       input[type="checkbox"] {
         margin-left: 0.2em;
       }
-    }
-    .autocomplete {
-      margin-left: 0.2em;
     }
   }
   .CodeMirror {
