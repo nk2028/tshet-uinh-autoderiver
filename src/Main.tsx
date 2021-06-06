@@ -212,7 +212,7 @@ class Main extends React.Component<any, MainState> {
     let handles = {
       convertArticle: () =>
         Array.from(this.state.article).map((ch, i) => {
-          let 所有異體字 = [ch].concat(this.state.convertVariant ? Yitizi.get(ch) : []);
+          const 所有異體字 = [ch].concat(this.state.convertVariant ? Yitizi.get(ch) : []);
           const entries: Entries = [];
 
           for (const 字頭 of 所有異體字) {
@@ -292,7 +292,7 @@ class Main extends React.Component<any, MainState> {
     };
 
     try {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-new-func
       userInputs = this.state.schemas.map(({ input }) => new Function("音韻地位", "字頭", "選項", input));
     } catch (err) {
       notifyError("程式碼錯誤", err);
