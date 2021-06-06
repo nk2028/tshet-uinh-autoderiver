@@ -416,7 +416,7 @@ class Main extends React.Component<any, MainState> {
               onClick={() => this.handlePredefinedOptions()}
             />
             <input className="pure-button" type="button" value="匯出至剪貼簿" onClick={() => this.handleCopy()} />
-            <label className="autocomplete">
+            <label>
               <input
                 type="checkbox"
                 checked={this.state.autocomplete}
