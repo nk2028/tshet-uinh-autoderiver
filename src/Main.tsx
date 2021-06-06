@@ -292,6 +292,7 @@ class Main extends React.Component<any, MainState> {
     };
 
     try {
+      // eslint-disable-next-line
       userInputs = this.state.schemas.map(({ input }) => new Function("音韻地位", "字頭", "選項", input));
     } catch (err) {
       notifyError("程式碼錯誤", err);
