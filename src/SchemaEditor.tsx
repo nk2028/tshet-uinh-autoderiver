@@ -267,6 +267,9 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
 
     return (
       <div className="schema-editor">
+        <form className="delete-schema">
+          <input type="button" title="刪除方案" disabled={this.props.single} onClick={() => this.deleteSchema()} />
+        </form>
         <form className="pure-form" onSubmit={event => this.loadSchema(event)}>
           <p>
             <b>預設推導方案：</b>
@@ -283,13 +286,6 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               </label>
             ))}
             <input className="pure-button" type="submit" value="載入" />
-            <input
-              className="pure-button"
-              type="button"
-              value="刪除方案"
-              disabled={this.props.single}
-              onClick={() => this.deleteSchema()}
-            />
           </p>
         </form>
         <div lang="en-x-code" id="schemaInput">

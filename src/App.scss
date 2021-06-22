@@ -94,6 +94,34 @@ body {
       background-color: white;
     }
   }
+  .delete-schema {
+    position: relative;
+    float: right;
+    input {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      margin: 0 0 4px 4px;
+      border: none;
+      background-color: #aaa;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.2s;
+      &:hover {
+        background-color: #129fea;
+      }
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 11px;
+      left: 8px;
+      width: 16px;
+      height: 2px;
+      border-radius: 1px;
+      background-color: white;
+    }
+  }
   .pure-button {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
