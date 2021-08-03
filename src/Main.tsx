@@ -79,6 +79,8 @@ export const schemas = {
   putonghua: "推導普通話",
   gwongzau: "推導廣州音",
   zaonhe: "推導上海話",
+  langjin: "推導南京話",
+  taibu: "推導大埔話",
   ayaka_v8: "綾香思考音系",
 };
 
