@@ -159,6 +159,7 @@ body {
     label {
       display: inline;
       margin-right: 0.4em;
+      white-space: nowrap;
       &:first-child select {
         margin: 0;
       }
