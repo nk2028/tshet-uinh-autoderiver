@@ -85,7 +85,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
 
   loadSchema(event?: any) {
     if (event) event.preventDefault();
-    fetchFile(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@450e6d9/${this.props.name}.js`, input => {
+    fetchFile(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@6e5ee81/${this.props.name}.js`, input => {
       if (event && this.props.input && this.props.input !== this.props.original) {
         Swal.fire({
           showClass: { popup: "" },
