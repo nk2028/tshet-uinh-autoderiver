@@ -24,7 +24,7 @@ import "codemirror/mode/javascript/javascript";
 import { 音韻地位 } from "qieyun";
 import { Pos, ShowHintOptions } from "codemirror";
 import Swal from "sweetalert2";
-import { fetchFile, schemas, SchemaState, Parameter } from "./Main";
+import { addKey, fetchFile, schemas, SchemaState, Parameter } from "./Main";
 import prettier from "prettier/standalone";
 import parserBabel from "prettier/parser-babel";
 
@@ -83,38 +83,37 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
     return { list, from, to };
   }
 
-  loadSchema(event?: any) {
+  async loadSchema(event?: any) {
     if (event) event.preventDefault();
-    fetchFile(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@1223f3b/${this.props.name}.js`, input => {
-      if (event && this.props.input && this.props.input !== this.props.original) {
-        Swal.fire({
-          showClass: { popup: "" },
-          hideClass: { popup: "" },
-          title: "是否確定載入？",
-          text: "您會遺失所有變更。",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "確定",
-          cancelButtonText: "取消",
-        }).then(result => {
-          if (result.isConfirmed) {
-            this.props.setSchemaState({
-              ...this.props,
-              input,
-              original: input,
-              parameters: this.setParameters(input) || {},
-            });
-          }
-        });
-      } else {
-        const newProp = { ...this.props, original: input };
-        if (event || !this.props.input) {
-          newProp.input = input;
-          newProp.parameters = this.setParameters(input) || {};
+    const input = await fetchFile(`https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@1223f3b/${this.props.name}.js`);
+    if (event && this.props.input && this.props.input !== this.props.original) {
+      Swal.fire({
+        showClass: { popup: "" },
+        hideClass: { popup: "" },
+        title: "是否確定載入？",
+        text: "您會遺失所有變更。",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "確定",
+        cancelButtonText: "取消",
+      }).then(result => {
+        if (result.isConfirmed) {
+          this.props.setSchemaState({
+            ...this.props,
+            input,
+            original: input,
+            parameters: this.setParameters(input) || {},
+          });
         }
-        this.props.setSchemaState(newProp);
+      });
+    } else {
+      const newProp = { ...this.props, original: input };
+      if (event || !this.props.input) {
+        newProp.input = input;
+        newProp.parameters = this.setParameters(input) || {};
       }
-    });
+      this.props.setSchemaState(newProp);
+    }
   }
 
   changeSchema(event: any) {
@@ -145,24 +144,26 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
   setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
     try {
       // eslint-disable-next-line no-new-func
-      const parameters = Object.fromEntries(new Function("音韻地位", "字頭", "選項", input)(null, null, null));
+      const returnValue = new Function("音韻地位", "字頭", "選項", input)(null, null, null);
+      let parameters: Parameter;
+      try {
+        parameters = Object.fromEntries(returnValue);
+      } catch (err) {
+        parameters = returnValue;
+      }
       Object.keys(parameters).forEach(key => {
-        if (Array.isArray(parameters[key])) {
-          if (
-            key in oldParameters &&
-            Array.isArray(oldParameters[key]) &&
-            parameters[key].slice(1).includes(oldParameters[key][0])
-          )
-            parameters[key][0] = oldParameters[key][0];
-          else if (
-            typeof parameters[key][0] === "number" &&
-            parameters[key][0] >= 1 &&
-            parameters[key][0] < parameters[key].length
-          )
-            parameters[key][0] = parameters[key][parameters[key][0]];
-          else if (!parameters[key].slice(1).includes(parameters[key][0])) parameters[key][0] = parameters[key][1];
-        } else if (key in oldParameters && typeof oldParameters[key] === typeof parameters[key])
-          parameters[key] = oldParameters[key];
+        const parametersKey = parameters[key];
+        const oldParametersKey = oldParameters[key];
+        if (Array.isArray(parametersKey)) {
+          if (Array.isArray(oldParametersKey) && parametersKey.includes(oldParametersKey[0], 1))
+            parametersKey[0] = oldParametersKey[0];
+          else {
+            const defaultValue = parametersKey[0];
+            if (typeof defaultValue === "number" && defaultValue >= 1 && defaultValue < parametersKey.length)
+              parametersKey[0] = parametersKey[defaultValue];
+            else if (!parametersKey.includes(defaultValue, 1)) parametersKey[0] = parametersKey[1];
+          }
+        } else if (typeof oldParametersKey === typeof parametersKey) parameters[key] = oldParametersKey;
       });
       return parameters;
     } catch (err) {}
@@ -174,7 +175,8 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
 
   render() {
     const changeParameter = (key: string, value: any) => {
-      if (Array.isArray(this.props.parameters[key])) this.props.parameters[key][0] = value;
+      const parametersKey = this.props.parameters[key];
+      if (Array.isArray(parametersKey)) parametersKey[0] = value;
       else this.props.parameters[key] = value;
       this.props.setSchemaState({ ...this.props });
     };
@@ -196,19 +198,18 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
     };
 
     let parameters = Object.entries(this.props.parameters)
-      .map(([key, value], index) => {
+      .map(([key, value]) => {
         if (Array.isArray(value))
           return (
-            <label key={index}>
+            <label key={key}>
               {key}
               <select
-                onChange={event => changeParameter(key, JSON.parse(event.target.value))}
-                value={JSON.stringify(value[0])}>
-                {value.slice(1).map((option, i) => (
-                  <option key={i + 1} value={JSON.stringify(option)}>
-                    {option + ""}
-                  </option>
-                ))}
+                onChange={event => changeParameter(key, this.props.parameters[event.target.value])}
+                value={value.indexOf(value[0], 1)}>
+                {value
+                  .map((option, index) => <option value={index}>{option + ""}</option>)
+                  .slice(1)
+                  .map(addKey)}
               </select>
             </label>
           );
@@ -216,7 +217,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
           switch (typeof value) {
             case "boolean":
               return (
-                <label key={index}>
+                <label key={key}>
                   <input
                     type="checkbox"
                     checked={value}
@@ -227,7 +228,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               );
             case "number":
               return (
-                <label key={index}>
+                <label key={key}>
                   {key}
                   <input
                     type="number"
@@ -239,7 +240,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               );
             case "string":
               return (
-                <label key={index}>
+                <label key={key}>
                   {key}
                   <input type="text" value={value} onChange={event => changeParameter(key, event.target.value)} />
                 </label>
@@ -273,8 +274,8 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         <form className="pure-form" onSubmit={event => this.loadSchema(event)}>
           <p>
             <b>預設推導方案：</b>
-            {Object.entries(schemas).map(([value, label], index) => (
-              <label key={index}>
+            {Object.entries(schemas).map(([value, label]) => (
+              <label key={value}>
                 <input
                   type="radio"
                   name="schema"

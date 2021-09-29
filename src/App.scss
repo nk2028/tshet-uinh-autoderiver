@@ -1,9 +1,22 @@
 body {
   line-height: 1.6;
   a:link {
-    border-bottom: 1px solid;
+    position: relative;
     color: inherit;
     text-decoration: none;
+    transition: 0.2s;
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 3px;
+      border-bottom: 1px dashed currentColor;
+      transition: 0.2s;
+    }
+    &:hover {
+      color: black;
+    }
   }
   :lang(en),
   :lang(zh) {
@@ -31,6 +44,7 @@ body {
         display: inline-block;
         position: relative;
         cursor: pointer;
+        transition: 0.2s;
         &:after {
           content: "";
           position: absolute;
@@ -38,9 +52,13 @@ body {
           right: 0;
           bottom: 2px;
           border-bottom: 1px dashed #aaa;
+          transition: 0.2s;
         }
         &:hover {
           color: #444;
+          &:after {
+            border-bottom-color: #888;
+          }
         }
       }
     }
@@ -202,10 +220,28 @@ body {
   .swal2-container.swal2-center {
     grid-template-columns: auto auto auto;
   }
+  .swal2-container::after {
+    grid-column: 2;
+  }
   .about-modal.swal2-backdrop-show {
     background: rgba(0, 0, 0, 0.7);
     -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
+  }
+  .about-modal-popup {
+    width: 100%;
+    max-width: 960px;
+  }
+  @media (max-width: 720px) {
+    .about-modal {
+      padding: 0;
+    }
+    .about-modal-popup {
+      border-radius: 0;
+    }
+    .swal2-container::after {
+      height: 0;
+    }
   }
   .about-modal-content {
     &.swal2-html-container {
@@ -220,11 +256,6 @@ body {
     p {
       color: #5c5c5c;
       font-size: 16px;
-      a:link:hover {
-        border-bottom: 1px solid black;
-        color: initial;
-        transition: 0.5s;
-      }
     }
   }
   .swal2-close {

@@ -12,9 +12,9 @@ function showAbout() {
     hideClass: { popup: "" },
     customClass: {
       container: "about-modal",
+      popup: "about-modal-popup",
       htmlContainer: "about-modal-content",
     },
-    width: "60vw",
     showCloseButton: true,
     showConfirmButton: false,
     html: (
