@@ -84,11 +84,14 @@ export const schemas = {
   panwuyun: "潘悟雲擬音",
   unt_j: "unt 切韻擬音 J",
   msoeg_v8: "msoeg 中古拟音 V8",
+  mid_tang: "推導盛中唐擬音",
   chiangxhua: "推導《聲音唱和圖》擬音",
   fanwan: "推導《分韻撮要》擬音",
   putonghua: "推導普通話",
   gwongzau: "推導廣州音",
   zaonhe: "推導上海話",
+  langjin: "推導南京話",
+  taibu: "推導大埔話",
   ayaka_v8: "綾香思考音系",
 };
 
@@ -230,7 +233,7 @@ class Main extends React.Component<any, MainState> {
     };
 
     if (this.state.option === "convertPresetArticle" && !presetArticle)
-      presetArticle = await fetchFile("https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@310b6a8/index.txt");
+      presetArticle = await fetchFile("https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@2a2aa89/index.txt");
     // else await new Promise(resolve => setTimeout(resolve));
 
     let handles = {
@@ -499,7 +502,7 @@ class Main extends React.Component<any, MainState> {
               onClick={() => this.handlePredefinedOptions()}
             />
             <input className="pure-button" type="button" value="匯出至剪貼簿" onClick={() => this.handleCopy()} />
-            <label className="nowrap">
+            <label>
               <input
                 type="checkbox"
                 checked={this.state.autocomplete}

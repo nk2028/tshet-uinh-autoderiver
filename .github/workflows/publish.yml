@@ -32,7 +32,7 @@ jobs:
           rm -rf build/static
 
           # Rewrite links to static files
-          sed -i 's|"/qieyun-autoderiver/static/|"https://qieyun-autoderiver-1305783649.cos.ap-guangzhou.myqcloud.com/|g' build/*.*
+          sed -i 's|"/qieyun-autoderiver/static/|"https://qieyun-autoderiver-1305783649.cos.accelerate.myqcloud.com/|g' build/*.*
       - name: Publish to GitHub Pages
         run: |
           # Create a temporary directory
