@@ -12,10 +12,6 @@ const SwalReact = withReactContent(Swal);
 (window as any).__react_key__ = 0;
 
 export function addKey(element: JSX.Element) {
-  // return <React.Fragment key={++(window as any).__react_key__}>{element}</React.Fragment>;
-  // element = Object.assign({}, element);
-  // element.key = ++(window as any).__react_key__;
-  // return Object.freeze(element);
   return React.cloneElement(element, { key: ++(window as any).__react_key__ });
 }
 
@@ -70,7 +66,7 @@ function copyFallback(txt: string) {
   textArea.select();
   try {
     document.execCommand("copy") ? copySuccess() : copyFailed();
-  } catch (err) {
+  } catch {
     copyFailed();
   }
   document.body.removeChild(textArea);
@@ -129,7 +125,7 @@ export type Entries = [string[], { 字頭: string; 解釋: string; 音韻地位:
 
 export type Parameter = { [parameter: string]: unknown };
 
-export async function fetchFile(input: string): Promise<string> {
+export async function fetchFile(input: string) {
   try {
     const text = await (await fetch(input)).text();
     if (text.startsWith("Failed to fetch")) throw new Error(text);
@@ -164,12 +160,12 @@ export function makeRubyText(array: React.ReactNode[]) {
 
 let presetArticle: string;
 
-class Main extends React.Component<any, MainState> {
-  largeTooltip?: any;
+class Main extends React.Component<{}, MainState> {
+  largeTooltip?: ReturnType<typeof LargeTooltip.init>;
 
   outputArea?: HTMLElement;
 
-  constructor(props: any) {
+  constructor(props: {}) {
     super(props);
 
     const schemaNames: Schema[] = JSON.parse(localStorage.getItem("schemas") || "[]");
@@ -234,16 +230,20 @@ class Main extends React.Component<any, MainState> {
 
     if (this.state.option === "convertPresetArticle" && !presetArticle)
       presetArticle = await fetchFile("https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@2a2aa89/index.txt");
-    // else await new Promise(resolve => setTimeout(resolve));
 
     let handles = {
       convertArticle: () =>
         Array.from(this.state.article)
           .map(ch => {
-            const 所有異體字 = [ch].concat(this.state.convertVariant ? Yitizi.get(ch) : []);
+            const 所有異體字 = [ch, null].concat(Yitizi.get(ch));
             const entries: Entries = [];
 
             for (const 字頭 of 所有異體字) {
+              if (!字頭) {
+                if (this.state.convertVariant) continue;
+                if (!entries.length) continue;
+                break;
+              }
               for (const { 音韻地位, 解釋 } of query字頭(字頭)) {
                 let 擬音 = callDeriver(音韻地位, 字頭);
                 const entry = entries.find(key => key[0].every((pronunciation, i) => pronunciation === 擬音[i]));
@@ -251,7 +251,7 @@ class Main extends React.Component<any, MainState> {
                 else entries.push([擬音, [{ 字頭, 解釋, 音韻地位 }]]);
               }
             }
-            return <Entry ch={ch} entries={entries} tooltip={this.largeTooltip}></Entry>;
+            return <Entry ch={ch} entries={entries} tooltip={this.largeTooltip!}></Entry>;
           })
           .map(addKey),
 
@@ -386,7 +386,7 @@ class Main extends React.Component<any, MainState> {
     }
     try {
       this.setState({ output: handles[this.state.option](), isApplied: true });
-    } catch (err) {}
+    } catch {}
   }
 
   handleCopy() {

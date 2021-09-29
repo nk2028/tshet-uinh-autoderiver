@@ -1,10 +1,11 @@
 import React from "react";
+import LargeTooltip from "./large-tooltip";
 import { addKey, Entries, makeRubyText } from "./Main";
 
 interface EntryProps {
   ch: string;
   entries: Entries;
-  tooltip: any;
+  tooltip: ReturnType<typeof LargeTooltip.init>;
 }
 
 interface EntryState {
@@ -13,7 +14,7 @@ interface EntryState {
 }
 
 class Entry extends React.Component<EntryProps, EntryState> {
-  constructor(props: any) {
+  constructor(props: EntryProps) {
     super(props);
     if (this.props.entries.length) {
       this.state = {
@@ -24,7 +25,7 @@ class Entry extends React.Component<EntryProps, EntryState> {
   }
 
   handleClick(pronunciation: string[]) {
-    this.setState((state: any) => ({
+    this.setState(state => ({
       pronunciation,
       rubyClass: state.rubyClass.replace(" entry-unresolved", ""),
     }));

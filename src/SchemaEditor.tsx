@@ -43,7 +43,7 @@ const 音韻地位properties = Object.getOwnPropertyNames(音韻地位example).c
 );
 const deriverParameters = ["音韻地位", "字頭"];
 
-class SchemaEditor extends React.Component<SchemaProps, any> {
+class SchemaEditor extends React.Component<SchemaProps, {}> {
   constructor(props: SchemaProps) {
     super(props);
     const parameters = this.setParameters(props.input);
@@ -141,14 +141,14 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
     }
   }
 
-  setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
+  setParameters(input: string, oldParameters: Parameter = this.props.parameters) {
     try {
       // eslint-disable-next-line no-new-func
       const returnValue = new Function("音韻地位", "字頭", "選項", input)(null, null, null);
       let parameters: Parameter;
       try {
         parameters = Object.fromEntries(returnValue);
-      } catch (err) {
+      } catch {
         parameters = returnValue;
       }
       Object.keys(parameters).forEach(key => {
@@ -166,7 +166,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         } else if (typeof oldParametersKey === typeof parametersKey) parameters[key] = oldParametersKey;
       });
       return parameters;
-    } catch (err) {}
+    } catch {}
   }
 
   resetParameters() {
@@ -174,7 +174,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
   }
 
   render() {
-    const changeParameter = (key: string, value: any) => {
+    const changeParameter = <T extends keyof Parameter>(key: T, value: Parameter[T]) => {
       const parametersKey = this.props.parameters[key];
       if (Array.isArray(parametersKey)) parametersKey[0] = value;
       else this.props.parameters[key] = value;
