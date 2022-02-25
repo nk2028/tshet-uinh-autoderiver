@@ -24,8 +24,6 @@ jobs:
         run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
       - run: npm install
       - run: npm run build
-      - name: Run after-build script
-        run: node afterBuild.js
       - name: Publish static files to COS
         run: |
           coscmd upload -rs --delete -f ./build/static/ /
