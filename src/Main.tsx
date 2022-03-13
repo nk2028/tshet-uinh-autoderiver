@@ -67,6 +67,7 @@ function copyFallback(txt: string) {
 }
 
 export const schemas = {
+  tshet: "切韻拼音",
   baxter: "白一平轉寫",
   blankego: "有女羅馬字",
   kyonh: "古韻羅馬字",
