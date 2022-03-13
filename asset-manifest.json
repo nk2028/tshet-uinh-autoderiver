@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/css/main.7b4fb4e1.chunk.css",
-    "main.js": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/js/main.023b92db.chunk.js",
-    "main.js.map": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/js/main.023b92db.chunk.js.map",
+    "main.js": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/js/main.8e804565.chunk.js",
+    "main.js.map": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/js/main.8e804565.chunk.js.map",
     "runtime-main.js": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/js/runtime-main.455621d8.js",
     "runtime-main.js.map": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/js/runtime-main.455621d8.js.map",
     "static/css/2.4bd9e1c9.chunk.css": "https://qieyun-autoderiver-1305783649.file.myqcloud.com/css/2.4bd9e1c9.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.4bd9e1c9.chunk.css",
     "static/js/2.11aa3c51.chunk.js",
     "static/css/main.7b4fb4e1.chunk.css",
-    "static/js/main.023b92db.chunk.js"
+    "static/js/main.8e804565.chunk.js"
   ]
 }
