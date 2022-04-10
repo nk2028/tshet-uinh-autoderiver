@@ -1,5 +1,5 @@
 import React from "react";
-import { query字頭, 音韻地位 as class音韻地位, iter音韻地位 } from "qieyun";
+import { 音韻地位 as class音韻地位, 資料 } from "qieyun";
 import Yitizi from "yitizi";
 import LargeTooltip from "./large-tooltip";
 import Entry from "./Entry";
@@ -7,9 +7,24 @@ import SchemaEditor from "./SchemaEditor";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+const { query字頭, iter音韻地位, query音韻地位 } = 資料;
+
+function get代表字(地位: class音韻地位): string[] {
+  const by反切 = new Map();
+  for (const { 字頭, 反切 } of query音韻地位(地位)) {
+    if (!by反切.has(反切)) {
+      by反切.set(反切, 字頭);
+    }
+  }
+  return Array.from(by反切.values());
+}
+
 const SwalReact = withReactContent(Swal);
 
-function notifyError(msg: string, err?: Error) {
+function notifyError(msg: string, err?: unknown) {
+  if (!(err instanceof Error)) {
+    throw err;
+  }
   if (err?.stack)
     SwalReact.fire({
       showClass: { popup: "" },
@@ -115,7 +130,7 @@ export interface SchemaState {
   id: number;
 }
 
-export type Entries = [string[], { 字頭: string; 解釋: string; 音韻地位: class音韻地位 }[]][];
+export type Entries = [string[], { 字頭: string; 反切: string | null; 解釋: string; 音韻地位: class音韻地位 }[]][];
 
 export type Parameter = { [parameter: string]: any };
 
@@ -221,11 +236,11 @@ class Main extends React.Component<any, MainState> {
           const entries: Entries = [];
 
           for (const 字頭 of 所有異體字) {
-            for (const { 音韻地位, 解釋 } of query字頭(字頭)) {
+            for (const { 音韻地位, 反切, 解釋 } of query字頭(字頭)) {
               let 擬音 = callDeriver(音韻地位, 字頭);
               const entry = entries.find(key => key[0].every((pronunciation, i) => pronunciation === 擬音[i]));
-              if (entry) entry[1].push({ 字頭, 解釋, 音韻地位 });
-              else entries.push([擬音, [{ 字頭, 解釋, 音韻地位 }]]);
+              if (entry) entry[1].push({ 字頭, 反切, 解釋, 音韻地位 });
+              else entries.push([擬音, [{ 字頭, 反切, 解釋, 音韻地位 }]]);
             }
           }
           return <Entry key={id + i} ch={ch} entries={entries} tooltip={this.largeTooltip}></Entry>;
@@ -268,7 +283,7 @@ class Main extends React.Component<any, MainState> {
         Array.from(iter音韻地位()).map((音韻地位, i) => (
           <p key={id + i}>
             {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, null).join(" / ")}</span>{" "}
-            {音韻地位.代表字}
+            {get代表字(音韻地位).join("")}
           </p>
         )),
 
