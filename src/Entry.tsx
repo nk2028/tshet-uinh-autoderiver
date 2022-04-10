@@ -48,7 +48,7 @@ class Entry extends React.Component<EntryProps, EntryState> {
             </span>{" "}
             {ress.map((res, index) => {
               const { 字頭, 解釋, 音韻地位 } = res;
-              let 反切 = 音韻地位.反切(字頭);
+              let { 反切 } = res;
               反切 = 反切 == null ? "" : `${反切}切 `;
               return (
                 <React.Fragment key={index}>

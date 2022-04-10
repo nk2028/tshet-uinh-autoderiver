@@ -1,5 +1,5 @@
 import React from "react";
-import { query字頭, 音韻地位 as class音韻地位, iter音韻地位 } from "qieyun";
+import { 音韻地位 as class音韻地位, 資料, 推導方案 } from "qieyun";
 import Yitizi from "yitizi";
 import LargeTooltip from "./large-tooltip";
 import Entry from "./Entry";
@@ -7,9 +7,29 @@ import SchemaEditor from "./SchemaEditor";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+// 推導方案（及控制臺）用
+// XXX 之後改成 new Function 時作為參數（然後再 bind 或閉包一下就不用每次都傳了）
+import * as Qieyun from "qieyun";
+(global as any).Qieyun = Qieyun;
+
+const { query字頭, iter音韻地位, query音韻地位 } = 資料;
+
+function get代表字(地位: class音韻地位): string[] {
+  const by反切 = new Map();
+  for (const { 字頭, 反切 } of query音韻地位(地位)) {
+    if (!by反切.has(反切)) {
+      by反切.set(反切, 字頭);
+    }
+  }
+  return Array.from(by反切.values());
+}
+
 const SwalReact = withReactContent(Swal);
 
-function notifyError(msg: string, err?: Error) {
+function notifyError(msg: string, err?: unknown) {
+  if (!(err instanceof Error)) {
+    throw err;
+  }
   if (err?.stack)
     SwalReact.fire({
       showClass: { popup: "" },
@@ -116,7 +136,7 @@ export interface SchemaState {
   id: number;
 }
 
-export type Entries = [string[], { 字頭: string; 解釋: string; 音韻地位: class音韻地位 }[]][];
+export type Entries = [string[], { 字頭: string; 反切: string | null; 解釋: string; 音韻地位: class音韻地位 }[]][];
 
 export type Parameter = { [parameter: string]: any };
 
@@ -184,7 +204,7 @@ class Main extends React.Component<any, MainState> {
   handlePredefinedOptions() {
     const id = +new Date() + ":";
 
-    let userInputs: Function[];
+    let userInputs: 推導方案.推導函數<string>[];
     const parameters = this.state.schemas.map(({ parameters }) => {
       const pass = { ...parameters };
       Object.keys(pass).forEach(key => {
@@ -208,7 +228,7 @@ class Main extends React.Component<any, MainState> {
     };
 
     if (this.state.option === "convertPresetArticle" && !presetArticle) {
-      fetchFile("https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@2a2aa89/index.txt", article => {
+      fetchFile("https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@360e36b/index.txt", article => {
         presetArticle = article;
         this.handlePredefinedOptions();
       });
@@ -222,11 +242,11 @@ class Main extends React.Component<any, MainState> {
           const entries: Entries = [];
 
           for (const 字頭 of 所有異體字) {
-            for (const { 音韻地位, 解釋 } of query字頭(字頭)) {
+            for (const { 音韻地位, 反切, 解釋 } of query字頭(字頭)) {
               let 擬音 = callDeriver(音韻地位, 字頭);
               const entry = entries.find(key => key[0].every((pronunciation, i) => pronunciation === 擬音[i]));
-              if (entry) entry[1].push({ 字頭, 解釋, 音韻地位 });
-              else entries.push([擬音, [{ 字頭, 解釋, 音韻地位 }]]);
+              if (entry) entry[1].push({ 字頭, 反切, 解釋, 音韻地位 });
+              else entries.push([擬音, [{ 字頭, 反切, 解釋, 音韻地位 }]]);
             }
           }
           return <Entry key={id + i} ch={ch} entries={entries} tooltip={this.largeTooltip}></Entry>;
@@ -266,12 +286,15 @@ class Main extends React.Component<any, MainState> {
         )),
 
       exportAllSmallRhymes: () =>
-        Array.from(iter音韻地位()).map((音韻地位, i) => (
-          <p key={id + i}>
-            {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, null).join(" / ")}</span>{" "}
-            {音韻地位.代表字}
-          </p>
-        )),
+        Array.from(iter音韻地位()).map((音韻地位, i) => {
+          const 代表字s = get代表字(音韻地位);
+          return (
+            <p key={id + i}>
+              {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, 代表字s[0]).join(" / ")}</span>{" "}
+              {代表字s.join("")}
+            </p>
+          );
+        }),
 
       exportAllSyllables: () => [
         <span lang="och-Latn-fonipa" key={id + 0}>
@@ -298,8 +321,10 @@ class Main extends React.Component<any, MainState> {
     };
 
     try {
-      // eslint-disable-next-line no-new-func
-      userInputs = this.state.schemas.map(({ input }) => new Function("音韻地位", "字頭", "選項", input));
+      userInputs = this.state.schemas.map(({ input }) =>
+        // eslint-disable-next-line no-new-func
+        推導方案.建立(new Function("音韻地位", "字頭", "選項", input) as 推導方案.原始推導函數<string>)
+      );
     } catch (err) {
       notifyError("程式碼錯誤", err);
       return;
