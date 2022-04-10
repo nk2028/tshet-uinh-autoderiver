@@ -1,5 +1,5 @@
 import React from "react";
-import { 音韻地位 as class音韻地位, 資料 } from "qieyun";
+import { 音韻地位 as class音韻地位, 資料, 推導方案 } from "qieyun";
 import Yitizi from "yitizi";
 import LargeTooltip from "./large-tooltip";
 import Entry from "./Entry";
@@ -198,7 +198,7 @@ class Main extends React.Component<any, MainState> {
   handlePredefinedOptions() {
     const id = +new Date() + ":";
 
-    let userInputs: Function[];
+    let userInputs: 推導方案.推導函數<string>[];
     const parameters = this.state.schemas.map(({ parameters }) => {
       const pass = { ...parameters };
       Object.keys(pass).forEach(key => {
@@ -312,8 +312,10 @@ class Main extends React.Component<any, MainState> {
     };
 
     try {
-      // eslint-disable-next-line no-new-func
-      userInputs = this.state.schemas.map(({ input }) => new Function("音韻地位", "字頭", "選項", input));
+      userInputs = this.state.schemas.map(({ input }) =>
+        // eslint-disable-next-line no-new-func
+        推導方案.建立(new Function("音韻地位", "字頭", "選項", input) as 推導方案.原始推導函數<string>)
+      );
     } catch (err) {
       notifyError("程式碼錯誤", err);
       return;

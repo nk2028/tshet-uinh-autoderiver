@@ -21,7 +21,7 @@ import "codemirror/addon/scroll/simplescrollbars.css";
 import "codemirror/addon/selection/active-line";
 import "codemirror/mode/javascript/javascript";
 
-import { 音韻地位 } from "qieyun";
+import { 推導方案, 音韻地位 } from "qieyun";
 import { Pos, ShowHintOptions } from "codemirror";
 import Swal from "sweetalert2";
 import { fetchFile, schemas, SchemaState, Parameter } from "./Main";
@@ -144,25 +144,26 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
 
   setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
     try {
-      // eslint-disable-next-line no-new-func
-      const parameters = Object.fromEntries(new Function("音韻地位", "字頭", "選項", input)(null, null, null));
-      Object.keys(parameters).forEach(key => {
-        if (Array.isArray(parameters[key])) {
+      const parameters = Object.fromEntries(
+        // eslint-disable-next-line no-new-func
+        推導方案.建立(new Function("音韻地位", "字頭", "選項", input) as 推導方案.原始推導函數<string>).parameters
+      );
+      Object.entries(parameters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          // 推導方案.建立 guarantees:
+          // - value.length >= 2
+          // - value[0] is not an index
+          // - value[0] is in value[1..]
           if (
             key in oldParameters &&
             Array.isArray(oldParameters[key]) &&
-            parameters[key].slice(1).includes(oldParameters[key][0])
-          )
-            parameters[key][0] = oldParameters[key][0];
-          else if (
-            typeof parameters[key][0] === "number" &&
-            parameters[key][0] >= 1 &&
-            parameters[key][0] < parameters[key].length
-          )
-            parameters[key][0] = parameters[key][parameters[key][0]];
-          else if (!parameters[key].slice(1).includes(parameters[key][0])) parameters[key][0] = parameters[key][1];
-        } else if (key in oldParameters && typeof oldParameters[key] === typeof parameters[key])
+            value.slice(1).includes(oldParameters[key][0])
+          ) {
+            value[0] = oldParameters[key][0];
+          }
+        } else if (key in oldParameters && typeof oldParameters[key] === typeof parameters[key]) {
           parameters[key] = oldParameters[key];
+        }
       });
       return parameters;
     } catch (err) {}
