@@ -7,6 +7,10 @@ import SchemaEditor from "./SchemaEditor";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+// 推導方案用
+import * as Qieyun from "qieyun";
+(global as any).Qieyun = Qieyun;
+
 const { query字頭, iter音韻地位, query音韻地位 } = 資料;
 
 function get代表字(地位: class音韻地位): string[] {
