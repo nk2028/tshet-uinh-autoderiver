@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 // 推導方案用
+// XXX Strangely, if I wrote `import Qieyun from "qieyun"` it would give an `undefined`
 import * as Qieyun from "qieyun";
 (global as any).Qieyun = Qieyun;
 
