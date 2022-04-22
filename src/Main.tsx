@@ -72,6 +72,7 @@ export const schemas = {
   blankego: "有女羅馬字",
   kyonh: "古韻羅馬字",
   zyepheng: "隋拼",
+  sliark_peengqvim: "Sliark 拼音",
   panwuyun: "潘悟雲擬音",
   unt_j: "unt 切韻擬音 J",
   msoeg_v8: "msoeg 中古拟音 V8",
