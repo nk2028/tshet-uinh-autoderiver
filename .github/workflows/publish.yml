@@ -9,10 +9,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
         with:
-          node-version: "14"
+          path: qieyun-autoderiver
+      - uses: actions/checkout@v3
+        with:
+          repository: graphemecluster/qieyun-autoderiver-evaluate
+          path: qieyun-autoderiver-evaluate
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - run: cd ./qieyun-autoderiver-evaluate/
+      - run: npm ic
+      - run: npm run build
+      - run: cd ../qieyun-autoderiver/
+      - run: npm ic
+      - run: npm run lint
+      - run: npm run build
       - name: Install coscmd
         run: sudo pip install coscmd
       - name: Configure coscmd
@@ -22,15 +35,14 @@ jobs:
           BUCKET: ${{ secrets.Bucket }}
           REGION: ${{ secrets.Region }}
         run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
-      - run: npm install
-      - run: npm run build
       - name: Publish static files to COS
         run: |
-          coscmd upload -rs --delete -f ./build/static/ /
-          rm -rf build/static
+          cd ./build/
+          coscmd upload -rs --delete -f ./ / --ignore index.html
+          rm -rf !(index.html)
 
           # Rewrite links to static files
-          sed -i 's|"/qieyun-autoderiver/static/|"https://qieyun-autoderiver-1305783649.file.myqcloud.com/|g' build/*.*
+          sed -i 's|"/index|"https://qieyun-autoderiver-1305783649.file.myqcloud.com/index|g' index.html
       - name: Publish to GitHub Pages
         run: |
           # Create a temporary directory

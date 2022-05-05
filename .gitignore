@@ -11,6 +11,9 @@
 # production
 /build
 
+# caching
+/.parcel-cache
+
 # misc
 .DS_Store
 .env.local

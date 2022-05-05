@@ -8,12 +8,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+        with:
+          path: qieyun-autoderiver
+      - uses: actions/checkout@v3
+        with:
+          repository: graphemecluster/qieyun-autoderiver-evaluate
+          path: qieyun-autoderiver-evaluate
+      - uses: actions/setup-node@v3
         with:
           node-version: 14
-      - name: Install Node.js packages
-        run: npm ci
-      - name: Build
-        run: npm build
+      - run: cd ./qieyun-autoderiver-evaluate/
+      - run: npm ic
+      - run: npm run build
+      - run: cd ../qieyun-autoderiver/
+      - run: npm ic
+      - run: npm run lint
+      - run: npm run build
