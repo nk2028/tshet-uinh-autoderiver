@@ -285,12 +285,15 @@ class Main extends React.Component<any, MainState> {
         )),
 
       exportAllSmallRhymes: () =>
-        Array.from(iter音韻地位()).map((音韻地位, i) => (
-          <p key={id + i}>
-            {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, null).join(" / ")}</span>{" "}
-            {get代表字(音韻地位).join("")}
-          </p>
-        )),
+        Array.from(iter音韻地位()).map((音韻地位, i) => {
+          const 代表字s = get代表字(音韻地位);
+          return (
+            <p key={id + i}>
+              {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, 代表字s[0]).join(" / ")}</span>{" "}
+              {代表字s.join("")}
+            </p>
+          );
+        }),
 
       exportAllSyllables: () => [
         <span lang="och-Latn-fonipa" key={id + 0}>
