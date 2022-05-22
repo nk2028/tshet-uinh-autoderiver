@@ -7,8 +7,7 @@ import SchemaEditor from "./SchemaEditor";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-// 推導方案用
-// XXX Strangely, if I wrote `import Qieyun from "qieyun"` it would give an `undefined`
+// 推導方案（及控制臺）用
 import * as Qieyun from "qieyun";
 (global as any).Qieyun = Qieyun;
 
@@ -92,6 +91,7 @@ export const schemas = {
   blankego: "有女羅馬字",
   kyonh: "古韻羅馬字",
   zyepheng: "隋拼",
+  sliark_peengqvim: "Sliark 拼音",
   panwuyun: "潘悟雲擬音",
   unt_j: "unt 切韻擬音 J",
   msoeg_v8: "msoeg 中古拟音 V8",
