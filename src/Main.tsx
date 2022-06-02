@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 // 推導方案（及控制臺）用
+// XXX 之後改成 new Function 時作為參數（然後再 bind 或閉包一下就不用每次都傳了）
 import * as Qieyun from "qieyun";
 (global as any).Qieyun = Qieyun;
 
