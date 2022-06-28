@@ -53,7 +53,7 @@ export default {
     const schemas = [...state.schemas];
     const index = schemas.findIndex(schema => schema.name === name);
     const newState = { ...schemas[index], input };
-    newState.parameters = newState.parameters.refresh(input);
+    newState.parameters = newState.parameters?.refresh(input) || ParameterSet.from(input);
     schemas[index] = newState;
     return { ...state, schemas };
   },

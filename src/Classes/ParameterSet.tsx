@@ -23,7 +23,7 @@ export default class ParameterSet {
       if (Array.isArray(parameter)) {
         const key = String(parameter[0]);
         const value = parameter[1];
-        if (!key || key === "$legacy") return;
+        if (!key || key === "$legacy") continue;
         const arg: Arg = { key, value };
         if (Array.isArray(value)) {
           arg.options = value.slice(1);
@@ -31,7 +31,7 @@ export default class ParameterSet {
           if (current && typeof current === "number" && current in value) arg.value = value[current];
           else if (arg.options.includes(current)) arg.value = current;
           else arg.value = first;
-        } else if (!["boolean", "number", "string"].includes(typeof value)) return;
+        } else if (!["boolean", "number", "string"].includes(typeof value)) continue;
         this.data.set(key, arg);
         this.form.push(arg);
       } else this.form.push(parameter);
