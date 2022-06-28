@@ -10,7 +10,8 @@ import Editor from "@monaco-editor/react";
 
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import setupMonaco from "../editor/setup";
+import { codeFontFamily } from "../consts";
+import "../editor/setup";
 import { memoize, normalizeFileName } from "../utils";
 import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
@@ -165,6 +166,14 @@ const Options = styled.form`
   overflow-y: auto;
   border-top: 0.2rem solid #c4c6c8;
 `;
+const SeparatorShadow = styled.div`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 6px;
+  box-shadow: #ddd 0 -6px 6px -6px inset;
+`;
 const ToggleButton = styled.div<{ collapsed: boolean }>`
   position: absolute;
   display: flex;
@@ -173,23 +182,21 @@ const ToggleButton = styled.div<{ collapsed: boolean }>`
   left: 0.5rem;
   bottom: -0.2rem;
   width: 3rem;
-  height: 1.5rem;
+  height: 1.75rem;
   border-radius: 0.5rem 0.5rem 0 0;
   background-color: #c4c6c8;
   color: white;
   &:hover {
     transition: background-color 150ms, height 150ms;
-    height: 2rem;
+    height: 2.125rem;
     background-color: #a2a4a6;
   }
   ${({ collapsed }) =>
     collapsed &&
     css`
       bottom: 0rem;
-      height: 1.875rem;
       background-color: #a2a4a6;
       &:hover {
-        height: 2.25rem;
         background-color: #409bf0;
       }
     `}
@@ -199,11 +206,8 @@ interface SchemaEditorProps extends UseMainState {
   otherOptions: ReactNode;
 }
 
-export default function SchemaEditor({
-  state: { schemas, activeSchemaName },
-  setState,
-  otherOptions,
-}: SchemaEditorProps) {
+export default function SchemaEditor({ state, setState, otherOptions }: SchemaEditorProps) {
+  const { schemas, activeSchemaName } = state;
   const activeSchema = useMemo(
     () => schemas.find(({ name }) => name === activeSchemaName),
     [schemas, activeSchemaName]
@@ -229,7 +233,7 @@ export default function SchemaEditor({
       }),
     [schemas]
   );
-  const [dialogVisible, setDialogVisible] = useState(!activeSchema);
+  const [dialogVisible, setDialogVisible] = useState(false);
 
   async function deleteSchema(name: string) {
     if (
@@ -238,15 +242,17 @@ export default function SchemaEditor({
           title: "要刪除此方案嗎？",
           text: "此動作無法復原。",
           icon: "warning",
+          showConfirmButton: false,
+          focusConfirm: false,
+          showDenyButton: true,
           showCancelButton: true,
-          confirmButtonText: "確定",
+          focusCancel: true,
+          denyButtonText: "確定",
           cancelButtonText: "取消",
         })
-      ).isConfirmed
-    ) {
+      ).isDenied
+    )
       setState(actions.deleteSchema(name));
-      if (schemas.length <= 1) setDialogVisible(true);
-    }
   }
 
   const resetParameters = useCallback(
@@ -416,7 +422,13 @@ export default function SchemaEditor({
           language="javascript"
           value={activeSchema?.input || ""}
           loading={<Spinner />}
-          beforeMount={setupMonaco}
+          options={{
+            fontFamily: codeFontFamily,
+            scrollbar: {
+              horizontalScrollbarSize: 10,
+              verticalScrollbarSize: 10,
+            },
+          }}
           onChange={useCallback(
             input => {
               if (typeof input !== "undefined" && activeSchema)
@@ -425,6 +437,7 @@ export default function SchemaEditor({
             [activeSchemaName]
           )}
         />
+        {optionsVisible && <SeparatorShadow />}
         <ToggleButton
           title={optionsVisible ? "隱藏選項" : "顯示選項"}
           collapsed={!optionsVisible}
@@ -458,8 +471,9 @@ export default function SchemaEditor({
         </Options>
       )}
       <CreateSchemaDialog
+        state={state}
+        setState={setState}
         visible={dialogVisible}
-        uncancellable={!activeSchema}
         closeDialog={useCallback(() => setDialogVisible(false), [])}
         schemaLoaded={useCallback(schema => {
           setState(actions.addSchema(schema));

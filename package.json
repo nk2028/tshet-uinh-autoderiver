@@ -1,11 +1,12 @@
 {
   "name": "qieyun-autoderiver",
-  "version": "0.2.0-beta.1",
+  "version": "0.2.0-beta.2",
   "description": "An automatic tool to generate the derivatives of the Qieyun phonological system",
   "private": true,
   "scripts": {
+    "postinstall": "patch-package",
     "start": "cross-env NPM_PACKAGE_VERSION=$npm_package_version parcel ./public/index.html --dist-dir build --open --port 8080",
-    "build": "cross-env NPM_PACKAGE_VERSION=$npm_package_version parcel build ./public/index.html --dist-dir build",
+    "build": "cross-env NPM_PACKAGE_VERSION=$npm_package_version parcel build ./public/index.html --dist-dir build --no-cache",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix"
   },
@@ -26,9 +27,10 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
-    "@monaco-editor/react": "^4.3.1",
+    "@monaco-editor/react": "^4.4.5",
+    "monaco-editor": "^0.33.0",
     "purecss": "^2.0.6",
-    "qieyun": "^0.12.3",
+    "qieyun": "^0.13.4",
     "qieyun-autoderiver-evaluate": "file:../qieyun-autoderiver-evaluate",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -48,7 +50,8 @@
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "^7.29.2",
-    "parcel": "^2.3.2",
+    "parcel": "^2.6.2",
+    "patch-package": "^6.4.7",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "typescript": "^4.6.3"
@@ -70,5 +73,8 @@
   "bugs": {
     "url": "https://github.com/nk2028/qieyun-autoderiver/issues"
   },
-  "homepage": "qieyun-autoderiver/"
+  "homepage": "qieyun-autoderiver/",
+  "@parcel/bundler-default": {
+    "minBundleSize": 2147483647
+  }
 }

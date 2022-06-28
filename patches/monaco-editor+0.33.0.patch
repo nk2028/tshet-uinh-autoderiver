@@ -1,0 +1,506 @@
+diff --git a/node_modules/monaco-editor/esm/metadata.d.ts b/node_modules/monaco-editor/esm/metadata.d.ts
+index 754e807..81eaa55 100644
+--- a/node_modules/monaco-editor/esm/metadata.d.ts
++++ b/node_modules/monaco-editor/esm/metadata.d.ts
+@@ -20,7 +20,7 @@ export const features: IFeatureDefinition[];
+ 
+ export const languages: IFeatureDefinition[];
+ 
+-export type EditorLanguage = 'abap' | 'apex' | 'azcli' | 'bat' | 'bicep' | 'cameligo' | 'clojure' | 'coffee' | 'cpp' | 'csharp' | 'csp' | 'css' | 'dart' | 'dockerfile' | 'ecl' | 'elixir' | 'flow9' | 'freemarker2' | 'fsharp' | 'go' | 'graphql' | 'handlebars' | 'hcl' | 'html' | 'ini' | 'java' | 'javascript' | 'json' | 'julia' | 'kotlin' | 'less' | 'lexon' | 'liquid' | 'lua' | 'm3' | 'markdown' | 'mips' | 'msdax' | 'mysql' | 'objective-c' | 'pascal' | 'pascaligo' | 'perl' | 'pgsql' | 'php' | 'pla' | 'postiats' | 'powerquery' | 'powershell' | 'protobuf' | 'pug' | 'python' | 'qsharp' | 'r' | 'razor' | 'redis' | 'redshift' | 'restructuredtext' | 'ruby' | 'rust' | 'sb' | 'scala' | 'scheme' | 'scss' | 'shell' | 'solidity' | 'sophia' | 'sparql' | 'sql' | 'st' | 'swift' | 'systemverilog' | 'tcl' | 'twig' | 'typescript' | 'vb' | 'xml' | 'yaml';
++export type EditorLanguage = 'javascript' | 'typescript';
+ 
+ export type EditorFeature = 'accessibilityHelp' | 'anchorSelect' | 'bracketMatching' | 'browser' | 'caretOperations' | 'clipboard' | 'codeAction' | 'codelens' | 'colorPicker' | 'comment' | 'contextmenu' | 'cursorUndo' | 'dnd' | 'documentSymbols' | 'find' | 'folding' | 'fontZoom' | 'format' | 'gotoError' | 'gotoLine' | 'gotoSymbol' | 'hover' | 'iPadShowKeyboard' | 'inPlaceReplace' | 'indentation' | 'inlayHints' | 'inlineCompletions' | 'inspectTokens' | 'lineSelection' | 'linesOperations' | 'linkedEditing' | 'links' | 'multicursor' | 'parameterHints' | 'quickCommand' | 'quickHelp' | 'quickOutline' | 'referenceSearch' | 'rename' | 'smartSelect' | 'snippet' | 'suggest' | 'toggleHighContrast' | 'toggleTabFocusMode' | 'tokenization' | 'unicodeHighlighter' | 'unusualLineTerminators' | 'viewportSemanticTokens' | 'wordHighlighter' | 'wordOperations' | 'wordPartOperations';
+ 
+diff --git a/node_modules/monaco-editor/esm/metadata.js b/node_modules/monaco-editor/esm/metadata.js
+index 1e87648..acc9d2b 100644
+--- a/node_modules/monaco-editor/esm/metadata.js
++++ b/node_modules/monaco-editor/esm/metadata.js
+@@ -212,124 +212,6 @@ exports.features = [
+   }
+ ];
+ exports.languages = [
+-  {
+-    "label": "abap",
+-    "entry": "vs/basic-languages/abap/abap.contribution"
+-  },
+-  {
+-    "label": "apex",
+-    "entry": "vs/basic-languages/apex/apex.contribution"
+-  },
+-  {
+-    "label": "azcli",
+-    "entry": "vs/basic-languages/azcli/azcli.contribution"
+-  },
+-  {
+-    "label": "bat",
+-    "entry": "vs/basic-languages/bat/bat.contribution"
+-  },
+-  {
+-    "label": "bicep",
+-    "entry": "vs/basic-languages/bicep/bicep.contribution"
+-  },
+-  {
+-    "label": "cameligo",
+-    "entry": "vs/basic-languages/cameligo/cameligo.contribution"
+-  },
+-  {
+-    "label": "clojure",
+-    "entry": "vs/basic-languages/clojure/clojure.contribution"
+-  },
+-  {
+-    "label": "coffee",
+-    "entry": "vs/basic-languages/coffee/coffee.contribution"
+-  },
+-  {
+-    "label": "cpp",
+-    "entry": "vs/basic-languages/cpp/cpp.contribution"
+-  },
+-  {
+-    "label": "csharp",
+-    "entry": "vs/basic-languages/csharp/csharp.contribution"
+-  },
+-  {
+-    "label": "csp",
+-    "entry": "vs/basic-languages/csp/csp.contribution"
+-  },
+-  {
+-    "label": "css",
+-    "entry": [
+-      "vs/basic-languages/css/css.contribution",
+-      "vs/language/css/monaco.contribution"
+-    ],
+-    "worker": {
+-      "id": "vs/language/css/cssWorker",
+-      "entry": "vs/language/css/css.worker"
+-    }
+-  },
+-  {
+-    "label": "dart",
+-    "entry": "vs/basic-languages/dart/dart.contribution"
+-  },
+-  {
+-    "label": "dockerfile",
+-    "entry": "vs/basic-languages/dockerfile/dockerfile.contribution"
+-  },
+-  {
+-    "label": "ecl",
+-    "entry": "vs/basic-languages/ecl/ecl.contribution"
+-  },
+-  {
+-    "label": "elixir",
+-    "entry": "vs/basic-languages/elixir/elixir.contribution"
+-  },
+-  {
+-    "label": "flow9",
+-    "entry": "vs/basic-languages/flow9/flow9.contribution"
+-  },
+-  {
+-    "label": "freemarker2",
+-    "entry": "vs/basic-languages/freemarker2/freemarker2.contribution"
+-  },
+-  {
+-    "label": "fsharp",
+-    "entry": "vs/basic-languages/fsharp/fsharp.contribution"
+-  },
+-  {
+-    "label": "go",
+-    "entry": "vs/basic-languages/go/go.contribution"
+-  },
+-  {
+-    "label": "graphql",
+-    "entry": "vs/basic-languages/graphql/graphql.contribution"
+-  },
+-  {
+-    "label": "handlebars",
+-    "entry": "vs/basic-languages/handlebars/handlebars.contribution"
+-  },
+-  {
+-    "label": "hcl",
+-    "entry": "vs/basic-languages/hcl/hcl.contribution"
+-  },
+-  {
+-    "label": "html",
+-    "entry": [
+-      "vs/basic-languages/html/html.contribution",
+-      "vs/language/html/monaco.contribution"
+-    ],
+-    "worker": {
+-      "id": "vs/language/html/htmlWorker",
+-      "entry": "vs/language/html/html.worker"
+-    }
+-  },
+-  {
+-    "label": "ini",
+-    "entry": "vs/basic-languages/ini/ini.contribution"
+-  },
+-  {
+-    "label": "java",
+-    "entry": "vs/basic-languages/java/java.contribution"
+-  },
+   {
+     "label": "javascript",
+     "entry": "vs/basic-languages/javascript/javascript.contribution"
+@@ -342,190 +224,6 @@ exports.languages = [
+       "entry": "vs/language/json/json.worker"
+     }
+   },
+-  {
+-    "label": "julia",
+-    "entry": "vs/basic-languages/julia/julia.contribution"
+-  },
+-  {
+-    "label": "kotlin",
+-    "entry": "vs/basic-languages/kotlin/kotlin.contribution"
+-  },
+-  {
+-    "label": "less",
+-    "entry": "vs/basic-languages/less/less.contribution"
+-  },
+-  {
+-    "label": "lexon",
+-    "entry": "vs/basic-languages/lexon/lexon.contribution"
+-  },
+-  {
+-    "label": "liquid",
+-    "entry": "vs/basic-languages/liquid/liquid.contribution"
+-  },
+-  {
+-    "label": "lua",
+-    "entry": "vs/basic-languages/lua/lua.contribution"
+-  },
+-  {
+-    "label": "m3",
+-    "entry": "vs/basic-languages/m3/m3.contribution"
+-  },
+-  {
+-    "label": "markdown",
+-    "entry": "vs/basic-languages/markdown/markdown.contribution"
+-  },
+-  {
+-    "label": "mips",
+-    "entry": "vs/basic-languages/mips/mips.contribution"
+-  },
+-  {
+-    "label": "msdax",
+-    "entry": "vs/basic-languages/msdax/msdax.contribution"
+-  },
+-  {
+-    "label": "mysql",
+-    "entry": "vs/basic-languages/mysql/mysql.contribution"
+-  },
+-  {
+-    "label": "objective-c",
+-    "entry": "vs/basic-languages/objective-c/objective-c.contribution"
+-  },
+-  {
+-    "label": "pascal",
+-    "entry": "vs/basic-languages/pascal/pascal.contribution"
+-  },
+-  {
+-    "label": "pascaligo",
+-    "entry": "vs/basic-languages/pascaligo/pascaligo.contribution"
+-  },
+-  {
+-    "label": "perl",
+-    "entry": "vs/basic-languages/perl/perl.contribution"
+-  },
+-  {
+-    "label": "pgsql",
+-    "entry": "vs/basic-languages/pgsql/pgsql.contribution"
+-  },
+-  {
+-    "label": "php",
+-    "entry": "vs/basic-languages/php/php.contribution"
+-  },
+-  {
+-    "label": "pla",
+-    "entry": "vs/basic-languages/pla/pla.contribution"
+-  },
+-  {
+-    "label": "postiats",
+-    "entry": "vs/basic-languages/postiats/postiats.contribution"
+-  },
+-  {
+-    "label": "powerquery",
+-    "entry": "vs/basic-languages/powerquery/powerquery.contribution"
+-  },
+-  {
+-    "label": "powershell",
+-    "entry": "vs/basic-languages/powershell/powershell.contribution"
+-  },
+-  {
+-    "label": "protobuf",
+-    "entry": "vs/basic-languages/protobuf/protobuf.contribution"
+-  },
+-  {
+-    "label": "pug",
+-    "entry": "vs/basic-languages/pug/pug.contribution"
+-  },
+-  {
+-    "label": "python",
+-    "entry": "vs/basic-languages/python/python.contribution"
+-  },
+-  {
+-    "label": "qsharp",
+-    "entry": "vs/basic-languages/qsharp/qsharp.contribution"
+-  },
+-  {
+-    "label": "r",
+-    "entry": "vs/basic-languages/r/r.contribution"
+-  },
+-  {
+-    "label": "razor",
+-    "entry": "vs/basic-languages/razor/razor.contribution"
+-  },
+-  {
+-    "label": "redis",
+-    "entry": "vs/basic-languages/redis/redis.contribution"
+-  },
+-  {
+-    "label": "redshift",
+-    "entry": "vs/basic-languages/redshift/redshift.contribution"
+-  },
+-  {
+-    "label": "restructuredtext",
+-    "entry": "vs/basic-languages/restructuredtext/restructuredtext.contribution"
+-  },
+-  {
+-    "label": "ruby",
+-    "entry": "vs/basic-languages/ruby/ruby.contribution"
+-  },
+-  {
+-    "label": "rust",
+-    "entry": "vs/basic-languages/rust/rust.contribution"
+-  },
+-  {
+-    "label": "sb",
+-    "entry": "vs/basic-languages/sb/sb.contribution"
+-  },
+-  {
+-    "label": "scala",
+-    "entry": "vs/basic-languages/scala/scala.contribution"
+-  },
+-  {
+-    "label": "scheme",
+-    "entry": "vs/basic-languages/scheme/scheme.contribution"
+-  },
+-  {
+-    "label": "scss",
+-    "entry": "vs/basic-languages/scss/scss.contribution"
+-  },
+-  {
+-    "label": "shell",
+-    "entry": "vs/basic-languages/shell/shell.contribution"
+-  },
+-  {
+-    "label": "solidity",
+-    "entry": "vs/basic-languages/solidity/solidity.contribution"
+-  },
+-  {
+-    "label": "sophia",
+-    "entry": "vs/basic-languages/sophia/sophia.contribution"
+-  },
+-  {
+-    "label": "sparql",
+-    "entry": "vs/basic-languages/sparql/sparql.contribution"
+-  },
+-  {
+-    "label": "sql",
+-    "entry": "vs/basic-languages/sql/sql.contribution"
+-  },
+-  {
+-    "label": "st",
+-    "entry": "vs/basic-languages/st/st.contribution"
+-  },
+-  {
+-    "label": "swift",
+-    "entry": "vs/basic-languages/swift/swift.contribution"
+-  },
+-  {
+-    "label": "systemverilog",
+-    "entry": "vs/basic-languages/systemverilog/systemverilog.contribution"
+-  },
+-  {
+-    "label": "tcl",
+-    "entry": "vs/basic-languages/tcl/tcl.contribution"
+-  },
+-  {
+-    "label": "twig",
+-    "entry": "vs/basic-languages/twig/twig.contribution"
+-  },
+   {
+     "label": "typescript",
+     "entry": [
+@@ -536,17 +234,5 @@ exports.languages = [
+       "id": "vs/language/typescript/tsWorker",
+       "entry": "vs/language/typescript/ts.worker"
+     }
+-  },
+-  {
+-    "label": "vb",
+-    "entry": "vs/basic-languages/vb/vb.contribution"
+-  },
+-  {
+-    "label": "xml",
+-    "entry": "vs/basic-languages/xml/xml.contribution"
+-  },
+-  {
+-    "label": "yaml",
+-    "entry": "vs/basic-languages/yaml/yaml.contribution"
+   }
+ ];
+diff --git a/node_modules/monaco-editor/esm/vs/base/common/buffer.js b/node_modules/monaco-editor/esm/vs/base/common/buffer.js
+index 9518d6d..f322611 100644
+--- a/node_modules/monaco-editor/esm/vs/base/common/buffer.js
++++ b/node_modules/monaco-editor/esm/vs/base/common/buffer.js
+@@ -1,33 +1,17 @@
+-const hasBuffer = (typeof Buffer !== 'undefined');
+ let textDecoder;
+ export class VSBuffer {
+     constructor(buffer) {
+         this.buffer = buffer;
+         this.byteLength = this.buffer.byteLength;
+     }
+-    /**
+-     * When running in a nodejs context, if `actual` is not a nodejs Buffer, the backing store for
+-     * the returned `VSBuffer` instance might use a nodejs Buffer allocated from node's Buffer pool,
+-     * which is not transferrable.
+-     */
+     static wrap(actual) {
+-        if (hasBuffer && !(Buffer.isBuffer(actual))) {
+-            // https://nodejs.org/dist/latest-v10.x/docs/api/buffer.html#buffer_class_method_buffer_from_arraybuffer_byteoffset_length
+-            // Create a zero-copy Buffer wrapper around the ArrayBuffer pointed to by the Uint8Array
+-            actual = Buffer.from(actual.buffer, actual.byteOffset, actual.byteLength);
+-        }
+         return new VSBuffer(actual);
+     }
+     toString() {
+-        if (hasBuffer) {
+-            return this.buffer.toString();
+-        }
+-        else {
+-            if (!textDecoder) {
+-                textDecoder = new TextDecoder();
+-            }
+-            return textDecoder.decode(this.buffer);
++        if (!textDecoder) {
++            textDecoder = new TextDecoder();
+         }
++        return textDecoder.decode(this.buffer);
+     }
+ }
+ export function readUInt16LE(source, offset) {
+diff --git a/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js b/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js
+index f9807f9..b243e3b 100644
+--- a/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js
++++ b/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js
+@@ -9,15 +9,6 @@
+  * The code in this file is generated from files in ./src/
+  */
+ 
+-// ESM-uncomment-begin
+-let __marked_exports = {};
+-(function() {
+-  function define(deps, factory) {
+-    factory(__marked_exports);
+-  }
+-  define.amd = true;
+-// ESM-uncomment-end
+-
+  (function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+   typeof define === 'function' && define.amd ? define(['exports'], factory) :
+@@ -2942,8 +2933,3 @@ let __marked_exports = {};
+ 
+   Object.defineProperty(exports, '__esModule', { value: true });
+ }));
+-
+-// ESM-uncomment-begin
+-})();
+-export var marked = (__marked_exports || exports);
+-// ESM-uncomment-end
+diff --git a/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js b/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js
+index a6b7213..4378e30 100644
+--- a/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js
++++ b/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js
+@@ -7,80 +7,5 @@ import '../editor/editor.api.js';
+  *-----------------------------------------------------------------------------*/
+ 
+ // src/basic-languages/monaco.contribution.ts
+-import "./abap/abap.contribution.js";
+-import "./apex/apex.contribution.js";
+-import "./azcli/azcli.contribution.js";
+-import "./bat/bat.contribution.js";
+-import "./bicep/bicep.contribution.js";
+-import "./cameligo/cameligo.contribution.js";
+-import "./clojure/clojure.contribution.js";
+-import "./coffee/coffee.contribution.js";
+-import "./cpp/cpp.contribution.js";
+-import "./csharp/csharp.contribution.js";
+-import "./csp/csp.contribution.js";
+-import "./css/css.contribution.js";
+-import "./dart/dart.contribution.js";
+-import "./dockerfile/dockerfile.contribution.js";
+-import "./ecl/ecl.contribution.js";
+-import "./elixir/elixir.contribution.js";
+-import "./flow9/flow9.contribution.js";
+-import "./fsharp/fsharp.contribution.js";
+-import "./freemarker2/freemarker2.contribution.js";
+-import "./go/go.contribution.js";
+-import "./graphql/graphql.contribution.js";
+-import "./handlebars/handlebars.contribution.js";
+-import "./hcl/hcl.contribution.js";
+-import "./html/html.contribution.js";
+-import "./ini/ini.contribution.js";
+-import "./java/java.contribution.js";
+ import "./javascript/javascript.contribution.js";
+-import "./julia/julia.contribution.js";
+-import "./kotlin/kotlin.contribution.js";
+-import "./less/less.contribution.js";
+-import "./lexon/lexon.contribution.js";
+-import "./lua/lua.contribution.js";
+-import "./liquid/liquid.contribution.js";
+-import "./m3/m3.contribution.js";
+-import "./markdown/markdown.contribution.js";
+-import "./mips/mips.contribution.js";
+-import "./msdax/msdax.contribution.js";
+-import "./mysql/mysql.contribution.js";
+-import "./objective-c/objective-c.contribution.js";
+-import "./pascal/pascal.contribution.js";
+-import "./pascaligo/pascaligo.contribution.js";
+-import "./perl/perl.contribution.js";
+-import "./pgsql/pgsql.contribution.js";
+-import "./php/php.contribution.js";
+-import "./pla/pla.contribution.js";
+-import "./postiats/postiats.contribution.js";
+-import "./powerquery/powerquery.contribution.js";
+-import "./powershell/powershell.contribution.js";
+-import "./protobuf/protobuf.contribution.js";
+-import "./pug/pug.contribution.js";
+-import "./python/python.contribution.js";
+-import "./qsharp/qsharp.contribution.js";
+-import "./r/r.contribution.js";
+-import "./razor/razor.contribution.js";
+-import "./redis/redis.contribution.js";
+-import "./redshift/redshift.contribution.js";
+-import "./restructuredtext/restructuredtext.contribution.js";
+-import "./ruby/ruby.contribution.js";
+-import "./rust/rust.contribution.js";
+-import "./sb/sb.contribution.js";
+-import "./scala/scala.contribution.js";
+-import "./scheme/scheme.contribution.js";
+-import "./scss/scss.contribution.js";
+-import "./shell/shell.contribution.js";
+-import "./solidity/solidity.contribution.js";
+-import "./sophia/sophia.contribution.js";
+-import "./sparql/sparql.contribution.js";
+-import "./sql/sql.contribution.js";
+-import "./st/st.contribution.js";
+-import "./swift/swift.contribution.js";
+-import "./systemverilog/systemverilog.contribution.js";
+-import "./tcl/tcl.contribution.js";
+-import "./twig/twig.contribution.js";
+ import "./typescript/typescript.contribution.js";
+-import "./vb/vb.contribution.js";
+-import "./xml/xml.contribution.js";
+-import "./yaml/yaml.contribution.js";

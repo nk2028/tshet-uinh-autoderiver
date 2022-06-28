@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 
 import { listenArticle, listenTooltip, setClassName } from "qieyun-autoderiver-evaluate";
 
@@ -7,7 +7,8 @@ import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { allOptions } from "../consts";
+import Swal from "../Classes/SwalReact";
+import { allOptions, defaultArticle } from "../consts";
 import evaluate from "../evaluate";
 import initialState from "../state";
 import { copy, notifyError } from "../utils";
@@ -26,14 +27,14 @@ const ArticleInput = styled.textarea`
 const OutputArea = styled.div`
   display: flex;
   position: absolute;
-  left: -1rem;
-  bottom: -1rem;
-  right: -1rem;
-  max-height: calc(100% - 1rem);
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-height: 100%;
   background-color: white;
   border-top: 0.375rem solid #ccc;
   transition: bottom 0.5s;
-  z-index: 5;
+  z-index: 500;
 `;
 const OutputContainer = styled.div`
   position: relative;
@@ -65,11 +66,15 @@ const OutputContent = styled.output`
     line-height: 1.1;
   }
   table {
+    margin-top: -0.5rem;
     margin-left: 0.25rem;
-    border-collapse: collapse;
-    th {
-      text-align: left;
-      border-bottom: 0.5px solid #aaa;
+    border-spacing: 0;
+    thead {
+      position: sticky;
+      top: -2px;
+      background-color: white;
+      height: 2.5rem;
+      vertical-align: bottom;
     }
     th,
     td {
@@ -77,8 +82,16 @@ const OutputContent = styled.output`
       padding: 0 0.5rem;
       &:first-child {
         border-left: none;
-        padding-left: 0;
+        padding-left: 0.25rem;
       }
+    }
+    th {
+      text-align: left;
+      border-bottom: 0.5px solid #aaa;
+      padding-right: 1.25rem;
+    }
+    tbody > tr:first-child > td {
+      padding-top: 0.25rem;
     }
   }
 `;
@@ -123,7 +136,7 @@ setClassName(stylesheet`
   color: #333;
   width: 25rem;
   max-width: calc(100vw - 2rem);
-  z-index: 10;
+  z-index: 800;
   &:hover {
     display: block !important;
   }
@@ -137,7 +150,7 @@ setClassName(stylesheet`
 
 let evaluationResult: (Node | string)[] = [];
 
-export default function Main() {
+export default function Main({ handleRef }: { handleRef: MutableRefObject<() => void> }) {
   const [state, setState] = useState(initialState);
   const { article, option, convertVariant, syncCharPosition } = state;
   useEffect(() => {
@@ -167,7 +180,7 @@ export default function Main() {
     renderResult();
   }, []);
 
-  const handleClick = useCallback(async () => {
+  handleRef.current = useCallback(async () => {
     evaluationResult = [];
     ref.current.textContent = "";
     setVisible(true);
@@ -202,6 +215,28 @@ export default function Main() {
     });
   }, []);
 
+  const resetArticle = useCallback(async () => {
+    if (
+      !article ||
+      (article !== defaultArticle &&
+        (
+          await Swal.fire({
+            title: "要恢復成預設文本嗎？",
+            text: "此動作無法復原。",
+            icon: "warning",
+            showConfirmButton: false,
+            focusConfirm: false,
+            showDenyButton: true,
+            showCancelButton: true,
+            focusCancel: true,
+            denyButtonText: "確定",
+            cancelButtonText: "取消",
+          })
+        ).isDenied)
+    )
+      setState({ ...state, article: defaultArticle });
+  }, [state]);
+
   return (
     <>
       <SchemaEditor
@@ -211,6 +246,7 @@ export default function Main() {
           <>
             <p>
               <ArticleInput
+                disabled={option !== "convertArticle"}
                 placeholder="輸入框"
                 rows={5}
                 autoComplete="off"
@@ -248,7 +284,19 @@ export default function Main() {
                 />
                 同步音韻地位選擇至輸入框
               </label>
-              <input className="pure-button pure-button-primary" type="button" value="適用" onClick={handleClick} />
+              <input
+                className="pure-button pure-button-primary"
+                type="button"
+                value="適用"
+                onClick={handleRef.current}
+              />
+              <input
+                hidden={option !== "convertArticle"}
+                className="pure-button pure-button-danger"
+                type="button"
+                value="恢復成預設文本"
+                onClick={resetArticle}
+              />
             </p>
           </>
         }

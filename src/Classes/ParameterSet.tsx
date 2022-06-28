@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 
 import Schema from "./Schema";
 
-export type Arg = { key: string; value: unknown; options?: unknown[]; display: boolean };
-export type Parameter = string | null | undefined | [key: string, value: unknown, display?: boolean];
+export type Arg = { key: string; value: unknown; options?: unknown[] };
+export type Parameter = string | null | undefined | [key: string, value: unknown];
 
 const Colon = styled.span`
   &:after {
@@ -19,11 +19,12 @@ export default class ParameterSet {
   private form: (string | null | undefined | Arg)[] = [];
 
   constructor(parameters: Parameter[] = []) {
-    parameters.forEach(parameter => {
+    for (const parameter of parameters) {
       if (Array.isArray(parameter)) {
-        const [key, value, display] = parameter;
-        if (!key || typeof key !== "string") return;
-        const arg: Arg = { key, value, display: !(2 in parameter) || !!display };
+        const key = String(parameter[0]);
+        const value = parameter[1];
+        if (!key || key === "$legacy") return;
+        const arg: Arg = { key, value };
         if (Array.isArray(value)) {
           arg.options = value.slice(1);
           const [current, first] = value;
@@ -34,7 +35,7 @@ export default class ParameterSet {
         this.data.set(key, arg);
         this.form.push(arg);
       } else this.form.push(parameter);
-    });
+    }
   }
 
   get(key: string) {
@@ -47,10 +48,10 @@ export default class ParameterSet {
     return this;
   }
 
-  pack(showAll?: boolean) {
+  pack() {
     const result: Record<string, unknown> = {};
-    this.data.forEach(({ value, display }, key) => {
-      if (showAll || display) result[key] = value;
+    this.data.forEach(({ value }, key) => {
+      result[key] = value;
     });
     return result;
   }
@@ -68,7 +69,7 @@ export default class ParameterSet {
   refresh(input: string) {
     if (!this.size) return ParameterSet.from(input);
     try {
-      return new ParameterSet(new Schema(input).getParameters(this.pack(true))).combine(this);
+      return new ParameterSet(new Schema(input).getParameters(this.pack())).combine(this);
     } catch {
       return this;
     }
@@ -97,8 +98,7 @@ export default class ParameterSet {
             )}
           </>
         );
-      const { key, value, options, display } = arg;
-      if (!display) return null;
+      const { key, value, options } = arg;
       if (options)
         return (
           <label key={key}>
@@ -110,7 +110,7 @@ export default class ParameterSet {
               autoComplete="off">
               {options.map((option, index) => (
                 <option key={index} value={index}>
-                  {String(option) /* Using + "" will cause error with symbols */}
+                  {String(option)}
                 </option>
               ))}
             </select>
@@ -166,7 +166,6 @@ export default class ParameterSet {
   }
 
   clone() {
-    // return Object.create(Object.getPrototypeOf(this), Object.getOwnPropertyDescriptors(this));
     const copy = new ParameterSet();
     copy.data = this.data;
     copy.form = this.form;
@@ -174,6 +173,6 @@ export default class ParameterSet {
   }
 
   toJSON() {
-    return this.pack(true);
+    return this.pack();
   }
 }

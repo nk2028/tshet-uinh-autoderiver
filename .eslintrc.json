@@ -46,6 +46,7 @@
         "newlines-between": "always",
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }
-    ]
+    ],
+    "import/no-unresolved": ["error", { "ignore": ["^url:"] }]
   }
 }

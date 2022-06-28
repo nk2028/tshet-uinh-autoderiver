@@ -6,7 +6,9 @@ import styled from "@emotion/styled";
 import { faFile, faFileCode, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { qieyunExamplesURLPrefix } from "../consts";
+import actions from "../actions";
+import Swal from "../Classes/SwalReact";
+import { newFileTemplate, qieyunExamplesURLPrefix, UseMainState } from "../consts";
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
 import ExplorerFolder from "./ExplorerFolder";
@@ -127,24 +129,24 @@ const Rename = styled.div<{ invalid: boolean }>`
   display: contents;
   form {
     display: contents;
-  }
-  label {
-    display: contents;
-  }
-  svg {
-    color: #222;
-    margin: 0 0.375rem 0 0.125rem;
-  }
-  input[type="text"] {
-    display: block;
-    width: 100%;
-    height: 2.25rem;
-    flex: 1;
-    ${({ invalid }) =>
-      invalid &&
-      css`
-        border-color: red;
-      `}
+    label {
+      display: contents;
+      svg {
+        color: #222;
+        margin: 0 0.375rem 0 0.125rem;
+      }
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        height: 2.25rem;
+        flex: 1;
+        ${({ invalid }) =>
+          invalid &&
+          css`
+            border-color: red;
+          `}
+      }
+    }
   }
 `;
 const Validation = styled.div`
@@ -162,10 +164,13 @@ const Loading = styled.div`
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.6);
 `;
+const LoadModal = styled.div`
+  margin-top: 3rem;
+  color: #bbb;
+`;
 
-interface CreateSchemaDialogProps {
+interface CreateSchemaDialogProps extends UseMainState {
   visible: boolean;
-  uncancellable: boolean;
   closeDialog: () => void;
   getDefaultFileName: (sample: Sample | "") => string;
   schemaLoaded: (schema: Omit<SchemaState, "parameters">) => void;
@@ -173,8 +178,9 @@ interface CreateSchemaDialogProps {
 }
 
 export default function CreateSchemaDialog({
+  state: { schemas },
+  setState,
   visible,
-  uncancellable,
   closeDialog,
   getDefaultFileName,
   schemaLoaded,
@@ -227,12 +233,47 @@ export default function CreateSchemaDialog({
     try {
       schemaLoaded({
         name: normalizeFileName(createSchemaName) + ".js",
-        input: createSchemaSample && (await fetchFile(qieyunExamplesURLPrefix + createSchemaSample + ".js")),
+        input: createSchemaSample
+          ? await fetchFile(qieyunExamplesURLPrefix + createSchemaSample + ".js")
+          : newFileTemplate,
       });
     } catch {
       setLoading(false);
     }
   }, [createSchemaName, createSchemaSample]);
+
+  useEffect(() => {
+    if (schemas.length) return;
+    Swal.fire({
+      html: (
+        <LoadModal>
+          <Spinner />
+          <h2>載入中……</h2>
+        </LoadModal>
+      ),
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+    });
+    (async () => {
+      try {
+        setState(
+          actions.addSchema({
+            name: "tupa.js",
+            input: await fetchFile(qieyunExamplesURLPrefix + "tupa.js"),
+          })
+        );
+        Swal.close();
+      } catch {
+        setState(
+          actions.addSchema({
+            name: "untitled.js",
+            input: newFileTemplate,
+          })
+        );
+      }
+    })();
+  }, [schemas]);
 
   const inputChange = useCallback(event => setCreateSchemaName(event.target.value), []);
 
@@ -321,7 +362,7 @@ export default function CreateSchemaDialog({
                   </label>
                 </form>
               </Rename>
-              <button className="swal2-cancel swal2-styled" disabled={uncancellable} onClick={closeDialog}>
+              <button className="swal2-cancel swal2-styled" onClick={closeDialog}>
                 取消
               </button>
               <button className="swal2-confirm swal2-styled" disabled={!!validation} onClick={addSchema}>

@@ -28,7 +28,7 @@ const Circle = styled.circle`
 
 export default function Spinner() {
   return (
-    <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="5rem" height="5rem">
+    <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="4rem" height="4rem">
       <Circle
         cx={8}
         cy={8}

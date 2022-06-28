@@ -1,8 +1,10 @@
 import "purecss/build/pure.css";
 
+import { useCallback, useRef } from "react";
+
 import { injectGlobal, css as stylesheet } from "@emotion/css";
 import styled from "@emotion/styled";
-import { faInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlay, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Swal from "../Classes/SwalReact";
@@ -13,9 +15,6 @@ injectGlobal`
   body {
     line-height: 1.6;
     font-size: 16px;
-  }
-  :lang(en),
-  :lang(zh) {
     font-family: "Jomolhari", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
       "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
       "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", serif;
@@ -24,22 +23,20 @@ injectGlobal`
   :lang(och-Latn-fonipa) {
     font-family: "CharisSILW", serif;
   }
-  :lang(en-x-code) {
-    font-family: monospace, "CharisSILW", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR",
-      "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC",
-      "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", monospace, monospace;
-    font-language-override: "KOR";
-  }
   br:first-child {
     display: none;
   }
-  .pure-button {
+  body .pure-button {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
     margin-right: 0.3em;
     vertical-align: baseline;
+    &.pure-button-danger {
+      background-color: #dc3741;
+      color: white;
+    }
   }
-  .pure-form {
+  body .pure-form {
     p {
       line-height: 2.5;
     }
@@ -70,6 +67,9 @@ injectGlobal`
       margin-right: 1.125rem;
       white-space: nowrap;
     }
+  }
+  .swal2-close {
+    font-family: unset;
   }
   @media (max-width: 720px) {
     .swal2-container {
@@ -201,7 +201,7 @@ const ShowButton = styled.span`
   font-size: 1.25rem;
   color: #666;
   border: 0.125rem solid #666;
-  margin-left: 0.75rem;
+  margin-left: 0.5rem;
   cursor: pointer;
   transition: color 150ms, border-color 150ms;
   &:hover {
@@ -209,8 +209,28 @@ const ShowButton = styled.span`
     border-color: #0078e7;
   }
 `;
+const ApplyButton = styled.span`
+  margin-left: 0.75rem;
+  color: #0078e7;
+  cursor: pointer;
+  transition: color 150ms;
+  &:hover {
+    color: #339cff;
+  }
+`;
+const FontPreload = styled.span`
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+`;
 
 export default function App() {
+  const handleRef = useRef(() => {
+    //
+  });
   return (
     <Container>
       <Content>
@@ -219,14 +239,18 @@ export default function App() {
             <Title>
               <span>切韻音系自動推導器</span>
               <Version>v{process.env["NPM_PACKAGE_VERSION"]}</Version>
+              <ApplyButton title="適用" onClick={useCallback(() => handleRef.current(), [])}>
+                <FontAwesomeIcon icon={faCirclePlay} />
+              </ApplyButton>
               <ShowButton title="關於" onClick={showAbout}>
                 <FontAwesomeIcon icon={faInfo} fixedWidth />
               </ShowButton>
             </Title>
           </nav>
         </header>
-        <Main />
+        <Main handleRef={handleRef} />
       </Content>
+      <FontPreload aria-hidden>結果</FontPreload>
     </Container>
   );
 }
