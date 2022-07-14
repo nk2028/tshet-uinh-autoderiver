@@ -60,6 +60,7 @@ function App() {
             <span onClick={showAbout}>切韻音系自動推導器</span>
           </h1>
         </nav>
+        <a href="https://graphemecluster.github.io/qieyun-autoderiver">試用 v0.2 beta 版</a>
       </header>
       <Main />
     </div>

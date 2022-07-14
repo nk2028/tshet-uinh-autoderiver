@@ -10,7 +10,7 @@ import withReactContent from "sweetalert2-react-content";
 // 推導方案（及控制臺）用
 // XXX 之後改成 new Function 時作為參數（然後再 bind 或閉包一下就不用每次都傳了）
 import * as Qieyun from "qieyun";
-(global as any).Qieyun = Qieyun;
+(window as any).Qieyun = Qieyun;
 
 const { query字頭, iter音韻地位, query音韻地位 } = 資料;
 
@@ -228,7 +228,7 @@ class Main extends React.Component<any, MainState> {
     };
 
     if (this.state.option === "convertPresetArticle" && !presetArticle) {
-      fetchFile("https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@360e36b/index.txt", article => {
+      fetchFile("https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@main/index.txt", article => {
         presetArticle = article;
         this.handlePredefinedOptions();
       });

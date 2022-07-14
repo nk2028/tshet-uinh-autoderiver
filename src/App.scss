@@ -44,6 +44,22 @@ body {
         }
       }
     }
+    & + a:link {
+      position: absolute;
+      top: 1.5em;
+      right: 2em;
+      border: none;
+      background-color: #555;
+      color: white;
+      line-height: 2.5;
+      font-size: 1.06rem;
+      padding: 0 1.25em;
+      border-radius: 9999px;
+      transition: 0.2s;
+      &:hover {
+        background-color: #606060;
+      }
+    }
   }
   .add-schema {
     position: relative;
@@ -157,8 +173,8 @@ body {
       padding: 0 0 0 0.6em;
     }
     label {
-      display: inline;
-      margin-right: 0.4em;
+      display: inline-block;
+      margin: 0 0.4em 0.2em 0;
       white-space: nowrap;
       &:first-child select {
         margin: 0;
