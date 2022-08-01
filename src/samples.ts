@@ -10,9 +10,8 @@ export default {
   },
   "切韻音系擬音": {
     "潘悟雲擬音": "panwuyun",
-    "unt 切韻朗讀音": "unt",
-    "unt 切韻擬音 J": "unt_j",
-    "msoeg 中古拟音 V8": "msoeg_v8",
+    "unt 切韻擬音": "unt",
+    "msoeg 中古擬音 V8": "msoeg_v8",
   },
   "推導後世音系": {
     "推導盛中唐擬音": "mid_tang",
