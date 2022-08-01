@@ -94,7 +94,7 @@ export const schemas = {
   zyepheng: "隋拼",
   sliark_peengqvim: "Sliark 拼音",
   panwuyun: "潘悟雲擬音",
-  unt_j: "unt 切韻擬音 J",
+  unt: "unt 切韻擬音",
   msoeg_v8: "msoeg 中古拟音 V8",
   mid_tang: "推導盛中唐擬音",
   chiangxhua: "推導《聲音唱和圖》擬音",
