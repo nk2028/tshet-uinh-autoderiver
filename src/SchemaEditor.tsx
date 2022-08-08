@@ -21,12 +21,15 @@ import "codemirror/addon/scroll/simplescrollbars.css";
 import "codemirror/addon/selection/active-line";
 import "codemirror/mode/javascript/javascript";
 
-import { 推導方案, 音韻地位 } from "qieyun";
 import { Pos, ShowHintOptions } from "codemirror";
 import Swal from "sweetalert2";
 import { fetchFile, schemas, SchemaState, Parameter } from "./Main";
 import prettier from "prettier/standalone";
 import parserBabel from "prettier/parser-babel";
+
+import * as Qieyun from "qieyun";
+import { 音韻地位 } from "qieyun";
+import { 原始推導函數, 推導方案 } from "tshet-uinh-deriver-tools";
 
 (window as any).JSHINT = JSHINT;
 
@@ -145,17 +148,19 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
   }
 
   setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
+    console.log("#setParameters", oldParameters);
     try {
-      const parameters = Object.fromEntries(
+      const 當前選項: Record<string, unknown> = {};
+      Object.entries(oldParameters).forEach(([k, v]) => {
+        當前選項[k] = Array.isArray(v) ? v[0] : v;
+      });
+      const 方案選項 = new 推導方案(
         // eslint-disable-next-line no-new-func
-        推導方案.建立(new Function("音韻地位", "字頭", "選項", input) as 推導方案.原始推導函數<string>).parameters
-      );
+        new Function("Qieyun", "選項", "音韻地位", "字頭", input).bind(null, Qieyun) as 原始推導函數<string>
+      ).方案選項(當前選項);
+      const parameters = Object.fromEntries(方案選項.列表.filter(x => Array.isArray(x) && x.length >= 2) as any);
       Object.entries(parameters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-          // 推導方案.建立 guarantees:
-          // - value.length >= 2
-          // - value[0] is not an index
-          // - value[0] is in value[1..]
           if (
             key in oldParameters &&
             Array.isArray(oldParameters[key]) &&
@@ -177,9 +182,11 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
 
   render() {
     const changeParameter = (key: string, value: any) => {
-      if (Array.isArray(this.props.parameters[key])) this.props.parameters[key][0] = value;
-      else this.props.parameters[key] = value;
-      this.props.setSchemaState({ ...this.props });
+      const parameters = { ...this.props.parameters };
+      if (Array.isArray(parameters[key])) parameters[key] = [value, ...parameters[key].slice(1)];
+      else parameters[key] = value;
+      const newParameters = this.setParameters(this.props.input, parameters);
+      this.props.setSchemaState({ ...this.props, parameters: newParameters });
     };
 
     const formatCode = (cm: CodeMirror.Editor) => {

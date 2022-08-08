@@ -1,16 +1,15 @@
+import * as Qieyun from "qieyun";
+import { 音韻地位 as class音韻地位, 資料 } from "qieyun";
+import { 推導方案 } from "tshet-uinh-deriver-tools";
+import type { 推導函數, 原始推導函數 } from "tshet-uinh-deriver-tools";
+
 import React from "react";
-import { 音韻地位 as class音韻地位, 資料, 推導方案 } from "qieyun";
 import Yitizi from "yitizi";
 import LargeTooltip from "./large-tooltip";
 import Entry from "./Entry";
 import SchemaEditor from "./SchemaEditor";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
-// 推導方案（及控制臺）用
-// XXX 之後改成 new Function 時作為參數（然後再 bind 或閉包一下就不用每次都傳了）
-import * as Qieyun from "qieyun";
-(window as any).Qieyun = Qieyun;
 
 const { query字頭, iter音韻地位, query音韻地位 } = 資料;
 
@@ -204,7 +203,7 @@ class Main extends React.Component<any, MainState> {
   handlePredefinedOptions() {
     const id = +new Date() + ":";
 
-    let userInputs: 推導方案.推導函數<string>[];
+    let userInputs: 推導函數<string>[];
     const parameters = this.state.schemas.map(({ parameters }) => {
       const pass = { ...parameters };
       Object.keys(pass).forEach(key => {
@@ -215,7 +214,7 @@ class Main extends React.Component<any, MainState> {
 
     let callDeriver = (音韻地位: class音韻地位, 字頭: string | null) => {
       try {
-        return userInputs.map((input, index) => input(音韻地位, 字頭, parameters[index]));
+        return userInputs.map(input => input(音韻地位, 字頭));
       } catch (err) {
         notifyError(
           字頭
@@ -321,9 +320,11 @@ class Main extends React.Component<any, MainState> {
     };
 
     try {
-      userInputs = this.state.schemas.map(({ input }) =>
-        // eslint-disable-next-line no-new-func
-        推導方案.建立(new Function("音韻地位", "字頭", "選項", input) as 推導方案.原始推導函數<string>)
+      userInputs = this.state.schemas.map(({ input }, i) =>
+        new 推導方案(
+          // eslint-disable-next-line no-new-func
+          new Function("Qieyun", "選項", "音韻地位", "字頭", input).bind(null, Qieyun) as 原始推導函數<string>
+        )(parameters[i])
       );
     } catch (err) {
       notifyError("程式碼錯誤", err);
