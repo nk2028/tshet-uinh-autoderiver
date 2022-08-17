@@ -148,7 +148,6 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
   }
 
   setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
-    console.log("#setParameters", oldParameters);
     try {
       const 當前選項: Record<string, unknown> = {};
       Object.entries(oldParameters).forEach(([k, v]) => {
