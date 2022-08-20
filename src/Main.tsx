@@ -180,9 +180,9 @@ class Main extends React.Component<any, MainState> {
   constructor(props: any) {
     super(props);
 
-    const schemaNames: Schema[] = JSON.parse(localStorage.getItem("schemas") || "[]");
-    const schemaInputs: string[] = JSON.parse(localStorage.getItem("inputs") || "[]");
-    const schemaParameterLists: 選項項目[][] = JSON.parse(localStorage.getItem("settings") || "[]");
+    const schemaNames: Schema[] = JSON.parse(localStorage.getItem("autoderiver/0.1/schemas") || "[]");
+    const schemaInputs: string[] = JSON.parse(localStorage.getItem("autoderiver/0.1/inputs") || "[]");
+    const schemaParameterLists: 選項項目[][] = JSON.parse(localStorage.getItem("autoderiver/0.1/settings") || "[]");
 
     this.state = {
       schemas: schemaNames.length
@@ -364,9 +364,12 @@ class Main extends React.Component<any, MainState> {
     };
 
     const storeSchemas = () => {
-      localStorage.setItem("schemas", JSON.stringify(this.state.schemas.map(schema => schema.name)));
-      localStorage.setItem("inputs", JSON.stringify(this.state.schemas.map(schema => schema.input)));
-      localStorage.setItem("settings", JSON.stringify(this.state.schemas.map(schemas => schemas.settings.列表)));
+      localStorage.setItem("autoderiver/0.1/schemas", JSON.stringify(this.state.schemas.map(schema => schema.name)));
+      localStorage.setItem("autoderiver/0.1/inputs", JSON.stringify(this.state.schemas.map(schema => schema.input)));
+      localStorage.setItem(
+        "autoderiver/0.1/settings",
+        JSON.stringify(this.state.schemas.map(schemas => schemas.settings))
+      );
     };
 
     const addSchema = (id: number | null) => {
