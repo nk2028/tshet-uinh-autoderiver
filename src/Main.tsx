@@ -1,7 +1,7 @@
 import * as Qieyun from "qieyun";
 import { 音韻地位 as class音韻地位, 資料 } from "qieyun";
-import { 推導方案 } from "tshet-uinh-deriver-tools";
-import type { 推導函數, 原始推導函數 } from "tshet-uinh-deriver-tools";
+import { 推導方案, 推導選項 } from "tshet-uinh-deriver-tools";
+import type { 推導函數, 原始推導函數, 選項項目 } from "tshet-uinh-deriver-tools";
 
 import React from "react";
 import Yitizi from "yitizi";
@@ -131,13 +131,11 @@ export interface SchemaState {
   name: Schema;
   input: string;
   original: string;
-  parameters: Parameter;
+  settings: 推導選項;
   id: number;
 }
 
 export type Entries = [string[], { 字頭: string; 反切: string | null; 解釋: string; 音韻地位: class音韻地位 }[]][];
-
-export type Parameter = { [parameter: string]: any };
 
 export function fetchFile(input: string, callback: (text: string) => void) {
   fetch(input)
@@ -147,7 +145,7 @@ export function fetchFile(input: string, callback: (text: string) => void) {
 }
 
 function schemaCopy(): SchemaState {
-  return { name: "tupa", input: "", original: "", parameters: {}, id: +new Date() };
+  return { name: "tupa", input: "", original: "", settings: new 推導選項(), id: +new Date() };
 }
 
 export function joinWithBr(array: (string | JSX.Element)[]) {
@@ -171,7 +169,7 @@ class Main extends React.Component<any, MainState> {
 
     const schemaNames: Schema[] = JSON.parse(localStorage.getItem("schemas") || "[]");
     const schemaInputs: string[] = JSON.parse(localStorage.getItem("inputs") || "[]");
-    const schemaParameters: Parameter[] = JSON.parse(localStorage.getItem("parameters") || "[]");
+    const schemaParameterLists: 選項項目[][] = JSON.parse(localStorage.getItem("settings") || "[]");
 
     this.state = {
       schemas: schemaNames.length
@@ -179,7 +177,7 @@ class Main extends React.Component<any, MainState> {
             name,
             input: schemaInputs[id],
             original: "",
-            parameters: schemaParameters[id],
+            settings: new 推導選項(schemaParameterLists[id]),
             id,
           }))
         : [schemaCopy()],
@@ -204,13 +202,7 @@ class Main extends React.Component<any, MainState> {
     const id = +new Date() + ":";
 
     let userInputs: 推導函數<string>[];
-    const parameters = this.state.schemas.map(({ parameters }) => {
-      const pass = { ...parameters };
-      Object.keys(pass).forEach(key => {
-        if (Array.isArray(pass[key])) pass[key] = pass[key][0];
-      });
-      return pass;
-    });
+    const optionsAll = this.state.schemas.map(({ settings }) => settings.預設選項);
 
     let callDeriver = (音韻地位: class音韻地位, 字頭: string | null) => {
       try {
@@ -324,7 +316,7 @@ class Main extends React.Component<any, MainState> {
         new 推導方案(
           // eslint-disable-next-line no-new-func
           new Function("Qieyun", "選項", "音韻地位", "字頭", input).bind(null, Qieyun) as 原始推導函數<string>
-        )(parameters[i])
+        )(optionsAll[i])
       );
     } catch (err) {
       notifyError("程式碼錯誤", err);
@@ -361,7 +353,7 @@ class Main extends React.Component<any, MainState> {
     const storeSchemas = () => {
       localStorage.setItem("schemas", JSON.stringify(this.state.schemas.map(schema => schema.name)));
       localStorage.setItem("inputs", JSON.stringify(this.state.schemas.map(schema => schema.input)));
-      localStorage.setItem("parameters", JSON.stringify(this.state.schemas.map(schemas => schemas.parameters)));
+      localStorage.setItem("settings", JSON.stringify(this.state.schemas.map(schemas => schemas.settings.列表)));
     };
 
     const addSchema = (id: number | null) => {
@@ -396,7 +388,7 @@ class Main extends React.Component<any, MainState> {
               input={schema.input}
               original={schema.original}
               id={schema.id}
-              parameters={schema.parameters}
+              settings={schema.settings}
               setSchemaState={setSchemaState}
               deleteSchema={deleteSchema}
               single={array.length === 1}
