@@ -209,7 +209,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         if (Array.isArray(value))
           return (
             <label key={index}>
-              {key}
+              <span className="select-label">{key}</span>
               <select
                 onChange={event => changeParameter(key, JSON.parse(event.target.value))}
                 value={JSON.stringify(value[0])}>
@@ -331,7 +331,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
           />
         </div>
         <form className="pure-form">
-          <p>
+          <p className="schema-settings">
             <b>選項：</b>
             {parameters}
           </p>
