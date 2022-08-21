@@ -29,30 +29,24 @@ function notifyError(msg: string, err?: unknown) {
   if (!(err instanceof Error)) {
     throw err;
   }
-  if (err?.stack)
-    SwalReact.fire({
-      showClass: { popup: "" },
-      hideClass: { popup: "" },
-      icon: "error",
-      title: "錯誤",
-      customClass: "error-with-stack" as any,
-      html: (
-        <>
-          <p>{msg}</p>
-          <pre lang="en-x-code">{err.stack.replace(/\n +at eval[^]+/, "")}</pre>
-        </>
-      ),
-      confirmButtonText: "確定",
-    });
-  else
-    Swal.fire({
-      showClass: { popup: "" },
-      hideClass: { popup: "" },
-      icon: "error",
-      title: "錯誤",
-      text: msg,
-      confirmButtonText: "確定",
-    });
+  let technicalMessage = err.message;
+  if (err?.stack) {
+    technicalMessage += "\n" + err.stack.replace(/\n +at eval[^]+/, "");
+  }
+  SwalReact.fire({
+    showClass: { popup: "" },
+    hideClass: { popup: "" },
+    icon: "error",
+    title: "錯誤",
+    customClass: "error-with-stack",
+    html: (
+      <>
+        <p>{msg}</p>
+        <pre lang="en-x-code">{technicalMessage}</pre>
+      </>
+    ),
+    confirmButtonText: "確定",
+  });
 }
 
 function copyFailed() {
