@@ -333,8 +333,14 @@ class Main extends React.Component<any, MainState> {
                 } else output.push(<React.Fragment key={id + i}>{chs[i]}</React.Fragment>);
               }
 
+              output.push(
+                <span hidden key={id + chs.length}>
+                  {"\n"}
+                </span>
+              );
               return React.createElement(key ? "p" : "h3", { key }, output);
             })}
+            <span hidden>{"\n"}</span>
           </React.Fragment>
         )),
 
@@ -345,6 +351,7 @@ class Main extends React.Component<any, MainState> {
             <p key={id + i}>
               {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, 代表字s[0]).join(" / ")}</span>{" "}
               {代表字s.join("")}
+              <span hidden>{"\n"}</span>
             </p>
           );
         }),
@@ -390,7 +397,7 @@ class Main extends React.Component<any, MainState> {
   }
 
   handleCopy() {
-    const txt = this.outputArea?.textContent;
+    const txt = this.outputArea?.textContent?.trimEnd();
     if (txt) {
       if (navigator.clipboard) navigator.clipboard.writeText(txt).then(copySuccess, () => copyFallback(txt));
       else copyFallback(txt);
