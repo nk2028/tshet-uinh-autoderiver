@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import { JSHINT } from "jshint";
 import "codemirror/lib/codemirror.css";
@@ -23,13 +23,14 @@ import "codemirror/mode/javascript/javascript";
 
 import { Pos, ShowHintOptions } from "codemirror";
 import Swal from "sweetalert2";
-import { fetchFile, schemas, SchemaState, Parameter } from "./Main";
+import { fetchFile, schemas, SchemaState } from "./Main";
 import prettier from "prettier/standalone";
 import parserBabel from "prettier/parser-babel";
 
 import * as Qieyun from "qieyun";
 import { 音韻地位 } from "qieyun";
-import { 原始推導函數, 推導方案 } from "tshet-uinh-deriver-tools";
+import { 推導方案, 推導選項 } from "tshet-uinh-deriver-tools";
+import type { 原始推導函數 } from "tshet-uinh-deriver-tools";
 
 (window as any).JSHINT = JSHINT;
 
@@ -49,8 +50,8 @@ const deriverParameters = ["音韻地位", "字頭"];
 class SchemaEditor extends React.Component<SchemaProps, any> {
   constructor(props: SchemaProps) {
     super(props);
-    const parameters = this.setParameters(props.input);
-    if (parameters) props.setSchemaState({ ...props, parameters });
+    const settings = this.getNewSettings(props.input);
+    if (settings) props.setSchemaState({ ...props, settings });
   }
 
   componentDidMount() {
@@ -72,10 +73,10 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         list = 音韻地位properties;
         break;
       case "選項":
-        list = Object.keys(this.props.parameters);
+        list = Object.keys(this.props.settings.預設選項);
         break;
       default:
-        list = deriverParameters.concat(Object.keys(this.props.parameters).length ? ["選項"] : []);
+        list = deriverParameters.concat(this.props.settings.項目數 ? ["選項"] : []);
         if (cursor.ch === token.end && /[\s!-#%-/:-@[-^`{-~]$/.test(token.string)) from = to;
         else filter();
         return { list, from, to };
@@ -107,7 +108,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
               ...this.props,
               input,
               original: input,
-              parameters: this.setParameters(input) || {},
+              settings: this.getNewSettings(input, new 推導選項()) ?? new 推導選項(),
             });
           }
         });
@@ -115,7 +116,7 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
         const newProp = { ...this.props, original: input };
         if (event || !this.props.input) {
           newProp.input = input;
-          newProp.parameters = this.setParameters(input) || {};
+          newProp.settings = this.getNewSettings(input, new 推導選項()) ?? new 推導選項();
         }
         this.props.setSchemaState(newProp);
       }
@@ -147,45 +148,33 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
     }
   }
 
-  setParameters(input: string, oldParameters: Parameter = this.props.parameters): any {
+  getNewSettings(input: string, oldSettings: 推導選項 = this.props.settings): 推導選項 | null {
+    const oldOptions = oldSettings.預設選項;
+    let settings: 推導選項;
     try {
-      const 當前選項: Record<string, unknown> = {};
-      Object.entries(oldParameters).forEach(([k, v]) => {
-        當前選項[k] = Array.isArray(v) ? v[0] : v;
-      });
-      const 方案選項 = new 推導方案(
+      settings = new 推導方案(
         // eslint-disable-next-line no-new-func
         new Function("Qieyun", "選項", "音韻地位", "字頭", input).bind(null, Qieyun) as 原始推導函數<string>
-      ).方案選項(當前選項);
-      const parameters = Object.fromEntries(方案選項.列表.filter(x => Array.isArray(x) && x.length >= 2) as any);
-      Object.entries(parameters).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          if (
-            key in oldParameters &&
-            Array.isArray(oldParameters[key]) &&
-            value.slice(1).includes(oldParameters[key][0])
-          ) {
-            value[0] = oldParameters[key][0];
-          }
-        } else if (key in oldParameters && typeof oldParameters[key] === typeof parameters[key]) {
-          parameters[key] = oldParameters[key];
-        }
-      });
-      return parameters;
-    } catch (err) {}
+      ).方案選項(oldOptions);
+    } catch {
+      return null;
+    }
+    return settings.combine(oldSettings);
   }
 
   resetParameters() {
-    this.props.setSchemaState({ ...this.props, parameters: this.setParameters(this.props.input, {}) || {} });
+    this.props.setSchemaState({
+      ...this.props,
+      settings: this.getNewSettings(this.props.input, new 推導選項()) ?? new 推導選項(),
+    });
   }
 
   render() {
     const changeParameter = (key: string, value: any) => {
-      const parameters = { ...this.props.parameters };
-      if (Array.isArray(parameters[key])) parameters[key] = [value, ...parameters[key].slice(1)];
-      else parameters[key] = value;
-      const newParameters = this.setParameters(this.props.input, parameters);
-      this.props.setSchemaState({ ...this.props, parameters: newParameters });
+      this.props.setSchemaState({
+        ...this.props,
+        settings: this.getNewSettings(this.props.input, this.props.settings.set(key, value)) ?? new 推導選項(),
+      });
     };
 
     const formatCode = (cm: CodeMirror.Editor) => {
@@ -204,8 +193,19 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
       cm.setCursor(position);
     };
 
-    let parameters = Object.entries(this.props.parameters)
-      .map(([key, value], index) => {
+    let parameters = this.props.settings.列表
+      .map((item, index) => {
+        if (!Array.isArray(item) || item.length < 2) {
+          return !!item ? (
+            <Fragment key={index}>
+              <br />
+              <b>〔{String(item)}〕</b>
+            </Fragment>
+          ) : (
+            <br key={index} />
+          );
+        }
+        const [key, value] = item;
         if (Array.isArray(value))
           return (
             <label key={index}>
@@ -322,8 +322,8 @@ class SchemaEditor extends React.Component<SchemaProps, any> {
             }}
             onBeforeChange={(cm, data, input) => {
               const newProp = { ...this.props, input };
-              const parameters = this.setParameters(input);
-              if (parameters) newProp.parameters = parameters;
+              const settings = this.getNewSettings(input);
+              if (settings) newProp.settings = settings;
               this.props.setSchemaState(newProp);
             }}
             onCursorActivity={cm => cm.hasFocus() && cm.showHint()}
