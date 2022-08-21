@@ -322,9 +322,12 @@ body {
   }
   .entry-multiple {
     color: #708;
-    &.entry-unresolved {
-      color: #00f;
-    }
+  }
+  .entry-unresolved {
+    color: #00f;
+  }
+  .entry-special {
+    color: #c00;
   }
   .tooltip-item {
     margin: 2px 10px;
