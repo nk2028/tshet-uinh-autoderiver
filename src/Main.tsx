@@ -298,12 +298,7 @@ class Main extends React.Component<any, MainState> {
           }
 
           res.push(
-            <Entry
-              key={id + "#" + i}
-              ch={ch}
-              entries={entries}
-              tooltip={this.largeTooltip}
-              preselect={preselect}></Entry>
+            <Entry key={id + i} ch={ch} entries={entries} tooltip={this.largeTooltip} preselect={preselect}></Entry>
           );
           i = iLast;
         }
