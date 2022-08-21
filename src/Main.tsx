@@ -195,13 +195,13 @@ class Main extends React.Component<any, MainState> {
           }))
         : [schemaCopy()],
       article:
-        localStorage.getItem("article") ||
+        localStorage.getItem("autoderiver/0.1/article") ||
         "遙襟甫暢，逸興遄飛。爽籟發而清風生，纖歌凝而白雲遏。睢園綠竹，氣凌彭澤之樽；鄴水朱華，光照臨川之筆。" +
           "四美具，二難并。窮睇眄於中天，極娛遊於暇日。天高地迥，覺宇宙之無窮；興盡悲來，識盈虛之有數。望長安於日下，目吳會於雲間。" +
           "地勢極而南溟深，天柱高而北辰遠。關山難越，誰悲失路之人。萍水相逢，盡是他鄉之客。懷帝閽而不見，奉宣室以何年？",
-      option: (localStorage.getItem("option") as Option) || "convertArticle",
-      convertVariant: localStorage.getItem("convertVariant") === "true",
-      autocomplete: localStorage.getItem("autocomplete") !== "false",
+      option: (localStorage.getItem("autoderiver/0.1/option") as Option) || "convertArticle",
+      convertVariant: localStorage.getItem("autoderiver/0.1/convertVariant") === "true",
+      autocomplete: localStorage.getItem("autoderiver/0.1/autocomplete") !== "false",
       output: [],
       isApplied: false,
     };
@@ -359,7 +359,7 @@ class Main extends React.Component<any, MainState> {
   render() {
     const changeValue = (key: keyof MainState, value: any) => {
       this.setState({ [key]: value } as MainState, () => {
-        localStorage.setItem(key, this.state[key] + "");
+        localStorage.setItem("autoderiver/0.1/" + key, this.state[key] + "");
       });
     };
 
