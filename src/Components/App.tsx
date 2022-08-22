@@ -36,10 +36,10 @@ injectGlobal`
       color: white;
     }
   }
+  .pure-form p {
+    line-height: 2.5;
+  }
   body .pure-form {
-    p {
-      line-height: 2.5;
-    }
     select {
       padding: 0 0.8rem 0 0.4rem;
       height: 2rem;

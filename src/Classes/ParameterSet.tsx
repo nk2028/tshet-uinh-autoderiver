@@ -1,9 +1,33 @@
 import styled from "@emotion/styled";
 
+import TooltipLabel from "../Components/TooltipLabel";
 import Schema from "./Schema";
 
-export type Arg = { key: string; value: unknown; options?: unknown[] };
+export type Arg = { key: string; description: string[]; value: unknown; options?: unknown[] };
 export type Parameter = string | null | undefined | [key: string, value: unknown];
+
+const Title = styled.b`
+  &:before {
+    content: "〔";
+    color: #888;
+    margin: 0 0.25rem 0 -0.5rem;
+  }
+  &:after {
+    content: "〕";
+    color: #888;
+    margin: 0 0.25rem;
+  }
+`;
+
+const Description = styled.div`
+  margin: -0.5rem 0 -0.2rem;
+  font-size: 0.875rem;
+  color: #555;
+  p {
+    margin: 0.3rem 0;
+    line-height: 1.6;
+  }
+`;
 
 const Colon = styled.span`
   &:after {
@@ -21,10 +45,11 @@ export default class ParameterSet {
   constructor(parameters: Parameter[] = []) {
     for (const parameter of parameters) {
       if (Array.isArray(parameter)) {
-        const key = String(parameter[0]);
+        const [key, ...description] = String(parameter[0]).split(/[\n-\r\x85\u2028\u2029]+/);
+        if (description.length && !description[description.length - 1]) description.pop();
         const value = parameter[1];
         if (!key || key === "$legacy") continue;
-        const arg: Arg = { key, value };
+        const arg: Arg = { key, description, value };
         if (Array.isArray(value)) {
           arg.options = value.slice(1);
           const [current, first] = value;
@@ -39,7 +64,8 @@ export default class ParameterSet {
   }
 
   get(key: string) {
-    return this.data.get(key);
+    const index = key.search(/[\n-\r\x85\u2028\u2029]/);
+    return this.data.get(index === -1 ? key : key.slice(0, index));
   }
 
   set(key: string, value: unknown) {
@@ -85,23 +111,28 @@ export default class ParameterSet {
 
   render(onChange: (change: ParameterSet) => void) {
     return this.form.map(arg => {
-      if (!arg || typeof arg === "string")
+      if (!arg || typeof arg === "string") {
+        const [title, ...description] = (arg || "").split(/[\n-\r\x85\u2028\u2029]+/);
+        if (description.length && !description[description.length - 1]) description.pop();
         return (
           <>
             <br />
             {"\n"}
-            {!!arg && (
-              <b>
-                <span>{arg}</span>
-                <Colon />
-              </b>
+            {!!title && <Title>{title}</Title>}
+            {!!description.length && (
+              <Description>
+                {description.map(line => (
+                  <p key={line}>{line}</p>
+                ))}
+              </Description>
             )}
           </>
         );
-      const { key, value, options } = arg;
+      }
+      const { key, description, value, options } = arg;
       if (options)
         return (
-          <label key={key}>
+          <TooltipLabel description={description} key={key}>
             <span>{key}</span>
             <Colon />
             <select
@@ -114,24 +145,24 @@ export default class ParameterSet {
                 </option>
               ))}
             </select>
-          </label>
+          </TooltipLabel>
         );
       else
         switch (typeof value) {
           case "boolean":
             return (
-              <label key={key}>
+              <TooltipLabel description={description} key={key}>
                 <input
                   type="checkbox"
                   checked={value}
                   onChange={event => onChange(this.clone().set(key, event.target.checked))}
                 />
                 <span>{key}</span>
-              </label>
+              </TooltipLabel>
             );
           case "number":
             return (
-              <label key={key}>
+              <TooltipLabel description={description} key={key}>
                 <span>{key}</span>
                 <Colon />
                 <input
@@ -141,11 +172,11 @@ export default class ParameterSet {
                   onChange={event => onChange(this.clone().set(key, +event.target.value))}
                   autoComplete="off"
                 />
-              </label>
+              </TooltipLabel>
             );
           case "string":
             return (
-              <label key={key}>
+              <TooltipLabel description={description} key={key}>
                 <span>{key}</span>
                 <Colon />
                 <input
@@ -157,7 +188,7 @@ export default class ParameterSet {
                   autoCapitalize="off"
                   spellCheck="false"
                 />
-              </label>
+              </TooltipLabel>
             );
           default:
             return null;
