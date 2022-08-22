@@ -25,34 +25,47 @@ function get代表字(地位: class音韻地位): string[] {
 
 const SwalReact = withReactContent(Swal);
 
-function notifyError(msg: string, err?: unknown) {
-  if (!(err instanceof Error)) {
-    throw err;
+function notifyError(msg: string, err?: any) {
+  let technicalMessage: string | null = null;
+  if (err !== undefined) {
+    if (!(err instanceof Error)) {
+      throw err;
+    }
+    technicalMessage = err.message;
+    while (err.cause instanceof Error) {
+      err = err.cause;
+      technicalMessage += "\n" + err.message;
+    }
+    if (err?.stack) {
+      technicalMessage += "\n" + err.stack.replace(/\n +at eval[^]+/, "");
+    }
   }
-  if (err?.stack)
-    SwalReact.fire({
-      showClass: { popup: "" },
-      hideClass: { popup: "" },
-      icon: "error",
-      title: "錯誤",
-      customClass: "error-with-stack" as any,
-      html: (
-        <>
-          <p>{msg}</p>
-          <pre lang="en-x-code">{err.stack.replace(/\n +at eval[^]+/, "")}</pre>
-        </>
-      ),
-      confirmButtonText: "確定",
-    });
-  else
-    Swal.fire({
-      showClass: { popup: "" },
-      hideClass: { popup: "" },
-      icon: "error",
-      title: "錯誤",
-      text: msg,
-      confirmButtonText: "確定",
-    });
+  const config: Parameters<typeof SwalReact.fire>[0] = {
+    showClass: { popup: "" },
+    hideClass: { popup: "" },
+    icon: "error",
+    title: "錯誤",
+    customClass: "error-with-stack",
+    html: (
+      <>
+        <p>{msg}</p>
+        <pre lang="en-x-code">{technicalMessage}</pre>
+      </>
+    ),
+    confirmButtonText: "確定",
+  };
+  if (technicalMessage !== null) {
+    config.html = (
+      <>
+        <p>{msg}</p>
+        <pre lang="en-x-code">{technicalMessage}</pre>
+      </>
+    );
+    config.customClass = "error-with-stack";
+  } else {
+    config.text = msg;
+  }
+  SwalReact.fire(config);
 }
 
 function copyFailed() {
