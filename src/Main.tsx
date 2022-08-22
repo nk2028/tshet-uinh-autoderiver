@@ -164,7 +164,12 @@ function schemaCopy(): SchemaState {
 export function joinWithBr(array: (string | JSX.Element)[]) {
   return array.map((item, index) => (
     <React.Fragment key={index}>
-      {index !== 0 && <br />}
+      {index !== 0 && (
+        <>
+          <span hidden> / </span>
+          <br />
+        </>
+      )}
       {item}
     </React.Fragment>
   ));
