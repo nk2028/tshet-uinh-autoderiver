@@ -1,5 +1,5 @@
 import * as Qieyun from "qieyun";
-import { 音韻地位 as class音韻地位, 資料 } from "qieyun";
+import { 音韻地位 as class音韻地位, 適配分析體系, 資料 } from "qieyun";
 import { 推導方案, 推導選項 } from "tshet-uinh-deriver-tools";
 import type { 推導函數, 原始推導函數, 選項項目 } from "tshet-uinh-deriver-tools";
 
@@ -164,13 +164,27 @@ function schemaCopy(): SchemaState {
 export function joinWithBr(array: (string | JSX.Element)[]) {
   return array.map((item, index) => (
     <React.Fragment key={index}>
-      {index !== 0 && <br />}
+      {index !== 0 && (
+        <>
+          <span hidden> / </span>
+          <br />
+        </>
+      )}
       {item}
     </React.Fragment>
   ));
 }
 
 let presetArticle: string;
+
+const defaultArticle =
+  "遙襟甫暢，逸興(曉開三蒸去)遄飛。爽籟發而清風(幫三東平)生(生開三庚平)，纖歌凝(疑開三蒸平)而白雲遏。" +
+  "睢(心合三脂平)園綠竹，氣(溪開三微去)凌彭澤之樽；鄴水朱華(匣合二麻平)，光(見合一唐平)照臨(來開三侵平)川之筆。" +
+  "四美具，二難(泥開一寒平)并(幫三清平)。窮睇(定開四齊去)眄(明四先去)於(影開三魚平)中(知三東平)天，極娛(疑三虞平)遊於(影開三魚平)暇日。" +
+  "天高地迥，覺(見二江入)宇宙之無窮；興(曉開三蒸去)盡(從開三眞上)悲來，識(書開三蒸入)盈虛(曉開三魚平)之有數(生三虞去)。" +
+  "望(明三陽平)長(澄開三陽平)安於(影開三魚平)日下(匣開二麻上)，目吳會(見合一泰去)於(影開三魚平)雲間(見開二山平)。" +
+  "地勢極而南溟(明四青平)深(書開三侵平)，天柱(澄三虞上)高而北辰遠(云合三元上)。關山難(泥開一寒平)越(云合三元入)，誰悲失路之人。" +
+  "萍水相(心開三陽平)逢，盡(從開三眞上)是他鄉之客。懷帝閽而不(幫三尤上)見(見開四先去)，奉宣室以何(匣開一歌平)年？";
 
 class Main extends React.Component<any, MainState> {
   largeTooltip?: any;
@@ -180,9 +194,9 @@ class Main extends React.Component<any, MainState> {
   constructor(props: any) {
     super(props);
 
-    const schemaNames: Schema[] = JSON.parse(localStorage.getItem("schemas") || "[]");
-    const schemaInputs: string[] = JSON.parse(localStorage.getItem("inputs") || "[]");
-    const schemaParameterLists: 選項項目[][] = JSON.parse(localStorage.getItem("settings") || "[]");
+    const schemaNames: Schema[] = JSON.parse(localStorage.getItem("autoderiver/0.1/schemas") || "[]");
+    const schemaInputs: string[] = JSON.parse(localStorage.getItem("autoderiver/0.1/inputs") || "[]");
+    const schemaParameterLists: 選項項目[][] = JSON.parse(localStorage.getItem("autoderiver/0.1/settings") || "[]");
 
     this.state = {
       schemas: schemaNames.length
@@ -194,14 +208,10 @@ class Main extends React.Component<any, MainState> {
             id,
           }))
         : [schemaCopy()],
-      article:
-        localStorage.getItem("article") ||
-        "遙襟甫暢，逸興遄飛。爽籟發而清風生，纖歌凝而白雲遏。睢園綠竹，氣凌彭澤之樽；鄴水朱華，光照臨川之筆。" +
-          "四美具，二難并。窮睇眄於中天，極娛遊於暇日。天高地迥，覺宇宙之無窮；興盡悲來，識盈虛之有數。望長安於日下，目吳會於雲間。" +
-          "地勢極而南溟深，天柱高而北辰遠。關山難越，誰悲失路之人。萍水相逢，盡是他鄉之客。懷帝閽而不見，奉宣室以何年？",
-      option: (localStorage.getItem("option") as Option) || "convertArticle",
-      convertVariant: localStorage.getItem("convertVariant") === "true",
-      autocomplete: localStorage.getItem("autocomplete") !== "false",
+      article: localStorage.getItem("autoderiver/0.1/article") || defaultArticle,
+      option: (localStorage.getItem("autoderiver/0.1/option") as Option) || "convertArticle",
+      convertVariant: localStorage.getItem("autoderiver/0.1/convertVariant") === "true",
+      autocomplete: localStorage.getItem("autoderiver/0.1/autocomplete") !== "false",
       output: [],
       isApplied: false,
     };
@@ -240,21 +250,65 @@ class Main extends React.Component<any, MainState> {
     }
 
     let handles = {
-      convertArticle: () =>
-        Array.from(this.state.article).map((ch, i) => {
-          const 所有異體字 = [ch].concat(this.state.convertVariant ? Yitizi.get(ch) : []);
+      convertArticle: () => {
+        const chs = Array.from(this.state.article);
+        const res: JSX.Element[] = [];
+
+        for (let i = 0; i < chs.length; i++) {
+          const ch = chs[i];
+          let iLast = i;
+
+          const 所有異體字 = [ch, null].concat(Yitizi.get(ch));
           const entries: Entries = [];
 
           for (const 字頭 of 所有異體字) {
+            if (字頭 === null) {
+              if (this.state.convertVariant || entries.length === 0) {
+                continue;
+              } else {
+                break;
+              }
+            }
             for (const { 音韻地位, 反切, 解釋 } of query字頭(字頭)) {
-              let 擬音 = callDeriver(音韻地位, 字頭);
-              const entry = entries.find(key => key[0].every((pronunciation, i) => pronunciation === 擬音[i]));
+              const 推導結果 = callDeriver(音韻地位, 字頭);
+              const entry = entries.find(key => key[0].every((pronunciation, i) => pronunciation === 推導結果[i]));
               if (entry) entry[1].push({ 字頭, 反切, 解釋, 音韻地位 });
-              else entries.push([擬音, [{ 字頭, 反切, 解釋, 音韻地位 }]]);
+              else entries.push([推導結果, [{ 字頭, 反切, 解釋, 音韻地位 }]]);
             }
           }
-          return <Entry key={id + i} ch={ch} entries={entries} tooltip={this.largeTooltip}></Entry>;
-        }),
+
+          let preselect: number | undefined = undefined;
+          if (chs[i + 1] === "(") {
+            iLast = i + 2;
+            while (iLast <= i + 8 && iLast < chs.length && chs[iLast] !== ")") iLast++;
+            if (iLast <= i + 8 && chs[iLast] === ")") {
+              const 指定地位 = (() => {
+                try {
+                  return 適配分析體系.v2extStrict(class音韻地位.from描述(chs.slice(i + 2, iLast).join("")));
+                } catch {
+                  iLast = i;
+                  return undefined;
+                }
+              })();
+              if (指定地位) {
+                const index = entries.findIndex(([, 條目s]) => 條目s.some(({ 音韻地位 }) => 音韻地位.等於(指定地位)));
+                if (index === -1) {
+                  const 推導結果 = callDeriver(指定地位, ch);
+                  preselect = entries.push([推導結果, [{ 字頭: ch, 反切: null, 解釋: "", 音韻地位: 指定地位 }]]) - 1;
+                } else {
+                  preselect = index;
+                }
+              }
+            }
+          }
+
+          res.push(
+            <Entry key={id + i} ch={ch} entries={entries} tooltip={this.largeTooltip} preselect={preselect}></Entry>
+          );
+          i = iLast;
+        }
+        return res;
+      },
 
       convertPresetArticle: () =>
         presetArticle.split("\n\n").map((passage, i) => (
@@ -284,8 +338,14 @@ class Main extends React.Component<any, MainState> {
                 } else output.push(<React.Fragment key={id + i}>{chs[i]}</React.Fragment>);
               }
 
+              output.push(
+                <span hidden key={id + chs.length}>
+                  {"\n"}
+                </span>
+              );
               return React.createElement(key ? "p" : "h3", { key }, output);
             })}
+            <span hidden>{"\n"}</span>
           </React.Fragment>
         )),
 
@@ -296,6 +356,7 @@ class Main extends React.Component<any, MainState> {
             <p key={id + i}>
               {音韻地位.描述} <span lang="och-Latn-fonipa">{callDeriver(音韻地位, 代表字s[0]).join(" / ")}</span>{" "}
               {代表字s.join("")}
+              <span hidden>{"\n"}</span>
             </p>
           );
         }),
@@ -341,7 +402,7 @@ class Main extends React.Component<any, MainState> {
   }
 
   handleCopy() {
-    const txt = this.outputArea?.textContent;
+    const txt = this.outputArea?.textContent?.trimEnd();
     if (txt) {
       if (navigator.clipboard) navigator.clipboard.writeText(txt).then(copySuccess, () => copyFallback(txt));
       else copyFallback(txt);
@@ -359,14 +420,17 @@ class Main extends React.Component<any, MainState> {
   render() {
     const changeValue = (key: keyof MainState, value: any) => {
       this.setState({ [key]: value } as MainState, () => {
-        localStorage.setItem(key, this.state[key] + "");
+        localStorage.setItem("autoderiver/0.1/" + key, this.state[key] + "");
       });
     };
 
     const storeSchemas = () => {
-      localStorage.setItem("schemas", JSON.stringify(this.state.schemas.map(schema => schema.name)));
-      localStorage.setItem("inputs", JSON.stringify(this.state.schemas.map(schema => schema.input)));
-      localStorage.setItem("settings", JSON.stringify(this.state.schemas.map(schemas => schemas.settings.列表)));
+      localStorage.setItem("autoderiver/0.1/schemas", JSON.stringify(this.state.schemas.map(schema => schema.name)));
+      localStorage.setItem("autoderiver/0.1/inputs", JSON.stringify(this.state.schemas.map(schema => schema.input)));
+      localStorage.setItem(
+        "autoderiver/0.1/settings",
+        JSON.stringify(this.state.schemas.map(schemas => schemas.settings))
+      );
     };
 
     const addSchema = (id: number | null) => {

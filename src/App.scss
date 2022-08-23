@@ -180,6 +180,19 @@ body {
         margin: 0;
       }
     }
+    .schema-settings {
+      // More spacing in schema settings so that adjacent items of various types are easier to tell apart
+      b:first-child {
+        margin-right: 0.6em;
+      }
+      label {
+        margin-right: 1em;
+        .select-label::after {
+          content: "：";
+          color: #999;
+        }
+      }
+    }
     b + label,
     input[type="button"] + label {
       input[type="radio"],
@@ -322,9 +335,12 @@ body {
   }
   .entry-multiple {
     color: #708;
-    &.entry-unresolved {
-      color: #00f;
-    }
+  }
+  .entry-unresolved {
+    color: #00f;
+  }
+  .entry-special {
+    color: #c00;
   }
   .tooltip-item {
     margin: 2px 10px;

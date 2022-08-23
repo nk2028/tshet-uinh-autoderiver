@@ -5,29 +5,40 @@ interface EntryProps {
   ch: string;
   entries: Entries;
   tooltip: any;
+  preselect?: number;
 }
 
 interface EntryState {
   rubyClass: string;
-  pronunciation: string[];
+  selected: number;
 }
 
 class Entry extends React.Component<EntryProps, EntryState> {
   constructor(props: any) {
     super(props);
-    if (this.props.entries.length) {
+    const { entries, preselect } = this.props;
+    const selected = preselect ?? 0;
+    if (entries.length) {
       this.state = {
-        rubyClass: this.props.entries.length > 1 ? "entry-multiple entry-unresolved" : "",
-        pronunciation: this.props.entries[0][0],
+        rubyClass: entries[selected][1].some(({ 解釋 }) => !解釋)
+          ? "entry-special"
+          : entries.length === 1
+          ? ""
+          : preselect == null
+          ? "entry-unresolved"
+          : "entry-multiple",
+        selected,
       };
     }
   }
 
-  handleClick(pronunciation: string[]) {
-    this.setState((state: any) => ({
-      pronunciation,
-      rubyClass: state.rubyClass.replace(" entry-unresolved", ""),
-    }));
+  handleClick(index: number) {
+    if (this.props.entries.length >= 2) {
+      this.setState((state: EntryState) => ({
+        selected: index,
+        rubyClass: this.props.entries[index][1].some(({ 解釋 }) => !解釋) ? "entry-special" : "entry-multiple",
+      }));
+    }
   }
 
   render() {
@@ -38,11 +49,8 @@ class Entry extends React.Component<EntryProps, EntryState> {
         {this.props.entries.map(([pronunciation, ress], i) => (
           <p
             key={i}
-            className={
-              "tooltip-item" +
-              (this.props.entries.length > 1 && pronunciation === this.state.pronunciation ? " selected" : "")
-            }
-            onClick={() => this.handleClick(pronunciation)}>
+            className={"tooltip-item" + (this.props.entries.length > 1 && i === this.state.selected ? " selected" : "")}
+            onClick={() => this.handleClick(i)}>
             <span className="nowrap" lang="och-Latn-fonipa">
               {pronunciation.join(" / ")}
             </span>{" "}
@@ -67,7 +75,7 @@ class Entry extends React.Component<EntryProps, EntryState> {
         <ruby className={this.state.rubyClass}>
           {this.props.ch}
           <rp>(</rp>
-          <rt lang="och-Latn-fonipa">{joinWithBr(this.state.pronunciation)}</rt>
+          <rt lang="och-Latn-fonipa">{joinWithBr(this.props.entries[this.state.selected][0])}</rt>
           <rp>)</rp>
         </ruby>
       </span>
