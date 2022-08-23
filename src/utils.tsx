@@ -2,6 +2,8 @@ import { css as stylesheet } from "@emotion/css";
 
 import Swal from "./Classes/SwalReact";
 
+import type { SweetAlertOptions } from "sweetalert2";
+
 const errorModal = stylesheet`
   width: 60vw;
   display: block !important;
@@ -16,29 +18,37 @@ const errorModal = stylesheet`
 `;
 
 export function notifyError(msg: string, err?: unknown) {
-  if (err instanceof Error && err.stack) {
-    Swal.fire({
-      icon: "error",
-      title: "錯誤",
-      customClass: errorModal,
-      html: (
-        <>
-          <p>{msg}</p>
-          <pre lang="en-x-code">{err.stack.replace(/\n +at eval[^]+/, "")}</pre>
-        </>
-      ),
-      confirmButtonText: "確定",
-    });
-    return new Error(msg, { cause: err });
-  } else {
-    Swal.fire({
-      icon: "error",
-      title: "錯誤",
-      text: msg,
-      confirmButtonText: "確定",
-    });
-    return new Error(msg);
+  let technical: string | null = null;
+  if (err instanceof Error) {
+    technical = err.message;
+    let curErr: Error = err;
+    while (curErr.cause instanceof Error) {
+      curErr = curErr.cause;
+      technical += "\n" + curErr.message;
+    }
+    if (curErr.stack) {
+      technical += "\n\n" + curErr.stack;
+    }
   }
+  const config: SweetAlertOptions = {
+    icon: "error",
+    title: "錯誤",
+    text: msg,
+    confirmButtonText: "確定",
+  };
+  if (technical !== null) {
+    config.customClass = errorModal;
+    config.html = (
+      <>
+        <p>{msg}</p>
+        <pre lang="en-x-code">{technical}</pre>
+      </>
+    );
+  } else {
+    config.text = msg;
+  }
+  Swal.fire(config);
+  return new Error(msg, err instanceof Error ? { cause: err } : {});
 }
 
 export async function copy(txt: string) {
