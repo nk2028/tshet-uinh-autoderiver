@@ -1,8 +1,5 @@
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, ReactNode, useCallback, useEffect, useReducer, useRef, useState } from "react";
 
-import { listenArticle, listenTooltip, setClassName } from "qieyun-autoderiver-evaluate";
-
-import { css as stylesheet } from "@emotion/css";
 import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,10 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "../Classes/SwalReact";
 import { allOptions, defaultArticle } from "../consts";
 import evaluate from "../evaluate";
+import { listenArticle } from "../options";
 import initialState from "../state";
 import { copy, notifyError } from "../utils";
 import SchemaEditor from "./SchemaEditor";
 import Spinner from "./Spinner";
+import { listenTooltip } from "./TooltipChar";
 
 import type { MainState, Option } from "../consts";
 
@@ -128,27 +127,7 @@ const Loading = styled.div`
   margin-bottom: 2rem;
 `;
 
-setClassName(stylesheet`
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 4px;
-  box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.37);
-  color: #333;
-  width: 25rem;
-  max-width: calc(100vw - 2rem);
-  z-index: 800;
-  &:hover {
-    display: block !important;
-  }
-  p:not(:only-child) {
-    cursor: pointer;
-    &:hover {
-      color: #0078e7 !important;
-    }
-  }
-`);
-
-let evaluationResult: (Node | string)[] = [];
+let evaluationResult: ReactNode = [];
 
 export default function Main({ handleRef }: { handleRef: MutableRefObject<() => void> }) {
   const [state, setState] = useState(initialState);
@@ -167,27 +146,15 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
   }, [syncCharPosition && syncedArticle]);
 
   const ref = useRef(dummyOutput);
-
-  function renderResult() {
-    ref.current.textContent = "";
-    ref.current.append(...evaluationResult);
-    setLoading(!evaluationResult.length);
-  }
-
-  const onReferenceChange = useCallback((element: HTMLOutputElement | null) => {
-    if (!element) return;
-    ref.current = element;
-    renderResult();
-  }, []);
+  const [operation, increaseOperation] = useReducer((operation: number) => operation + 1, 0);
 
   handleRef.current = useCallback(async () => {
     evaluationResult = [];
-    ref.current.textContent = "";
     setVisible(true);
     setLoading(true);
     try {
-      evaluationResult = evaluationResult.concat(await evaluate(state));
-      renderResult();
+      evaluationResult = await evaluate(state);
+      increaseOperation();
     } catch {
       setVisible(false);
     } finally {
@@ -204,6 +171,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
     else notifyError("請先進行操作，再匯出結果");
   }, []);
 
+  // XXX Please Rewrite
   useEffect(() => {
     listenArticle(setSyncedArticle);
     listenTooltip((id, ch, 描述) => {
@@ -318,7 +286,9 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
                 ×
               </CloseButton>
             </Title>
-            <OutputContent ref={onReferenceChange} />
+            <OutputContent key={operation} ref={ref}>
+              {evaluationResult}
+            </OutputContent>
             {loading && (
               <Loading>
                 <Spinner />

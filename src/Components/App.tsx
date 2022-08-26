@@ -8,6 +8,7 @@ import { faCirclePlay, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Swal from "../Classes/SwalReact";
+import { noop } from "../consts";
 import Main from "./Main";
 
 injectGlobal`
@@ -228,9 +229,7 @@ const FontPreload = styled.span`
 `;
 
 export default function App() {
-  const handleRef = useRef(() => {
-    //
-  });
+  const handleRef = useRef(noop);
   return (
     <Container>
       <Content>

@@ -1,25 +1,23 @@
 import { 表達式, 適配分析體系 } from "qieyun";
-import { Formatter } from "qieyun-autoderiver-evaluate";
 
+import { noop } from "../consts";
 import { notifyError } from "../utils";
+import { Formatter } from "./CustomElement";
 import ParameterSet from "./ParameterSet";
 
+import type { CustomNode } from "./CustomElement";
 import type { Parameter } from "./ParameterSet";
 import type { 音韻地位 } from "qieyun";
-import type { CustomNode } from "qieyun-autoderiver-evaluate";
 
 export type Require = (音韻地位: 音韻地位, 字頭?: string | null) => (sample: string) => UserSchema;
 
 const 適配poem = 適配分析體系("poem");
 
-function empty() {
-  // empty
-}
 const inner = new Proxy(
   {},
   {
     get(target, prop, reciver) {
-      return prop in target ? Reflect.get(target, prop, reciver) : empty;
+      return prop in target ? Reflect.get(target, prop, reciver) : noop;
     },
   }
 );

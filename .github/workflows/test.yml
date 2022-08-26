@@ -9,19 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: qieyun-autoderiver
-      - uses: actions/checkout@v3
-        with:
-          repository: graphemecluster/qieyun-autoderiver-evaluate
-          path: qieyun-autoderiver-evaluate
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
-      - run: cd ./qieyun-autoderiver-evaluate/
-      - run: npm ic
-      - run: npm run build
-      - run: cd ../qieyun-autoderiver/
-      - run: npm ic
+          node-version: 16
+      - run: npm ci
       - run: npm run lint
       - run: npm run build
