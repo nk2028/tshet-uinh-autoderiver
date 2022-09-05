@@ -10,18 +10,22 @@ const TagStyle = { fg: "color", bg: "backgroundColor", size: "fontSize" } as con
 
 export type CustomNode = CustomElement | string;
 
+const isTemplateStringsArray = (arg: unknown): arg is TemplateStringsArray => Array.isArray(arg);
+
 export default class CustomElement {
   private children: CustomNode[] = [];
 
   constructor(
     private tag: [NodeWithoutProp] | [NodeWithProp, string],
-    strings: TemplateStringsArray,
+    strings: TemplateStringsArray | CustomNode,
     ...args: CustomNode[]
   ) {
-    strings.forEach((str, index) => {
-      if (str) this.children.push(str);
-      if (index < args.length) this.children.push(args[index]);
-    });
+    if (isTemplateStringsArray(strings))
+      strings.forEach((str, index) => {
+        if (str) this.children.push(str);
+        if (index < args.length) this.children.push(args[index]);
+      });
+    else this.children.push(strings, ...args);
   }
 
   toJSON() {
@@ -63,12 +67,40 @@ type AllFormatters<T, R> = T extends [string, string?]
   : never;
 type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
-export type Formatter = UnionToIntersection<AllFormatters<Tag, (...args: Args) => CustomElement>>;
-export const Formatter = {} as Formatter;
+const TAGS = Symbol("TAGS");
+export interface Formatter extends UnionToIntersection<AllFormatters<Tag, Formatter>> {
+  (...args: Args): CustomElement;
+}
+interface FormatterWithTags extends Formatter {
+  [TAGS]: Tag[];
+}
 
-for (const tag of nodeWithoutProp) Formatter[tag] = (...args: Args) => new CustomElement([tag], ...args);
+function FormatterFactory(tags: Tag[]) {
+  const instance = ((...args: Args) => {
+    let i = instance[TAGS].length - 1;
+    let element = new CustomElement(instance[TAGS][i] || ["f"], ...args);
+    for (i--; i >= 0; i--) element = ((...args: Args) => new CustomElement(instance[TAGS][i], ...args))`${element}`;
+    return element;
+  }) as FormatterWithTags;
+  instance[TAGS] = tags;
+  Object.setPrototypeOf(instance, FormatterFactory.prototype);
+  return instance as Formatter;
+}
+
+Object.setPrototypeOf(FormatterFactory.prototype, Function.prototype);
+
+for (const tag of nodeWithoutProp)
+  Object.defineProperty(FormatterFactory.prototype, tag, {
+    get() {
+      return FormatterFactory([...this[TAGS], [tag]]);
+    },
+  });
+
 for (const tag of nodeWithProp)
-  Formatter[tag] =
-    (prop: string) =>
-    (...args: Args) =>
-      new CustomElement([tag, prop], ...args);
+  Object.defineProperty(FormatterFactory.prototype, tag, {
+    get() {
+      return (prop: string) => FormatterFactory([...this[TAGS], [tag, prop]]);
+    },
+  });
+
+export const Formatter = FormatterFactory([]);
