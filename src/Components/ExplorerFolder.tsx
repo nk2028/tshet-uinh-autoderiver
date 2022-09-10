@@ -1,8 +1,9 @@
 import { useReducer } from "react";
-import type { ReactNode } from "react";
 
 import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import type { ReactNode } from "../consts";
 
 export default function ExplorerFolder({ name, children }: { name: string; children: ReactNode }) {
   const [expanded, toggleExpanded] = useReducer((expanded: boolean) => !expanded, true);

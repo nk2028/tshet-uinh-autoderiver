@@ -14,10 +14,12 @@ import type { Entry } from "../consts";
 
 const Wrapper = styled.div`
   padding-bottom: 3px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: break-spaces;
 `;
 const Item = styled.p<{ textColor: string }>`
   margin: 2px 10px;
-  white-space: pre-line;
   color: ${({ textColor }) => textColor};
   ${({ onClick }) =>
     onClick &&
@@ -28,8 +30,11 @@ const Item = styled.p<{ textColor: string }>`
       }
     `}
 `;
-const Pronunciation = styled.span`
-  white-space: nowrap;
+const Missing = styled.span`
+  &:after {
+    content: "❬?❭";
+    color: #bbb;
+  }
 `;
 const Char = styled.span`
   font-size: 125%;
@@ -82,14 +87,14 @@ export default function TooltipChar({
               key={index}
               textColor={結果.some(({ 解釋 }) => !解釋) ? "#c00" : multiple && index === currIndex ? "#00f" : "black"}
               onClick={onClick(index, 結果[0].音韻地位.描述)}>
-              <Pronunciation lang="och-Latn-fonipa">
-                {CustomElement.render(擬音).map((item, index) => (
+              <span key={CustomElement.stringify(擬音)} lang="och-Latn-fonipa">
+                {CustomElement.render(擬音, <Missing />).map((item, index) => (
                   <Fragment key={index}>
                     {!!index && <span> / </span>}
                     {item}
                   </Fragment>
                 ))}
-              </Pronunciation>
+              </span>
               {結果.map((res, i) => {
                 const { 字頭, 解釋, 音韻地位 } = res;
                 const { 描述 } = 音韻地位;
@@ -110,7 +115,7 @@ export default function TooltipChar({
       }>
       <RubyWrapper
         textColor={結果.some(({ 解釋 }) => !解釋) ? "#c00" : multiple ? (resolved ? "#708" : "#00f") : "black"}>
-        <Ruby rb={ch} rt={CustomElement.render(擬音)} />
+        <Ruby key={CustomElement.stringify(擬音)} rb={ch} rt={CustomElement.render(擬音)} />
       </RubyWrapper>
     </Tooltip>
   );

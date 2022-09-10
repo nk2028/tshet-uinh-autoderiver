@@ -1,4 +1,4 @@
-import { MutableRefObject, ReactNode, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
@@ -14,7 +14,7 @@ import SchemaEditor from "./SchemaEditor";
 import Spinner from "./Spinner";
 import { listenTooltip } from "./TooltipChar";
 
-import type { MainState, Option } from "../consts";
+import type { MainState, Option, ReactNode } from "../consts";
 
 const dummyOutput = document.createElement("output");
 
@@ -46,9 +46,10 @@ const OutputWrapper = styled.div`
 const OutputContent = styled.output`
   display: block;
   font-size: 105%;
-  overflow-wrap: break-word;
   margin-top: 0.875rem;
-  white-space: pre-line;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: break-spaces;
   h3,
   p {
     margin: 0;
@@ -181,6 +182,22 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
         return syncedArticle;
       });
     });
+  }, []);
+
+  useEffect(() => {
+    function keyDown(event: KeyboardEvent) {
+      if (!event.altKey && !event.ctrlKey && event.key === "Escape") {
+        event.preventDefault();
+        setVisible(false);
+      } else if (event.altKey && !event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        handleRef.current();
+      }
+    }
+    document.addEventListener("keydown", keyDown);
+    return () => {
+      document.removeEventListener("keydown", keyDown);
+    };
   }, []);
 
   const resetArticle = useCallback(async () => {

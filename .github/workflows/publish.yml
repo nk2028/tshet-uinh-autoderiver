@@ -67,7 +67,7 @@ jobs:
           # Publish
           git add .
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Publish `TZ='Asia/Hong_Kong' date`"
+            git commit -m "Published at `TZ='Asia/Hong_Kong' date --rfc-3339=seconds`"
             git push -f origin gh-pages
           fi
           )

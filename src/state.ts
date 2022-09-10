@@ -29,7 +29,7 @@ export default function initialState(): MainState {
   };
   */
 
-  // For backward compatibility
+  // TODO remove the following in 0.2.0 stable release (or when upgrading Qieyun to 0.14)
 
   const schemaNames: string[] = JSON.parse(localStorage.getItem("schemas") || "[]");
   const schemaInputs: string[] = JSON.parse(localStorage.getItem("inputs") || "[]");

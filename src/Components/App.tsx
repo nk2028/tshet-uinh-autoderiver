@@ -20,6 +20,8 @@ injectGlobal`
       "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
       "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", serif;
     font-language-override: "KOR";
+    overflow: hidden;
+    touch-action: none;
   }
   :lang(och-Latn-fonipa) {
     font-family: "CharisSILW", serif;

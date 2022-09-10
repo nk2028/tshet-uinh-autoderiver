@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import type { MouseEvent, ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { MouseEvent } from "react";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -16,7 +16,7 @@ import { memoize, normalizeFileName } from "../utils";
 import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
 
-import type { Sample, UseMainState } from "../consts";
+import type { Sample, UseMainState, ReactNode } from "../consts";
 
 const TabBar = styled.div`
   display: flex;
@@ -180,7 +180,7 @@ const ToggleButton = styled.div<{ collapsed: boolean }>`
   align-items: center;
   justify-content: center;
   left: 0.5rem;
-  bottom: -0.2rem;
+  bottom: calc(1px - 0.2rem);
   width: 3rem;
   height: 1.75rem;
   border-radius: 0.5rem 0.5rem 0 0;
@@ -290,8 +290,10 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
       sum += widths[i];
     }
 
+    let clientX = startX;
+
     function move(event: { clientX: number } | TouchEvent) {
-      const { clientX } = "clientX" in event ? event : event.touches[0];
+      clientX = "clientX" in event ? event.clientX : event.touches?.[0]?.clientX ?? clientX;
       let value = clientX - startX;
       children[index].style.left = value + "px";
       if (value < 0) {
@@ -306,7 +308,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
     }
 
     function end(event: { clientX: number } | TouchEvent) {
-      const { clientX } = "clientX" in event ? event : event.touches[0];
+      clientX = "clientX" in event ? event.clientX : event.touches?.[0]?.clientX ?? clientX;
       let value = clientX - startX;
       children.forEach(element => (element.style.left = ""));
       let i: number;
@@ -392,6 +394,19 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
       }
     }
   }
+
+  useEffect(() => {
+    function keyDown(event: KeyboardEvent) {
+      if (!event.altKey && event.ctrlKey && event.key === "`") {
+        event.preventDefault();
+        setOptionsVisible(optionsVisible => !optionsVisible);
+      }
+    }
+    document.addEventListener("keydown", keyDown);
+    return () => {
+      document.removeEventListener("keydown", keyDown);
+    };
+  }, []);
 
   return (
     <>

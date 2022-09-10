@@ -1,12 +1,10 @@
-import type { ReactNode } from "react";
-
 import Schema, { UserSchema } from "./Classes/Schema";
 import { qieyunTextLabelURLPrefix } from "./consts";
 import { evaluateOption, getArticle, setArticle } from "./options";
 import { fetchFile, normalizeFileName, notifyError } from "./utils";
 
 import type { Require } from "./Classes/Schema";
-import type { MainState } from "./consts";
+import type { MainState, ReactNode } from "./consts";
 
 export default async function evaluate(state: MainState): Promise<ReactNode> {
   const { schemas, option } = state;

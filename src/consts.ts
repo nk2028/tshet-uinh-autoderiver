@@ -1,4 +1,4 @@
-import type { Dispatch, DispatchWithoutAction, SetStateAction } from "react";
+import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetStateAction } from "react";
 
 import type { CustomNode } from "./Classes/CustomElement";
 import type ParameterSet from "./Classes/ParameterSet";
@@ -92,3 +92,6 @@ export type UseMainState = Use<"state", MainState>;
 export type UseLoading = Use<"loading", boolean>;
 export type UseOperation = UseGet<"operation", number> & { increaseOperation: DispatchWithoutAction };
 export type UseSetSyncedArticle = UseSet<"syncedArticle", string[]>;
+
+type ReactFragment = Iterable<ReactNode>; // No {} !!!
+export type ReactNode = ReactChild | ReactFragment | ReactPortal | boolean | null | undefined;

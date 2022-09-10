@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
-
 import styled from "@emotion/styled";
 
 import Tooltip from "./Tooltip";
+
+import type { ReactNode } from "../consts";
 
 const Wrapper = styled.div`
   p {

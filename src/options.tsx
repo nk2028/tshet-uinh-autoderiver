@@ -1,17 +1,18 @@
-import { Fragment, ReactNode } from "react";
+import { Fragment } from "react";
 
 import { 資料, 音韻地位 } from "qieyun";
 import Yitizi from "yitizi";
 
 import styled from "@emotion/styled";
 
-import CustomElement, { CustomNode } from "./Classes/CustomElement";
+import CustomElement from "./Classes/CustomElement";
 import Ruby from "./Components/Ruby";
 import Table from "./Components/Table";
 import TooltipChar from "./Components/TooltipChar";
 import { noop } from "./consts";
 
-import type { Entry, MainState, Option, SchemaState } from "./consts";
+import type { CustomNode } from "./Classes/CustomElement";
+import type { Entry, MainState, Option, SchemaState, ReactNode } from "./consts";
 
 const Title = styled.h3`
   padding: 0 0 1rem 0.25rem;
@@ -26,7 +27,7 @@ function title(schemas: SchemaState[]) {
 }
 
 function serialize(callDeriver: Deriver): [string, CustomNode[]][] {
-  return 所有地位.map(音韻地位 => callDeriver(音韻地位)).map(擬音陣列 => [JSON.stringify(擬音陣列), 擬音陣列]);
+  return 所有地位.map(音韻地位 => callDeriver(音韻地位)).map(擬音陣列 => [CustomElement.stringify(擬音陣列), 擬音陣列]);
 }
 
 function iterate(callDeriver: Deriver) {
@@ -144,7 +145,7 @@ export const evaluateOption: Record<Option, Handler> = {
               const 地位 = 音韻地位.from描述(描述);
               const 擬音 = callDeriver(地位, 字頭);
 
-              output.push(<Ruby rb={字頭} rt={CustomElement.render(擬音)} />);
+              output.push(<Ruby key={CustomElement.stringify(擬音)} rb={字頭} rt={CustomElement.render(擬音)} />);
             } else output.push(chs[i]);
           }
 
