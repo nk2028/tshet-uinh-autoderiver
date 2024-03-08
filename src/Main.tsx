@@ -118,7 +118,9 @@ export const schemas = {
   zaonhe: "推導上海話",
   langjin: "推導南京話",
   taibu: "推導大埔話",
+  ngungei: "推導標準吳語",
   ayaka_v8: "綾香思考音系",
+  yec_en_hua: "不通話",
 };
 
 const options = {
