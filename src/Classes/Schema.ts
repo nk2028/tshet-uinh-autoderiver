@@ -1,5 +1,3 @@
-import { 表達式, 適配分析體系 } from "qieyun";
-
 import { Formatter } from "./CustomElement";
 import ParameterSet from "./ParameterSet";
 import { noop } from "../consts";
@@ -10,8 +8,6 @@ import type { Parameter } from "./ParameterSet";
 import type { 音韻地位 } from "qieyun";
 
 export type Require = (音韻地位: 音韻地位, 字頭?: string | null) => (sample: string) => UserSchema;
-
-const 適配poem = 適配分析體系("poem");
 
 const inner = new Proxy(
   {},
@@ -40,25 +36,12 @@ export default class Schema {
       require: (sample: string) => UserSchema,
     ): string | ((formatter: Formatter) => CustomNode);
   };
-  private readonly isLegacy: boolean;
 
   constructor(input: string) {
     this.input = new Function("音韻地位", "字頭", "選項", "require", input) as typeof this.input;
-    for (const parameter of this.getParameters())
-      if (Array.isArray(parameter) && String(parameter[0]) === "$legacy") {
-        this.isLegacy = !!parameter[1];
-        return;
-      }
-    this.isLegacy = false;
   }
 
   derive(音韻地位: 音韻地位, 字頭: string | null = null, 選項: Record<string, unknown>, require: Require) {
-    音韻地位 = 適配分析體系.v2extStrict(音韻地位);
-    if (this.isLegacy) {
-      音韻地位 = 適配poem(音韻地位);
-      if (音韻地位.屬於`脣音 或 ${表達式.開合中立韻}`) 音韻地位 = 音韻地位.調整({ 呼: null });
-      if (!音韻地位.屬於`${表達式.重紐母} (${表達式.重紐韻} 或 清韻)`) 音韻地位 = 音韻地位.調整({ 重紐: null });
-    }
     try {
       const result = this.input(音韻地位, 字頭, 選項, require(音韻地位, 字頭));
       return typeof result === "function" ? result(Formatter) : result;
