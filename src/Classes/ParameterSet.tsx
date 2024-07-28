@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
-import TooltipLabel from "../Components/TooltipLabel";
 import Schema from "./Schema";
+import TooltipLabel from "../Components/TooltipLabel";
 
 export type Arg = { key: string; description: string[]; value: unknown; options?: unknown[] };
 export type Parameter = string | null | undefined | [key: string, value: unknown];

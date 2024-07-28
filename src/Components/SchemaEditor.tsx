@@ -8,13 +8,13 @@ import { faChevronDown, faChevronUp, faPlus, faRotateLeft, faXmark } from "@fort
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Editor from "@monaco-editor/react";
 
+import CreateSchemaDialog from "./CreateSchemaDialog";
+import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily } from "../consts";
 import "../editor/setup";
 import { memoize, normalizeFileName } from "../utils";
-import CreateSchemaDialog from "./CreateSchemaDialog";
-import Spinner from "./Spinner";
 
 import type { Sample, UseMainState, ReactNode } from "../consts";
 
@@ -187,7 +187,9 @@ const ToggleButton = styled.div<{ collapsed: boolean }>`
   background-color: #c4c6c8;
   color: white;
   &:hover {
-    transition: background-color 150ms, height 150ms;
+    transition:
+      background-color 150ms,
+      height 150ms;
     height: 2.125rem;
     background-color: #a2a4a6;
   }
@@ -210,7 +212,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
   const { schemas, activeSchemaName } = state;
   const activeSchema = useMemo(
     () => schemas.find(({ name }) => name === activeSchemaName),
-    [schemas, activeSchemaName]
+    [schemas, activeSchemaName],
   );
 
   const getDefaultFileName: (sample: Sample | "") => string = useMemo(
@@ -231,7 +233,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
         while (indices[i] - indices[i - 1] <= 1) i++;
         return sample + (~indices[i - 1] || "");
       }),
-    [schemas]
+    [schemas],
   );
   const [dialogVisible, setDialogVisible] = useState(false);
 
@@ -263,7 +265,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
       element.offsetWidth; // Trigger DOM reflow
       element.classList.add("rotate");
     },
-    [activeSchemaName]
+    [activeSchemaName],
   );
 
   const [optionsVisible, setOptionsVisible] = useState(false);
@@ -293,7 +295,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
     let clientX = startX;
 
     function move(event: { clientX: number } | TouchEvent) {
-      clientX = "clientX" in event ? event.clientX : event.touches?.[0]?.clientX ?? clientX;
+      clientX = "clientX" in event ? event.clientX : (event.touches?.[0]?.clientX ?? clientX);
       let value = clientX - startX;
       children[index].style.left = value + "px";
       if (value < 0) {
@@ -308,7 +310,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
     }
 
     function end(event: { clientX: number } | TouchEvent) {
-      clientX = "clientX" in event ? event.clientX : event.touches?.[0]?.clientX ?? clientX;
+      clientX = "clientX" in event ? event.clientX : (event.touches?.[0]?.clientX ?? clientX);
       let value = clientX - startX;
       children.forEach(element => (element.style.left = ""));
       let i: number;
@@ -449,7 +451,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
               if (typeof input !== "undefined" && activeSchema)
                 setState(actions.setSchemaInput(activeSchemaName, input));
             },
-            [activeSchemaName]
+            [activeSchemaName],
           )}
         />
         {optionsVisible && <SeparatorShadow />}
@@ -472,7 +474,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
               </h3>
               <Parameters>
                 {activeSchema.parameters.render(parameters =>
-                  setState(actions.setSchemaParameters(activeSchemaName, parameters))
+                  setState(actions.setSchemaParameters(activeSchemaName, parameters)),
                 )}
               </Parameters>
             </>

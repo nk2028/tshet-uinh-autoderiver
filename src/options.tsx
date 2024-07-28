@@ -194,7 +194,7 @@ export const evaluateOption: Record<Option, Handler> = {
 
   compareSchemas({ schemas }, callDeriver) {
     const result = iterate(callDeriver).filter(({ 擬音陣列 }) =>
-      擬音陣列.some(擬音 => !CustomElement.isEqual(擬音, 擬音陣列[0]))
+      擬音陣列.some(擬音 => !CustomElement.isEqual(擬音, 擬音陣列[0])),
     );
     return result.length ? (
       <>

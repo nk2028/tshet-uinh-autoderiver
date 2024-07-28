@@ -1,9 +1,9 @@
 import { 表達式, 適配分析體系 } from "qieyun";
 
-import { noop } from "../consts";
-import { notifyError } from "../utils";
 import { Formatter } from "./CustomElement";
 import ParameterSet from "./ParameterSet";
+import { noop } from "../consts";
+import { notifyError } from "../utils";
 
 import type { CustomNode } from "./CustomElement";
 import type { Parameter } from "./ParameterSet";
@@ -19,7 +19,7 @@ const inner = new Proxy(
     get(target, prop, reciver) {
       return prop in target ? Reflect.get(target, prop, reciver) : noop;
     },
-  }
+  },
 );
 const proxy = new Proxy(
   {},
@@ -27,15 +27,18 @@ const proxy = new Proxy(
     get(target, prop, reciver) {
       return prop in target ? Reflect.get(target, prop, reciver) : inner;
     },
-  }
+  },
 );
 
 export default class Schema {
   private readonly input: {
     (音韻地位: null, 字頭: null, 選項: Record<string, unknown>, require: null): Parameter[];
-    (音韻地位: 音韻地位, 字頭: string | null, 選項: Record<string, unknown>, require: (sample: string) => UserSchema):
-      | string
-      | ((formatter: Formatter) => CustomNode);
+    (
+      音韻地位: 音韻地位,
+      字頭: string | null,
+      選項: Record<string, unknown>,
+      require: (sample: string) => UserSchema,
+    ): string | ((formatter: Formatter) => CustomNode);
   };
   private readonly isLegacy: boolean;
 
@@ -64,7 +67,7 @@ export default class Schema {
         字頭
           ? `推導「${字頭}」字（音韻地位：${音韻地位.描述}）時發生錯誤`
           : `推導「${音韻地位.描述}」音韻地位（字為 null）時發生錯誤`,
-        err
+        err,
       );
     }
   }
@@ -92,14 +95,19 @@ export default class Schema {
 }
 
 export class UserSchema extends Schema {
-  constructor(input: string, private require: Require, private 音韻地位: 音韻地位, private 字頭?: string | null) {
+  constructor(
+    input: string,
+    private require: Require,
+    private 音韻地位: 音韻地位,
+    private 字頭?: string | null,
+  ) {
     super(input);
   }
 
   override derive(
     音韻地位: 音韻地位,
     字頭: string | null = null,
-    選項: Record<string, unknown> = this.getDefaultOptions()
+    選項: Record<string, unknown> = this.getDefaultOptions(),
   ) {
     return super.derive(音韻地位, 字頭, 選項, this.require);
   }

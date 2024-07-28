@@ -56,7 +56,7 @@ export default class CustomElement {
     this.children = children.filter(child =>
       child instanceof CustomElement
         ? child.children.length
-        : String(child) !== "" && typeof (child ?? false) !== "boolean"
+        : String(child) !== "" && typeof (child ?? false) !== "boolean",
     );
   }
 
@@ -70,8 +70,8 @@ export default class CustomElement {
         ? node
         : ""
       : typeof (node ?? false) === "boolean"
-      ? ""
-      : String(node);
+        ? ""
+        : String(node);
   }
 
   static stringify(node: CustomNode | readonly CustomNode[]) {
@@ -90,7 +90,7 @@ export default class CustomElement {
     return createElement(
       isTagWithProp(tag) ? "span" : tag === "f" ? Fragment : tag,
       isTagWithProp(tag) ? { style: { [TagStyle[tag]]: prop } } : undefined,
-      ...CustomElement.renderInner(this.children)
+      ...CustomElement.renderInner(this.children),
     );
   }
 
@@ -101,8 +101,8 @@ export default class CustomElement {
           ? child.render()
           : ""
         : typeof (child ?? false) === "boolean"
-        ? ""
-        : String(child)
+          ? ""
+          : String(child),
     );
   }
 

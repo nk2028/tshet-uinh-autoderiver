@@ -1,5 +1,7 @@
 import { cloneElement, ReactElement, useCallback } from "react";
 import type { SyntheticEvent } from "react";
+// FIXME migrate to React's v18 API
+// eslint-disable-next-line react/no-deprecated
 import { render } from "react-dom";
 
 import { css as stylesheet } from "@emotion/css";
@@ -10,7 +12,7 @@ function getPageWidth() {
     document.documentElement.scrollWidth,
     document.body.offsetWidth,
     document.documentElement.offsetWidth,
-    document.documentElement.clientWidth
+    document.documentElement.clientWidth,
   );
 }
 
@@ -54,7 +56,7 @@ export default function Tooltip({ element, children }: { element: ReactElement; 
         div.style.visibility = "visible";
       });
     },
-    [element]
+    [element],
   );
   const hideTooltip = useCallback(() => {
     div.style.visibility = "hidden";

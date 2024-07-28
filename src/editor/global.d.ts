@@ -4,7 +4,7 @@ declare module "monaco-editor/esm/vs/language/typescript/tsMode" {
       model: import("monaco-editor").editor.ITextModel,
       position: import("monaco-editor").Position,
       _context: import("monaco-editor").languages.CompletionContext,
-      token: import("monaco-editor").CancellationToken
+      token: import("monaco-editor").CancellationToken,
     ): Promise<import("monaco-editor").languages.CompletionList | undefined>;
   }
 }

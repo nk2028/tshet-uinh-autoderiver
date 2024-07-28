@@ -5,10 +5,10 @@ import { 資料 } from "qieyun";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-import CustomElement from "../Classes/CustomElement";
-import { noop } from "../consts";
 import Ruby from "./Ruby";
 import Tooltip from "./Tooltip";
+import CustomElement from "../Classes/CustomElement";
+import { noop } from "../consts";
 
 import type { Entry } from "../consts";
 

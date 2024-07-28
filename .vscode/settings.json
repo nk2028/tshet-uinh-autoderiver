@@ -1,1 +1,6 @@
-{ "editor.formatOnSave": true }
+{
+    "editor.formatOnSave": true,
+    "[jsonc]": {
+        "editor.formatOnSave": false
+    }
+}

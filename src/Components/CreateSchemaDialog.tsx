@@ -6,13 +6,13 @@ import styled from "@emotion/styled";
 import { faFile, faFileCode, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import ExplorerFolder from "./ExplorerFolder";
+import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
 import { newFileTemplate, qieyunExamplesURLPrefix, UseMainState } from "../consts";
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
-import ExplorerFolder from "./ExplorerFolder";
-import Spinner from "./Spinner";
 
 import type { Folder, Sample, SchemaState } from "../consts";
 
@@ -118,7 +118,9 @@ const Action = styled.div`
     margin: 0 0 0 0.5rem;
     padding: 0 1.1rem;
     height: 100%;
-    transition: opacity 200ms, background-image 200ms;
+    transition:
+      opacity 200ms,
+      background-image 200ms;
     &:disabled {
       opacity: 0.8;
       pointer-events: none;
@@ -261,7 +263,7 @@ export default function CreateSchemaDialog({
           actions.addSchema({
             name: "tupa.js",
             input: await fetchFile(qieyunExamplesURLPrefix + "tupa.js"),
-          })
+          }),
         );
         Swal.close();
       } catch {
@@ -269,7 +271,7 @@ export default function CreateSchemaDialog({
           actions.addSchema({
             name: "untitled.js",
             input: newFileTemplate,
-          })
+          }),
         );
       }
     })();
@@ -279,7 +281,7 @@ export default function CreateSchemaDialog({
 
   return visible
     ? createPortal(
-        <Container className="swal2-center swal2-backdrop-show">
+        <Container className="swal2-container swal2-center swal2-backdrop-show">
           <Popup className="swal2-popup swal2-modal" tabIndex={-1} role="dialog" aria-live="assertive" aria-modal>
             <Title className="swal2-title">新增方案</Title>
             <Explorer>
@@ -377,7 +379,7 @@ export default function CreateSchemaDialog({
             )}
           </Popup>
         </Container>,
-        document.body
+        document.body,
       )
     : null;
 }

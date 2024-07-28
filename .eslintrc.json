@@ -9,7 +9,8 @@
     "plugin:react/jsx-runtime",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -32,7 +33,7 @@
         "groups": [["builtin", "external"], "internal", ["parent", "sibling", "index"], "type", "unknown", "object"],
         "pathGroups": [
           {
-            "pattern": "{react,react-dom}",
+            "pattern": "{react,react-dom,react-dom/client}",
             "group": "builtin",
             "position": "before"
           },
@@ -42,7 +43,7 @@
             "position": "after"
           }
         ],
-        "pathGroupsExcludedImportTypes": ["{react,react-dom}", "@**/**"],
+        "pathGroupsExcludedImportTypes": ["{react,react-dom,react-dom/client}", "@**/**"],
         "newlines-between": "always",
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }

@@ -4,15 +4,15 @@ import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import SchemaEditor from "./SchemaEditor";
+import Spinner from "./Spinner";
+import { listenTooltip } from "./TooltipChar";
 import Swal from "../Classes/SwalReact";
 import { allOptions, defaultArticle } from "../consts";
 import evaluate from "../evaluate";
 import { listenArticle } from "../options";
 import initialState from "../state";
 import { copy, notifyError } from "../utils";
-import SchemaEditor from "./SchemaEditor";
-import Spinner from "./Spinner";
-import { listenTooltip } from "./TooltipChar";
 
 import type { MainState, Option, ReactNode } from "../consts";
 

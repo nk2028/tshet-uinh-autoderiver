@@ -16,10 +16,10 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
 
   try {
     const inputs: [input: Schema, parameters: Record<string, unknown>, require: Require][] = schemas.map(
-      ({ name, input, parameters }) => [new Schema(input), parameters.pack(), require(name)]
+      ({ name, input, parameters }) => [new Schema(input), parameters.pack(), require(name)],
     );
     return evaluateOption[option](state, (音韻地位, 字頭) =>
-      inputs.map(([input, parameters, require]) => input.derive(音韻地位, 字頭, parameters, require))
+      inputs.map(([input, parameters, require]) => input.derive(音韻地位, 字頭, parameters, require)),
     );
   } catch (err) {
     throw notifyError("程式碼錯誤", err);

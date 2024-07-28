@@ -7,9 +7,9 @@ import styled from "@emotion/styled";
 import { faCirclePlay, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import Main from "./Main";
 import Swal from "../Classes/SwalReact";
 import { noop } from "../consts";
-import Main from "./Main";
 
 injectGlobal`
   html,
@@ -206,7 +206,9 @@ const ShowButton = styled.span`
   border: 0.125rem solid #666;
   margin-left: 0.5rem;
   cursor: pointer;
-  transition: color 150ms, border-color 150ms;
+  transition:
+    color 150ms,
+    border-color 150ms;
   &:hover {
     color: #0078e7;
     border-color: #0078e7;
