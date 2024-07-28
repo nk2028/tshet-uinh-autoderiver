@@ -85,7 +85,7 @@ export default function TooltipChar({
           {entries.map(({ 擬音, 結果 }, index) => (
             <Item
               key={index}
-              textColor={結果.some(({ 解釋 }) => !解釋) ? "#c00" : multiple && index === currIndex ? "#00f" : "black"}
+              textColor={結果.some(({ 釋義 }) => !釋義) ? "#c00" : multiple && index === currIndex ? "#00f" : "black"}
               onClick={onClick(index, 結果[0].音韻地位.描述)}>
               <span key={CustomElement.stringify(擬音)} lang="och-Latn-fonipa">
                 {CustomElement.render(擬音, <Missing />).map((item, index) => (
@@ -96,7 +96,7 @@ export default function TooltipChar({
                 ))}
               </span>
               {結果.map((res, i) => {
-                const { 字頭, 解釋, 音韻地位 } = res;
+                const { 字頭, 釋義, 音韻地位 } = res;
                 const { 描述 } = 音韻地位;
                 let 反切 = 資料.query音韻地位(音韻地位)[0]?.反切;
                 反切 = 反切 ? `${反切}切 ` : "";
@@ -104,7 +104,7 @@ export default function TooltipChar({
                   <Fragment key={i}>
                     {i ? <br /> : " "}
                     <span onClick={onClick(index, 描述)}>
-                      <Char>{字頭}</Char> {描述} {反切 + 解釋}
+                      <Char>{字頭}</Char> {描述} {反切 + 釋義}
                     </span>
                   </Fragment>
                 );
@@ -114,7 +114,7 @@ export default function TooltipChar({
         </Wrapper>
       }>
       <RubyWrapper
-        textColor={結果.some(({ 解釋 }) => !解釋) ? "#c00" : multiple ? (resolved ? "#708" : "#00f") : "black"}>
+        textColor={結果.some(({ 釋義 }) => !釋義) ? "#c00" : multiple ? (resolved ? "#708" : "#00f") : "black"}>
         <Ruby key={CustomElement.stringify(擬音)} rb={ch} rt={CustomElement.render(擬音)} />
       </RubyWrapper>
     </Tooltip>

@@ -85,11 +85,11 @@ export const evaluateOption: Record<Option, Handler> = {
           if (!entries.length) continue;
           break;
         }
-        for (const { 解釋, 音韻地位 } of 資料.query字頭(字頭)) {
+        for (const { 釋義, 音韻地位 } of 資料.query字頭(字頭)) {
           const 擬音 = callDeriver(音韻地位, 字頭);
           let entry = entries.find(key => CustomElement.isEqual(key.擬音, 擬音));
           if (!entry) entries.push((entry = { 擬音, 結果: [] }));
-          entry.結果.push({ 字頭, 解釋, 音韻地位 });
+          entry.結果.push({ 字頭, 釋義, 音韻地位 });
         }
       }
 
@@ -112,7 +112,7 @@ export const evaluateOption: Record<Option, Handler> = {
               const 擬音 = callDeriver(地位, ch);
               preselected = entries.findIndex(key => CustomElement.isEqual(key.擬音, 擬音));
               if (preselected === -1) preselected = entries.push({ 擬音, 結果: [] }) - 1;
-              entries[preselected].結果.push({ 字頭: ch, 解釋: "", 音韻地位: 地位 });
+              entries[preselected].結果.push({ 字頭: ch, 釋義: "", 音韻地位: 地位 });
             }
             syncedArticle.push(chs.slice(i, j + 1).join(""));
             i = j;
