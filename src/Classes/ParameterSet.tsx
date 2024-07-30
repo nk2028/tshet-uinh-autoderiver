@@ -1,10 +1,19 @@
+import { 推導方案, 推導設定 } from "tshet-uinh-deriver-tools";
+
 import styled from "@emotion/styled";
 
-import Schema from "./Schema";
 import TooltipLabel from "../Components/TooltipLabel";
+import { rawDeriverFrom } from "../evaluate";
 
-export type Arg = { key: string; description: string[]; value: unknown; options?: unknown[] };
-export type Parameter = string | null | undefined | [key: string, value: unknown];
+import type { GroupLabel, Newline, 設定項 } from "tshet-uinh-deriver-tools";
+
+function isNewline(item: 設定項): item is Newline {
+  return item.type === "newline";
+}
+
+function isGroupLabel(item: 設定項): item is GroupLabel {
+  return item.type === "groupLabel";
+}
 
 const Title = styled.b`
   &:before {
@@ -39,170 +48,152 @@ const Colon = styled.span`
 `;
 
 export default class ParameterSet {
-  private data = new Map<string, Arg>();
-  private form: (string | null | undefined | Arg)[] = [];
+  private _設定: 推導設定;
 
-  constructor(parameters: Parameter[] = []) {
-    for (const parameter of parameters) {
-      if (Array.isArray(parameter)) {
-        const [key, ...description] = String(parameter[0]).split(/[\n-\r\x85\u2028\u2029]+/);
-        if (description.length && !description[description.length - 1]) description.pop();
-        const value = parameter[1];
-        if (!key || key === "$legacy") continue;
-        const arg: Arg = { key, description, value };
-        if (Array.isArray(value)) {
-          arg.options = value.slice(1);
-          const [current, first] = value;
-          if (current && typeof current === "number" && current in value) arg.value = value[current];
-          else if (arg.options.includes(current)) arg.value = current;
-          else arg.value = first;
-        } else if (!["boolean", "number", "string"].includes(typeof value)) continue;
-        this.data.set(key, arg);
-        this.form.push(arg);
-      } else this.form.push(parameter);
+  constructor(parameters: 推導設定 | readonly 設定項[] = []) {
+    this._設定 = parameters instanceof 推導設定 ? parameters : new 推導設定(parameters);
+  }
+
+  set(key: string, value: unknown): ParameterSet {
+    return new ParameterSet(this._設定.with({ [key]: value }));
+  }
+
+  pack(): Readonly<Record<string, unknown>> {
+    return this._設定.選項;
+  }
+
+  combine(old: ParameterSet | Readonly<Record<string, unknown>>): ParameterSet {
+    if (old instanceof ParameterSet) {
+      old = old.pack();
     }
-  }
-
-  get(key: string) {
-    const index = key.search(/[\n-\r\x85\u2028\u2029]/);
-    return this.data.get(index === -1 ? key : key.slice(0, index));
-  }
-
-  set(key: string, value: unknown) {
-    const arg = this.get(key);
-    if (arg && (arg.options ? arg.options.includes(value) : typeof value === typeof arg.value)) arg.value = value;
-    return this;
-  }
-
-  pack() {
-    const result: Record<string, unknown> = {};
-    this.data.forEach(({ value }, key) => {
-      result[key] = value;
-    });
-    return result;
-  }
-
-  combine(old: ParameterSet | Record<string, unknown>) {
-    if (old instanceof ParameterSet) old.data.forEach((arg, key) => this.set(key, arg.value));
-    else Object.entries(old).forEach(item => this.set(...item));
-    return this;
+    return new ParameterSet(this._設定.with(old));
   }
 
   get size() {
-    return this.data.size;
+    return Object.keys(this._設定.選項).length;
   }
 
   refresh(input: string) {
     if (!this.size) return ParameterSet.from(input);
+    let rawDeriver;
     try {
-      return new ParameterSet(new Schema(input).getParameters(this.pack())).combine(this);
+      rawDeriver = rawDeriverFrom(input);
     } catch {
       return this;
     }
+    return new ParameterSet(new 推導方案(rawDeriver).方案設定(this.pack())).combine(this);
   }
 
-  static from(input: string) {
+  static from(input: string, 選項?: Readonly<Record<string, unknown>>) {
+    let rawDeriver;
     try {
-      return new ParameterSet(new Schema(input).getDefaultParameters());
+      rawDeriver = rawDeriverFrom(input);
     } catch {
       return new ParameterSet();
     }
+    return new ParameterSet(new 推導方案(rawDeriver).方案設定(選項));
   }
 
   render(onChange: (change: ParameterSet) => void) {
-    return this.form.map(arg => {
-      if (!arg || typeof arg === "string") {
-        const [title, ...description] = (arg || "").split(/[\n-\r\x85\u2028\u2029]+/);
-        if (description.length && !description[description.length - 1]) description.pop();
+    return this._設定.列表.map(item => {
+      if (isNewline(item)) {
         return (
           <>
             <br />
             {"\n"}
-            {!!title && <Title>{title}</Title>}
-            {!!description.length && (
-              <Description>
-                {description.map(line => (
-                  <p key={line}>{line}</p>
-                ))}
-              </Description>
-            )}
           </>
         );
-      }
-      const { key, description, value, options } = arg;
-      if (options)
+      } else if (isGroupLabel(item)) {
+        const { text, description } = item;
         return (
-          <TooltipLabel description={description} key={key}>
-            <span>{key}</span>
-            <Colon />
-            <select
-              onChange={event => onChange(this.clone().set(key, options[+event.target.value]))}
-              value={options.indexOf(value)}
-              autoComplete="off">
-              {options.map((option, index) => (
-                <option key={index} value={index}>
-                  {String(option)}
-                </option>
-              ))}
-            </select>
-          </TooltipLabel>
+          <>
+            <br />
+            {"\n"}
+            <Title>{text}</Title>
+            {description ? (
+              <Description>
+                {description.split(/[\n-\r\x85\u2028\u2029]+/u).map((line, i) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </Description>
+            ) : null}
+          </>
         );
-      else
-        switch (typeof value) {
-          case "boolean":
-            return (
-              <TooltipLabel description={description} key={key}>
-                <input
-                  type="checkbox"
-                  checked={value}
-                  onChange={event => onChange(this.clone().set(key, event.target.checked))}
-                />
-                <span>{key}</span>
-              </TooltipLabel>
-            );
-          case "number":
-            return (
-              <TooltipLabel description={description} key={key}>
-                <span>{key}</span>
-                <Colon />
-                <input
-                  type="number"
-                  value={value}
-                  step="any"
-                  onChange={event => onChange(this.clone().set(key, +event.target.value))}
-                  autoComplete="off"
-                />
-              </TooltipLabel>
-            );
-          case "string":
-            return (
-              <TooltipLabel description={description} key={key}>
-                <span>{key}</span>
-                <Colon />
-                <input
-                  type="text"
-                  value={value}
-                  onChange={event => onChange(this.clone().set(key, event.target.value))}
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck="false"
-                />
-              </TooltipLabel>
-            );
-          default:
-            return null;
+      } else {
+        const { key, text, description, value, options } = item;
+        const label = text ?? key;
+        if (options) {
+          return (
+            <TooltipLabel key={key} description={description}>
+              <span>{label}</span>
+              <Colon />
+              <select
+                onChange={event => onChange(this.set(key, options[+event.target.value]))}
+                value={options.findIndex(option => option.value === value)}
+                autoComplete="off">
+                {options.map((option, i) => {
+                  const { value, text } = option;
+                  return (
+                    <option key={i} value={i}>
+                      {text ?? String(value)}
+                    </option>
+                  );
+                })}
+              </select>
+            </TooltipLabel>
+          );
+        } else {
+          switch (typeof value) {
+            case "boolean":
+              return (
+                <TooltipLabel key={key} description={description}>
+                  <input
+                    type="checkbox"
+                    checked={value}
+                    onChange={event => onChange(this.set(key, event.target.checked))}
+                  />
+                  <span>{label}</span>
+                </TooltipLabel>
+              );
+            case "number":
+              return (
+                <TooltipLabel key={key} description={description}>
+                  <span>{label}</span>
+                  <Colon />
+                  <input
+                    type="number"
+                    value={value}
+                    step="any"
+                    onChange={event => onChange(this.set(key, +event.target.value))}
+                    autoComplete="off"
+                  />
+                </TooltipLabel>
+              );
+            case "string":
+              return (
+                <TooltipLabel key={key} description={description}>
+                  <span>{label}</span>
+                  <Colon />
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={event => onChange(this.set(key, event.target.value))}
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                  />
+                </TooltipLabel>
+              );
+            default:
+              return null;
+          }
         }
+      }
     });
   }
 
-  clone() {
-    const copy = new ParameterSet();
-    copy.data = this.data;
-    copy.form = this.form;
-    return copy;
-  }
-
+  // NOTE For saving the state. Only the packed object is needed.
   toJSON() {
     return this.pack();
   }

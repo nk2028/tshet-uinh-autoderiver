@@ -11,7 +11,7 @@ import Swal from "../Classes/SwalReact";
 import { allOptions, defaultArticle } from "../consts";
 import evaluate from "../evaluate";
 import { listenArticle } from "../options";
-import initialState from "../state";
+import initialState, { stateStorageLocation } from "../state";
 import { copy, notifyError } from "../utils";
 
 import type { MainState, Option, ReactNode } from "../consts";
@@ -134,7 +134,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
   const [state, setState] = useState(initialState);
   const { article, option, convertVariant, syncCharPosition } = state;
   useEffect(() => {
-    localStorage.setItem("state", JSON.stringify(state));
+    localStorage.setItem(stateStorageLocation, JSON.stringify(state));
   }, [state]);
 
   function useHandle<T extends keyof MainState, E>(key: T, handler: (event: E) => MainState[T]): (event: E) => void {

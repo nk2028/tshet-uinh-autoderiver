@@ -19,13 +19,19 @@ const Option = styled.label`
   }
 `;
 
-export default function TooltipLabel({ description, children }: { description: string[]; children: ReactNode }) {
-  return description.length ? (
+export default function TooltipLabel({
+  description,
+  children,
+}: {
+  description?: string | undefined;
+  children: ReactNode;
+}) {
+  return description ? (
     <Tooltip
       element={
         <Wrapper>
-          {description.map(line => (
-            <p key={line}>{line}</p>
+          {description.split(/[\n-\r\x85\u2028\u2029]+/).map((line, i) => (
+            <p key={i}>{line}</p>
           ))}
         </Wrapper>
       }>

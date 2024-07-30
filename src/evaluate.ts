@@ -1,10 +1,26 @@
-import Schema, { UserSchema } from "./Classes/Schema";
+import { 推導方案 } from "tshet-uinh-deriver-tools";
+
+import { CustomNode, Formatter } from "./Classes/CustomElement";
 import { qieyunTextLabelURLPrefix } from "./consts";
 import { evaluateOption, getArticle, setArticle } from "./options";
 import { fetchFile, normalizeFileName, notifyError } from "./utils";
 
-import type { Require } from "./Classes/Schema";
 import type { MainState, ReactNode } from "./consts";
+import type { 音韻地位 } from "qieyun";
+import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools";
+
+type Require = (音韻地位: 音韻地位, 字頭?: string | null) => RequireFunction;
+type RequireFunction = (sample: string) => SchemaFromRequire;
+
+type DeriveResult = string | ((formatter: Formatter) => CustomNode);
+
+export function rawDeriverFrom(input: string): 原始推導函數<DeriveResult, [RequireFunction]> {
+  return new Function("選項", "音韻地位", "字頭", "require", input) as 原始推導函數<DeriveResult, [RequireFunction]>;
+}
+
+function formatResult(result: DeriveResult): CustomNode {
+  return typeof result === "function" ? result(Formatter) : result;
+}
 
 export default async function evaluate(state: MainState): Promise<ReactNode> {
   const { schemas, option } = state;
@@ -15,11 +31,15 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
   else await new Promise(resolve => setTimeout(resolve));
 
   try {
-    const inputs: [input: Schema, parameters: Record<string, unknown>, require: Require][] = schemas.map(
-      ({ name, input, parameters }) => [new Schema(input), parameters.pack(), require(name)],
+    const derivers: [derive: 推導函數<DeriveResult, [RequireFunction]>, require: Require][] = schemas.map(
+      ({ name, input, parameters }) => {
+        const schema = new 推導方案(rawDeriverFrom(input));
+        const options = parameters.pack();
+        return [schema(options), require(name)];
+      },
     );
-    return evaluateOption[option](state, (音韻地位, 字頭) =>
-      inputs.map(([input, parameters, require]) => input.derive(音韻地位, 字頭, parameters, require)),
+    return evaluateOption[option](state, (地位, 字頭) =>
+      derivers.map(([derive, require]) => formatResult(derive(地位, 字頭, require(地位, 字頭)))),
     );
   } catch (err) {
     throw notifyError("程式碼錯誤", err);
@@ -31,7 +51,27 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
     return (音韻地位, 字頭) => sample => {
       const schema = schemas.find(({ name }) => name === normalizeFileName(sample) + ".js");
       if (!schema) throw notifyError("Schema not found");
-      return new UserSchema(schema.input, require(sample, newReferences), 音韻地位, 字頭);
+      return new SchemaFromRequire(rawDeriverFrom(schema.input), require(sample, newReferences), 音韻地位, 字頭);
     };
+  }
+}
+
+export class SchemaFromRequire {
+  private _schema: 推導方案<DeriveResult, [RequireFunction]>;
+  constructor(
+    rawDeriver: 原始推導函數<DeriveResult, [RequireFunction]>,
+    private _require: Require,
+    private _音韻地位: 音韻地位,
+    private _字頭: string | null = null,
+  ) {
+    this._schema = new 推導方案(rawDeriver);
+  }
+
+  derive(音韻地位: 音韻地位, 字頭: string | null = null, 選項?: Readonly<Record<string, unknown>>) {
+    return this._schema(選項)(音韻地位, 字頭, this._require(音韻地位, 字頭));
+  }
+
+  deriveThis(選項?: Readonly<Record<string, unknown>>) {
+    return this.derive(this._音韻地位, this._字頭, 選項);
   }
 }
