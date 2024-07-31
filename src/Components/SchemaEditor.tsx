@@ -130,7 +130,7 @@ const CreateSchemaButton = styled.div`
 const EditorArea = styled.div`
   flex: 1;
   position: relative;
-  min-height: calc(6rem + 25vh);
+  min-height: calc(6rem + 20vh);
 `;
 const ResetButton = styled.div`
   display: inline-block;
@@ -205,10 +205,10 @@ const ToggleButton = styled.div<{ collapsed: boolean }>`
 `;
 
 interface SchemaEditorProps extends UseMainState {
-  otherOptions: ReactNode;
+  commonOptions: ReactNode;
 }
 
-export default function SchemaEditor({ state, setState, otherOptions }: SchemaEditorProps) {
+export default function SchemaEditor({ state, setState, commonOptions }: SchemaEditorProps) {
   const { schemas, activeSchemaName } = state;
   const activeSchema = useMemo(
     () => schemas.find(({ name }) => name === activeSchemaName),
@@ -268,7 +268,7 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
     [activeSchemaName],
   );
 
-  const [optionsVisible, setOptionsVisible] = useState(false);
+  const [optionsVisible, setOptionsVisible] = useState(true);
 
   const tabBarRef = useRef<HTMLDivElement>(null);
   function drag(name: string, { clientX: startX }: { clientX: number }, isMouse?: boolean) {
@@ -485,7 +485,8 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
               <NoParameters>此推導方案無可用自訂選項。</NoParameters>
             </>
           )}
-          {otherOptions}
+          <hr />
+          {commonOptions}
         </Options>
       )}
       <CreateSchemaDialog

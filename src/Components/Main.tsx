@@ -227,22 +227,8 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
       <SchemaEditor
         state={state}
         setState={setState}
-        otherOptions={
+        commonOptions={
           <>
-            <p>
-              <ArticleInput
-                disabled={option !== "convertArticle"}
-                placeholder="輸入框"
-                rows={5}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-                required
-                onChange={useHandle("article", event => event.target.value)}
-                value={article}
-              />
-            </p>
             <p>
               <label>
                 <select onChange={useHandle("option", event => event.target.value as Option)} value={option}>
@@ -253,6 +239,12 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
                   ))}
                 </select>
               </label>
+              <input
+                className="pure-button pure-button-primary"
+                type="button"
+                value="適用"
+                onClick={handleRef.current}
+              />
               <label hidden={option !== "convertArticle"}>
                 <input
                   type="checkbox"
@@ -270,17 +262,26 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
                 同步音韻地位選擇至輸入框
               </label>
               <input
-                className="pure-button pure-button-primary"
-                type="button"
-                value="適用"
-                onClick={handleRef.current}
-              />
-              <input
                 hidden={option !== "convertArticle"}
+                disabled={article === defaultArticle}
                 className="pure-button pure-button-danger"
                 type="button"
                 value="恢復成預設文本"
                 onClick={resetArticle}
+              />
+            </p>
+            <p>
+              <ArticleInput
+                disabled={option !== "convertArticle"}
+                placeholder="輸入框"
+                rows={5}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                required
+                onChange={useHandle("article", event => event.target.value)}
+                value={article}
               />
             </p>
           </>

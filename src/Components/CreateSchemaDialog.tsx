@@ -201,7 +201,8 @@ export default function CreateSchemaDialog({
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
     if (!name) return "檔案名稱為空";
-    if (/[\0-\0x1f"*/:<>?\\|\x7f-\x9f]/.test(name)) return "檔案名稱含有特殊字元";
+    // eslint-disable-next-line no-control-regex
+    if (/[\0-\x1f"*/:<>?\\|\x7f-\x9f]/.test(name)) return "檔案名稱含有特殊字元";
     if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
     return "";
   }, [createSchemaName]);
@@ -351,7 +352,12 @@ export default function CreateSchemaDialog({
             </Preview>
             <Action>
               <Rename invalid={!!validation}>
-                <form className="pure-form">
+                <form
+                  className="pure-form"
+                  onSubmit={e => {
+                    e.preventDefault();
+                    validation || addSchema();
+                  }}>
                   <label>
                     <FontAwesomeIcon icon={faPenToSquare} size="lg" />
                     <input
