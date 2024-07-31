@@ -1,5 +1,5 @@
 import { createElement, Fragment } from "react";
-import type { ReactElement } from "react";
+import type { HTMLAttributes, ReactElement } from "react";
 
 import styled from "@emotion/styled";
 
@@ -89,7 +89,7 @@ export default class CustomElement {
     const [tag, prop] = this.tag;
     return createElement(
       isTagWithProp(tag) ? "span" : tag === "f" ? Fragment : tag,
-      isTagWithProp(tag) ? { style: { [TagStyle[tag]]: prop } } : undefined,
+      isTagWithProp(tag) ? ({ style: { [TagStyle[tag]]: prop } } as HTMLAttributes<HTMLElement>) : undefined,
       ...CustomElement.renderInner(this.children),
     );
   }

@@ -7,11 +7,12 @@
     "postinstall": "patch-package",
     "start": "cross-env NPM_PACKAGE_VERSION=$npm_package_version parcel ./public/index.html --dist-dir build --open --port 8080",
     "build": "cross-env NPM_PACKAGE_VERSION=$npm_package_version parcel build ./public/index.html --dist-dir build --public-url /qieyun-autoderiver --no-cache",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "format": "prettier ./src --list-different",
     "format:fix": "prettier ./src --write",
-    "test": "npm run lint && npm run format"
+    "test": "npm run typecheck && npm run lint && npm run format"
   },
   "repository": {
     "type": "git",

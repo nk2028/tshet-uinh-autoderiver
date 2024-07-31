@@ -345,7 +345,8 @@ export default function SchemaEditor({ state, setState, otherOptions }: SchemaEd
   function validateFileName(name: string) {
     const hasSchemaName = (name: string) => schemas.find(schema => schema.name === name);
     if (!name) return "檔案名稱為空";
-    if (/[\0-\037"*/:<>?\\|\177-\237]/.test(name)) return "檔案名稱含有特殊字元";
+    // eslint-disable-next-line no-control-regex
+    if (/[\0-\x1f"*/:<>?\\|\x7f-\x9f]/.test(name)) return "檔案名稱含有特殊字元";
     if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
     return "";
   }

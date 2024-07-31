@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
@@ -277,7 +277,10 @@ export default function CreateSchemaDialog({
     })();
   }, [schemas]);
 
-  const inputChange = useCallback(event => setCreateSchemaName(event.target.value), []);
+  const inputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    event => setCreateSchemaName(event.target.value),
+    [],
+  );
 
   return visible
     ? createPortal(
