@@ -78,6 +78,8 @@ export type Query = Readonly<{
   字頭: string;
   釋義: string;
   音韻地位: 音韻地位;
+  反切?: string | null;
+  韻目原貌?: string;
 }>;
 
 type Values<T> = T extends Record<PropertyKey, infer T> ? Values<T> : T;

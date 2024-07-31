@@ -85,11 +85,12 @@ export const evaluateOption: Record<Option, Handler> = {
           if (!entries.length) continue;
           break;
         }
-        for (const { 釋義, 音韻地位 } of 資料.query字頭(字頭)) {
+        for (const 條目 of 資料.query字頭(字頭)) {
+          const { 音韻地位 } = 條目;
           const 擬音 = callDeriver(音韻地位, 字頭);
           let entry = entries.find(key => CustomElement.isEqual(key.擬音, 擬音));
           if (!entry) entries.push((entry = { 擬音, 結果: [] }));
-          entry.結果.push({ 字頭, 釋義, 音韻地位 });
+          entry.結果.push(條目);
         }
       }
 

@@ -95,16 +95,22 @@ export default function TooltipChar({
                   </Fragment>
                 ))}
               </span>
-              {結果.map((res, i) => {
-                const { 字頭, 釋義, 音韻地位 } = res;
+              {結果.map((條目, i) => {
+                const { 字頭, 釋義, 韻目原貌, 音韻地位 } = 條目;
                 const { 描述 } = 音韻地位;
-                let 反切 = 資料.query音韻地位(音韻地位)[0]?.反切;
-                反切 = 反切 ? `${反切}切 ` : "";
+                let 各反切: string[];
+                if (條目.反切) {
+                  各反切 = [條目.反切];
+                } else {
+                  各反切 = [...new Set(資料.query音韻地位(音韻地位).flatMap(({ 反切 }) => (反切 ? [反切] : [])))];
+                }
+                const 反切 = 各反切.length ? `${各反切.join("/")}切 ` : "";
+                const 韻目出處 = 韻目原貌 ? `（《廣韻》${韻目原貌}韻）` : "";
                 return (
                   <Fragment key={i}>
                     {i ? <br /> : " "}
                     <span onClick={onClick(index, 描述)}>
-                      <Char>{字頭}</Char> {描述} {反切 + 釋義}
+                      <Char>{字頭}</Char> {描述} {反切 + 釋義 + 韻目出處}
                     </span>
                   </Fragment>
                 );
