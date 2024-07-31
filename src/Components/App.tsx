@@ -16,9 +16,9 @@ injectGlobal`
   body {
     line-height: 1.6;
     font-size: 16px;
-    font-family: "Jomolhari", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+    font-family: "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
       "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
-      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", serif;
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", serif;
     font-language-override: "KOR";
     overflow: hidden;
     touch-action: none;
