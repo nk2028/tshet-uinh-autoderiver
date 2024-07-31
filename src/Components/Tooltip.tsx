@@ -1,8 +1,6 @@
-import { cloneElement, ReactElement, useCallback } from "react";
+import { cloneElement, ReactElement, useCallback, useEffect } from "react";
 import type { SyntheticEvent } from "react";
-// FIXME migrate to React's v18 API
-// eslint-disable-next-line react/no-deprecated
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import { css as stylesheet } from "@emotion/css";
 
@@ -32,29 +30,37 @@ div.className = stylesheet`
   }
 `;
 document.body.appendChild(div);
+const root = createRoot(div);
+
+function TooltipAnchor({ relativeToNodeBox, children }: { relativeToNodeBox: DOMRect; children: ReactElement }) {
+  useEffect(() => {
+    const oneRemSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const margin = oneRemSize / 6;
+
+    const divInnerBox = div.getBoundingClientRect();
+
+    let targetTop = relativeToNodeBox.top - divInnerBox.height - margin;
+    targetTop = targetTop < oneRemSize ? relativeToNodeBox.bottom + margin : targetTop;
+    targetTop += window.scrollY;
+
+    let targetLeft = (relativeToNodeBox.left + relativeToNodeBox.right - divInnerBox.width) / 2;
+    targetLeft = Math.min(getPageWidth() - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
+    targetLeft += window.scrollX;
+
+    div.style.top = targetTop + "px";
+    div.style.left = targetLeft + "px";
+    div.style.visibility = "visible";
+  });
+
+  return children;
+}
 
 export default function Tooltip({ element, children }: { element: ReactElement; children: ReactElement }) {
   const showTooltip = useCallback(
     (event: SyntheticEvent) => {
       const relativeToNodeBox = event.currentTarget.getBoundingClientRect();
-      const oneRemSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      const margin = oneRemSize / 4;
 
-      render(element, div, () => {
-        const divInnerBox = div.getBoundingClientRect();
-
-        let targetTop = relativeToNodeBox.top - divInnerBox.height - margin;
-        targetTop = targetTop < oneRemSize ? relativeToNodeBox.bottom + margin : targetTop;
-        targetTop += window.pageYOffset;
-
-        let targetLeft = (relativeToNodeBox.left + relativeToNodeBox.right - divInnerBox.width) / 2;
-        targetLeft = Math.min(getPageWidth() - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
-        targetLeft += window.pageXOffset;
-
-        div.style.top = targetTop + "px";
-        div.style.left = targetLeft + "px";
-        div.style.visibility = "visible";
-      });
+      root.render(<TooltipAnchor relativeToNodeBox={relativeToNodeBox}>{element}</TooltipAnchor>);
     },
     [element],
   );
