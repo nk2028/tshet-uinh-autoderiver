@@ -66,7 +66,9 @@ export default class ParameterSet {
     if (old instanceof ParameterSet) {
       old = old.pack();
     }
-    return new ParameterSet(this._設定.with(old));
+    const resetKeys = new Set(this._設定.列表.flatMap(item => ("key" in item && item["reset"] ? [item.key] : [])));
+    const actual = Object.fromEntries(Object.entries(old).filter(([k]) => !resetKeys.has(k)));
+    return new ParameterSet(this._設定.with(actual));
   }
 
   get size() {
@@ -120,6 +122,9 @@ export default class ParameterSet {
           </>
         );
       } else {
+        if (item["hidden"]) {
+          return null;
+        }
         const { key, text, description, value, options } = item;
         const label = text ?? key;
         if (options) {
