@@ -42,8 +42,8 @@ export const codeFontFamily = `
 export const options = {
   convertArticle: "從輸入框中讀取文章，並注音",
   convertPresetArticle: "為預設文章注音",
-  exportAllSmallRhymes: "導出所有小韻",
-  compareSchemas: "比較多個方案，並導出相異小韻",
+  exportAllPositions: "導出所有音韻地位",
+  compareSchemas: "比較多個方案，並導出結果相異的音韻地位",
   exportAllSyllables: "導出所有音節",
   exportAllSyllablesWithCount: "導出所有音節，並計數",
 };

@@ -163,7 +163,7 @@ export const evaluateOption: Record<Option, Handler> = {
     ));
   },
 
-  exportAllSmallRhymes({ schemas }, callDeriver) {
+  exportAllPositions({ schemas }, callDeriver) {
     return <Table head={["音韻地位", ...title(schemas), "代表字"]} body={finalize(iterate(callDeriver))} />;
   },
 
