@@ -146,7 +146,7 @@ export const evaluateOption: Record<Option, Handler> = {
               const 地位 = 音韻地位.from描述(描述);
               const 擬音 = callDeriver(地位, 字頭);
 
-              output.push(<Ruby key={CustomElement.stringify(擬音)} rb={字頭} rt={CustomElement.render(擬音)} />);
+              output.push(<Ruby key={i} rb={字頭} rt={CustomElement.render(擬音)} />);
             } else output.push(chs[i]);
           }
 

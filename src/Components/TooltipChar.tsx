@@ -121,7 +121,7 @@ export default function TooltipChar({
       }>
       <RubyWrapper
         textColor={結果.some(({ 釋義 }) => !釋義) ? "#c00" : multiple ? (resolved ? "#708" : "#00f") : "black"}>
-        <Ruby key={CustomElement.stringify(擬音)} rb={ch} rt={CustomElement.render(擬音)} />
+        <Ruby rb={ch} rt={CustomElement.render(擬音)} />
       </RubyWrapper>
     </Tooltip>
   );
