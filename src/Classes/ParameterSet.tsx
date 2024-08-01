@@ -134,7 +134,7 @@ export default class ParameterSet {
               <span>{label}</span>
               <Colon />
               <select
-                onChange={event => onChange(this.set(key, options[+event.target.value]))}
+                onChange={event => onChange(this.set(key, options[+event.target.value].value))}
                 value={options.findIndex(option => option.value === value)}
                 disabled={disabled}
                 autoComplete="off">
