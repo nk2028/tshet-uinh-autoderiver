@@ -1,4 +1,4 @@
-import { cloneElement, ReactElement, useCallback, useEffect } from "react";
+import { cloneElement, ReactElement, useCallback, useEffect, useRef } from "react";
 import type { SyntheticEvent } from "react";
 import { createRoot } from "react-dom/client";
 
@@ -14,7 +14,8 @@ function getPageWidth() {
   );
 }
 
-const div = document.createElement("div");
+const div = document.getElementById("tooltip") ?? document.createElement("div");
+div.id = "tooltip";
 div.style.visibility = "hidden";
 div.className = stylesheet`
   position: absolute;
@@ -31,6 +32,12 @@ div.className = stylesheet`
 `;
 document.body.appendChild(div);
 const root = createRoot(div);
+
+let tooltipTarget: symbol | null = null;
+
+function hideTooltip() {
+  div.style.visibility = "hidden";
+}
 
 function TooltipAnchor({ relativeToNodeBox, children }: { relativeToNodeBox: DOMRect; children: ReactElement }) {
   useEffect(() => {
@@ -56,17 +63,24 @@ function TooltipAnchor({ relativeToNodeBox, children }: { relativeToNodeBox: DOM
 }
 
 export default function Tooltip({ element, children }: { element: ReactElement; children: ReactElement }) {
+  const selfRef = useRef(Symbol("Tooltip"));
   const showTooltip = useCallback(
     (event: SyntheticEvent) => {
       const relativeToNodeBox = event.currentTarget.getBoundingClientRect();
 
       root.render(<TooltipAnchor relativeToNodeBox={relativeToNodeBox}>{element}</TooltipAnchor>);
+      tooltipTarget = selfRef.current;
     },
     [element],
   );
-  const hideTooltip = useCallback(() => {
-    div.style.visibility = "hidden";
-  }, []);
+  useEffect(
+    () => () => {
+      if (tooltipTarget === selfRef.current) {
+        hideTooltip();
+      }
+    },
+    [],
+  );
   return cloneElement(children, {
     onMouseEnter: showTooltip,
     onTouchStart: showTooltip,
