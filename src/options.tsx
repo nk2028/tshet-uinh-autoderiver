@@ -206,7 +206,7 @@ export const evaluateOption: Record<Option, Handler> = {
         <Table head={["音韻地位", ...title(schemas), "代表字"]} body={finalize(result)} />
       </>
     ) : (
-      <h3>方案擬音結果相同。</h3>
+      <h3>方案推導結果相同。</h3>
     );
   },
 };
