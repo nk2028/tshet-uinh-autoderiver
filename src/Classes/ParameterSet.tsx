@@ -75,6 +75,10 @@ export default class ParameterSet {
     return Object.keys(this._設定.選項).length;
   }
 
+  get errors(): readonly string[] {
+    return this._設定.解析錯誤;
+  }
+
   refresh(input: string) {
     if (!this.size) return ParameterSet.from(input);
     let rawDeriver;

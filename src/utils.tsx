@@ -19,7 +19,9 @@ const errorModal = stylesheet`
 
 export function notifyError(msg: string, err?: unknown) {
   let technical: string | null = null;
-  if (err instanceof Error) {
+  if (typeof err === "string") {
+    technical = err;
+  } else if (err instanceof Error) {
     technical = err.message;
     let curErr: Error = err;
     while (curErr.cause instanceof Error) {

@@ -14,7 +14,7 @@ import actions from "../actions";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily } from "../consts";
 import "../editor/setup";
-import { memoize, normalizeFileName } from "../utils";
+import { memoize, normalizeFileName, notifyError } from "../utils";
 
 import type { Sample, UseMainState, ReactNode } from "../consts";
 
@@ -160,6 +160,15 @@ const NoParameters = styled.p`
   margin: -1.25rem 0 -0.5rem;
   font-size: 0.875rem;
   color: #888;
+`;
+const ParameterErrorHint = styled.p`
+  margin: 0;
+  font-size: 0.875rem;
+  color: red;
+  a {
+    color: blue;
+    text-decoration: underline;
+  }
 `;
 const Options = styled.form`
   padding: 0 1rem;
@@ -465,26 +474,31 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
       </EditorArea>
       {optionsVisible && (
         <Options className="pure-form">
+          <h3>
+            <span>選項</span>
+            {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
+              <ResetButton title="恢復成預設值" onClick={resetParameters}>
+                <FontAwesomeIcon icon={faRotateLeft} size="sm" />
+              </ResetButton>
+            ) : null}
+          </h3>
           {activeSchema?.parameters.size ? (
-            <>
-              <h3>
-                <span>選項</span>
-                <ResetButton title="恢復成預設值" onClick={resetParameters}>
-                  <FontAwesomeIcon icon={faRotateLeft} size="sm" />
-                </ResetButton>
-              </h3>
-              <Parameters>
-                {activeSchema.parameters.render(parameters =>
-                  setState(actions.setSchemaParameters(activeSchemaName, parameters)),
-                )}
-              </Parameters>
-            </>
+            <Parameters>
+              {activeSchema.parameters.render(parameters =>
+                setState(actions.setSchemaParameters(activeSchemaName, parameters)),
+              )}
+            </Parameters>
           ) : (
-            <>
-              <h3>選項</h3>
-              <NoParameters>此推導方案無可用自訂選項。</NoParameters>
-            </>
+            <NoParameters>此推導方案無可用自訂選項。</NoParameters>
           )}
+          {activeSchema?.parameters.errors.length ? (
+            <ParameterErrorHint>
+              部分設定項目無法解析{" "}
+              <a onClick={() => notifyError("部分設定項目無法解析", activeSchema.parameters.errors.join("\n"))}>
+                檢視詳情
+              </a>
+            </ParameterErrorHint>
+          ) : null}
           <hr />
           {commonOptions}
         </Options>
