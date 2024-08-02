@@ -3,11 +3,16 @@ import ParameterSet from "./Classes/ParameterSet";
 import type { MainState, SchemaState } from "./consts";
 
 export default {
-  addSchema: (schema: Omit<SchemaState, "parameters">) => (state: MainState) => ({
-    ...state,
-    schemas: [...state.schemas, { ...schema, parameters: ParameterSet.from(schema.input) }],
-    activeSchemaName: schema.name,
-  }),
+  addSchema: (schema: Omit<SchemaState, "parameters">) => (state: MainState) => {
+    if (state.schemas.some(({ name }) => name === schema.name)) {
+      return state;
+    }
+    return {
+      ...state,
+      schemas: [...state.schemas, { ...schema, parameters: ParameterSet.from(schema.input) }],
+      activeSchemaName: schema.name,
+    };
+  },
 
   deleteSchema: (name: string) => (state: MainState) => {
     const schemas = [...state.schemas];
