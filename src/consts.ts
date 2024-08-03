@@ -5,7 +5,8 @@ import type ParameterSet from "./Classes/ParameterSet";
 import type samples from "./samples";
 import type { 音韻地位 } from "qieyun";
 
-export const qieyunExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@dev-qieyun-0.15/";
+//export const qieyunExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@dev-qieyun-0.15/";
+export const qieyunExamplesURLPrefix = "https://raw.githubusercontent.com/nk2028/qieyun-examples/dev-qieyun-0.15/";
 export const qieyunTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@dev-qieyun-0.15/";
 
 export const newFileTemplate = /* js */ `
