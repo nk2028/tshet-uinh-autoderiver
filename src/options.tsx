@@ -102,7 +102,7 @@ export const evaluateOption: Record<Option, Handler> = {
           const 描述 = chs.slice(i + 2, j).join("");
           const 地位 = (() => {
             try {
-              return 音韻地位.from描述(描述);
+              return 音韻地位.from描述(描述, true);
             } catch {
               return undefined;
             }
