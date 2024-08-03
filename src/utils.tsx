@@ -85,7 +85,7 @@ export async function copy(txt: string) {
 
 export async function fetchFile(input: string) {
   try {
-    const text = await (await fetch(input)).text();
+    const text = await (await fetch(input, { cache: "no-cache" })).text();
     if (text.startsWith("Failed to fetch")) throw new Error(text);
     return text;
   } catch (err) {
