@@ -197,10 +197,13 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
 
   useEffect(() => {
     function keyDown(event: KeyboardEvent) {
-      if (!event.altKey && !event.ctrlKey && event.key === "Escape") {
+      if (!event.altKey && !event.ctrlKey && !event.metaKey && event.key === "Escape") {
         event.preventDefault();
         setVisible(false);
-      } else if (event.altKey && !event.ctrlKey && event.key === "s") {
+      } else if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "s") {
+        // TODO Test on macOS.
+        // AFAIK it might be more appropriate to use something like "⌥⌘" (option+command) instead,
+        // because "⌥S" on macOS is supposed to behave more like "AltGr+S" on a PC.
         event.preventDefault();
         handleRef.current();
       }

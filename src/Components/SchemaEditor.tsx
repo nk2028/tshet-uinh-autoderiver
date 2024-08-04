@@ -409,7 +409,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
 
   useEffect(() => {
     function keyDown(event: KeyboardEvent) {
-      if (!event.altKey && event.ctrlKey && event.key === "`") {
+      if (!event.altKey && (event.ctrlKey || event.metaKey) && event.key === "`") {
         event.preventDefault();
         setOptionsVisible(optionsVisible => !optionsVisible);
       }
