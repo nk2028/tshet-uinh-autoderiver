@@ -466,7 +466,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
         />
         {optionsVisible && <SeparatorShadow />}
         <ToggleButton
-          title={optionsVisible ? "隱藏選項" : "顯示選項"}
+          title={(optionsVisible ? "隱藏" : "顯示") + "推導操作面板"}
           collapsed={!optionsVisible}
           onClick={useCallback(() => setOptionsVisible(!optionsVisible), [optionsVisible])}>
           <FontAwesomeIcon icon={optionsVisible ? faChevronDown : faChevronUp} size="lg" />
