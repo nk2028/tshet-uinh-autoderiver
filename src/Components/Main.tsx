@@ -23,6 +23,18 @@ const ArticleInput = styled.textarea`
   resize: none;
   width: 100%;
 `;
+const OutputBackdrop = styled.div`
+  position: fixed;
+  z-index: 500;
+  background-color: rgba(0, 0, 0, 0.1);
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+`;
 const OutputArea = styled.div`
   display: flex;
   position: absolute;
@@ -33,7 +45,6 @@ const OutputArea = styled.div`
   background-color: white;
   border-top: 0.375rem solid #ccc;
   transition: bottom 0.5s;
-  z-index: 500;
 `;
 const OutputContainer = styled.div`
   position: relative;
@@ -287,34 +298,36 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
           </>
         }
       />
-      <OutputArea hidden={!visible}>
-        <OutputContainer>
-          <OutputWrapper>
-            <Title>
-              <span>推導結果</span>
-              <CopyButton title="匯出至剪貼簿" hidden={loading} onClick={handleCopy}>
-                <FontAwesomeIcon icon={faCopy} size="sm" />
-              </CopyButton>
-              <CloseButton
-                type="button"
-                className="swal2-close"
-                title="關閉"
-                hidden={loading}
-                onClick={useCallback(() => setVisible(false), [])}>
-                ×
-              </CloseButton>
-            </Title>
-            <OutputContent key={operation} ref={ref}>
-              {evaluationResult}
-            </OutputContent>
-            {loading && (
-              <Loading>
-                <Spinner />
-              </Loading>
-            )}
-          </OutputWrapper>
-        </OutputContainer>
-      </OutputArea>
+      <OutputBackdrop hidden={!visible}>
+        <OutputArea>
+          <OutputContainer>
+            <OutputWrapper>
+              <Title>
+                <span>推導結果</span>
+                <CopyButton title="匯出至剪貼簿" hidden={loading} onClick={handleCopy}>
+                  <FontAwesomeIcon icon={faCopy} size="sm" />
+                </CopyButton>
+                <CloseButton
+                  type="button"
+                  className="swal2-close"
+                  title="關閉"
+                  hidden={loading}
+                  onClick={useCallback(() => setVisible(false), [])}>
+                  ×
+                </CloseButton>
+              </Title>
+              <OutputContent key={operation} ref={ref}>
+                {evaluationResult}
+              </OutputContent>
+              {loading && (
+                <Loading>
+                  <Spinner />
+                </Loading>
+              )}
+            </OutputWrapper>
+          </OutputContainer>
+        </OutputArea>
+      </OutputBackdrop>
     </>
   );
 }
