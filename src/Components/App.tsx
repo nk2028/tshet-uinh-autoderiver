@@ -4,7 +4,7 @@ import { useCallback, useRef } from "react";
 
 import { injectGlobal, css as stylesheet } from "@emotion/css";
 import styled from "@emotion/styled";
-import { faCirclePlay, faInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlay, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Main from "./Main";
@@ -131,44 +131,117 @@ const aboutModal = stylesheet`
   }
 `;
 
-function showAbout() {
-  Swal.fire({
+function showInfoBox(content: JSX.Element) {
+  return Swal.fire({
     showClass: { popup: "" },
     hideClass: { popup: "" },
     customClass: { container: aboutModal },
     showCloseButton: true,
     showConfirmButton: false,
-    html: (
-      <>
-        <h2>關於</h2>
-        <p>
-          切韻音系自動推導器（下稱「本頁面」）由 <a href="https://nk2028.shn.hk/">nk2028</a>{" "}
-          開發。我們開發有關語言學的項目，尤其是有關歷史漢語語音學，異體字和日語語言學的項目。
-        </p>
-        <p>
-          歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram nk2028 社羣（
-          <a href="https://t.me/nk2028_discuss">@nk2028_discuss</a>）。
-        </p>
-        <p>
-          本頁面原始碼公開於 <a href="https://github.com/nk2028/qieyun-autoderiver">GitHub</a>。
-        </p>
-        <h2>私隱權政策</h2>
-        <p>
-          本頁面是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對您的私隱非常重視。本頁面的開發者不會透過本頁面收集您的任何資料。
-        </p>
-        <p>下面將具體介紹本頁面能在何種程度上保障您的私隱權。</p>
-        <b>您鍵入的內容</b>
-        <p>
-          本頁面的開發者不會收集您在本頁面中鍵入的任何內容。任何與您鍵入的內容相關的運算全部在您的系統中完成。本頁面不會將包括待標註的文本、標註結果在內的任何資料傳送至任何伺服器。
-        </p>
-        <b>您的其他資料</b>
-        <p>
-          本頁面使用的內容託管於以下站點：GitHub Pages、jsDelivr、Google
-          Fonts。在您訪問本頁面時，您的瀏覽器將與這些站點交互。本頁面的開發者並不能讀取您訪問這些站點時產生的資料，亦無法控制這些站點如何使用您訪問時產生的資料。
-        </p>
-      </>
-    ),
+    html: content,
   });
+}
+
+function showAbout() {
+  return showInfoBox(
+    <>
+      <h2>關於</h2>
+      <p>
+        切韻音系自動推導器（下稱「本頁面」）由 <a href="https://nk2028.shn.hk/">nk2028</a>{" "}
+        開發。我們開發有關語言學的項目，尤其是有關歷史漢語語音學，異體字和日語語言學的項目。
+      </p>
+      <p>
+        歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram nk2028 社羣（
+        <a href="https://t.me/nk2028_discuss">@nk2028_discuss</a>）。
+      </p>
+      <p>
+        本頁面原始碼公開於 <a href="https://github.com/nk2028/qieyun-autoderiver">GitHub</a>。
+      </p>
+      <h2>私隱權政策</h2>
+      <p>
+        本頁面是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對您的私隱非常重視。本頁面的開發者不會透過本頁面收集您的任何資料。
+      </p>
+      <p>下面將具體介紹本頁面能在何種程度上保障您的私隱權。</p>
+      <b>您鍵入的內容</b>
+      <p>
+        本頁面的開發者不會收集您在本頁面中鍵入的任何內容。任何與您鍵入的內容相關的運算全部在您的系統中完成。本頁面不會將包括待標註的文本、標註結果在內的任何資料傳送至任何伺服器。
+      </p>
+      <b>您的其他資料</b>
+      <p>
+        本頁面使用的內容託管於以下站點：GitHub Pages、jsDelivr、Google
+        Fonts。在您訪問本頁面時，您的瀏覽器將與這些站點交互。本頁面的開發者並不能讀取您訪問這些站點時產生的資料，亦無法控制這些站點如何使用您訪問時產生的資料。
+      </p>
+    </>,
+  );
+}
+
+function showHelp() {
+  return showInfoBox(
+    <>
+      <h2>使用說明</h2>
+      <h3>快速鍵</h3>
+      <ul>
+        <li>
+          <kbd>
+            <kbd>Ctrl</kbd>+<kbd>`</kbd>
+          </kbd>
+          ：隱藏或顯示推導操作面板
+        </li>
+        <li>
+          <kbd>
+            <kbd>Alt</kbd>+<kbd>S</kbd>
+          </kbd>
+          ：執行推導，顯示推導結果
+        </li>
+        <li>
+          <kbd>Esc</kbd>：關閉推導結果面板
+        </li>
+      </ul>
+      <h3>指定個別字音</h3>
+      <p>
+        推導自訂文章時，若某字有多個音，且推導結果不同，則在推導結果介面上，該字會被著色。指標移至其上（或觸控螢幕上點按）會出現選單，可以點選想要的字音。
+      </p>
+      <p>
+        若「同步音韻地位選擇至輸入框」已勾選，則選擇的字音會被記住於文章中（詳見下段所述格式），下次推導會預設選擇同一字音。
+      </p>
+      <p>
+        此外，若希望自訂某字需按某音推導，可在其後緊接一對半形圓括號 <code>()</code>
+        ，當中寫下想要的音韻地位描述（格式可參見推導結果中的音韻地位顯示，或參見{" "}
+        <a href="https://nk2028.shn.hk/qieyun-js/">Qieyun.js</a> 文檔）
+      </p>
+      <h3>編寫推導方案</h3>
+      <p>
+        推導方案代碼會作為函數執行，用 <code>return</code> 回傳結果。函數有兩個執行模式：「推導」與「方案設定」。
+      </p>
+      <p>在「推導」模式下，會對推導的每個字/音韻地位執行一次函數，需回傳推導結果，可用的引數有：</p>
+      <ul>
+        <li>
+          <code>音韻地位: Qieyun.音韻地位</code>：待推導之音韻地位，詳見{" "}
+          <a href="https://nk2028.shn.hk/qieyun-js/">Qieyun.js</a> 文檔
+        </li>
+        <li>
+          <code>字頭: string | null</code>：當前被推導的字
+        </li>
+        <li>
+          <code>選項: Record&lt;String, unknown&gt;</code>：物件，包含用戶指定的各項方案參數（詳見下述「方案設定模式」）
+        </li>
+      </ul>
+      <p>
+        在「方案設定」模式下，會在建立方案時、改變代碼後或用戶調整/重置參數選項後執行一次，需回傳方案支援的可調整參數。
+      </p>
+      <p>
+        該模式下僅 <code>選項</code> 引數會被傳入，<code>音韻地位</code> 與 <code>字頭</code> 均為{" "}
+        <code>undefined</code>，可以透過 <code>if (!音韻地位)</code> 判斷處於哪一模式。<code>選項</code>{" "}
+        引數格式與「推導」模式基本一致：剛建立方案時或重置選項後為空物件（<code>{"{}"}</code>
+        ），其餘情形則為包含當前選項各參數的物件。
+      </p>
+      <p>
+        「方案設定」模式需回傳方案各設定項的列表（<code>Array</code>），各項格式請參見{" "}
+        <a>tshet-uinh-deriver-tools 文檔</a>。如果方案不需可變參數，可回傳空列表（<code>[]</code>）。
+        {/* TODO link */}
+      </p>
+    </>,
+  );
 }
 
 const Container = styled.div`
@@ -247,6 +320,9 @@ export default function App() {
               </ApplyButton>
               <ShowButton title="關於" onClick={showAbout}>
                 <FontAwesomeIcon icon={faInfo} fixedWidth />
+              </ShowButton>
+              <ShowButton title="使用說明" onClick={showHelp}>
+                <FontAwesomeIcon icon={faQuestion} fixedWidth />
               </ShowButton>
             </Title>
           </nav>
