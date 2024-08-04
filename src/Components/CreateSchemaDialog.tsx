@@ -34,7 +34,8 @@ const Container = styled.div`
 const Popup = styled.div`
   display: grid;
   grid-template: auto 1fr auto auto / 1fr auto;
-  width: min(36vw + 360px, 960px, 100%);
+  //width: min(36vw + 360px, 960px, 100%); // with preview
+  width: min(24vw + 240px, 960px, 100%); // without preview
   height: 100%;
   padding: 0;
   overflow: hidden;
@@ -305,12 +306,13 @@ export default function CreateSchemaDialog({
                 {recursiveFolder(samples)}
               </ul>
             </Explorer>
-            <Preview>
+            {/* TODO preview disabled for now */}
+            <Preview hidden>
               <PreviewFrame>
                 <div>
                   <ruby>
                     遙<rp>(</rp>
-                    <rt lang="och-Latn-fonipa">yeu</rt>
+                    <rt lang="och-Latn-fonipa">eu</rt>
                     <rp>)</rp>
                   </ruby>
                   <ruby>
@@ -325,12 +327,12 @@ export default function CreateSchemaDialog({
                   </ruby>
                   <ruby>
                     暢<rp>(</rp>
-                    <rt lang="och-Latn-fonipa">chang</rt>
+                    <rt lang="och-Latn-fonipa">tyang</rt>
                     <rp>)</rp>
                   </ruby>
                 </div>
               </PreviewFrame>
-              <Description>yeu kim pu chang, it kyong sen pi.</Description>
+              <Description>eu kim pu tyang, it kyong sen pi.</Description>
               <Metadata>
                 <table>
                   <tbody>
