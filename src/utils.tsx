@@ -13,7 +13,7 @@ const errorModal = stylesheet`
   pre {
     text-align: left;
     overflow: auto;
-    max-height: 70vh;
+    max-height: calc(max(100vh - 24em, 7em));
   }
 `;
 
