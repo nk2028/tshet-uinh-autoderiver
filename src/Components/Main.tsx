@@ -206,6 +206,9 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
         // because "⌥S" on macOS is supposed to behave more like "AltGr+S" on a PC.
         event.preventDefault();
         handleRef.current();
+      } else if (!event.ctrlKey && !event.metaKey && event.shiftKey && event.key === "Enter") {
+        event.preventDefault();
+        handleRef.current();
       }
     }
     document.addEventListener("keydown", keyDown);

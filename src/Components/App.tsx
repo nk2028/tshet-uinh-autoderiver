@@ -194,17 +194,21 @@ function showHelp() {
         <li>
           <kbd>
             <kbd>Ctrl</kbd>+<kbd>`</kbd>
-          </kbd>
-          ：隱藏或顯示推導操作面板
+          </kbd>{" "}
+          (<kbd>⌃`</kbd>)：隱藏或顯示推導操作面板
         </li>
         <li>
           <kbd>
             <kbd>Alt</kbd>+<kbd>S</kbd>
-          </kbd>
-          ：執行推導，顯示推導結果
+          </kbd>{" "}
+          或{" "}
+          <kbd>
+            <kbd>Shift</kbd>+<kbd>Enter</kbd>
+          </kbd>{" "}
+          (<kbd>⇧↩</kbd>)：執行推導，顯示推導結果
         </li>
         <li>
-          <kbd>Esc</kbd>：關閉推導結果面板
+          <kbd>Esc</kbd> (<kbd>⎋</kbd>)：關閉推導結果面板
         </li>
       </ul>
       <h3>指定個別字音</h3>
