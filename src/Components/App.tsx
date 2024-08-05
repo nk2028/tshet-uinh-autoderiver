@@ -195,7 +195,11 @@ function showHelp() {
           <kbd>
             <kbd>Ctrl</kbd>+<kbd>`</kbd>
           </kbd>{" "}
-          (<kbd>⌃`</kbd>)：隱藏或顯示推導操作面板
+          或{" "}
+          <kbd>
+            <kbd>Meta</kbd>+<kbd>`</kbd>
+          </kbd>{" "}
+          (<kbd>⌘`</kbd>)：隱藏或顯示推導操作面板
         </li>
         <li>
           <kbd>
