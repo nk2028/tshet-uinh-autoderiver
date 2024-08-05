@@ -3,6 +3,7 @@ import "./App.scss";
 import Main from "./Main";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { MouseEvent } from "react";
 
 const SwalReact = withReactContent(Swal);
 
@@ -51,6 +52,35 @@ function showAbout() {
   });
 }
 
+function showAlert(event: MouseEvent<HTMLAnchorElement>) {
+  const href = (event.target as HTMLAnchorElement).href;
+  event.preventDefault();
+  SwalReact.fire({
+    icon: "info",
+    title: "注意",
+    html: (
+      <>
+        <p>新版推導器近期將正式上線，使用最新的 Qieyun.js v0.15（舊版到時將移至別處繼續上線）。</p>
+        <p>
+          新版推導器現有經過更新的推導方案供試用。新舊版推導方案代碼並不相同，不能互換使用。如您有自己的方案代碼想要更新，兩版的
+          API 與音韻地位差異請參見
+          <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-js/discussions/43">
+            遷移指南
+          </a>
+          。
+        </p>
+      </>
+    ),
+    //allowOutsideClick: false,
+    confirmButtonText: "了解",
+    width: "80vw",
+  }).then(result => {
+    if (result.isConfirmed) {
+      window.location.assign(href);
+    }
+  });
+}
+
 function App() {
   return (
     <div>
@@ -60,7 +90,15 @@ function App() {
             <span onClick={showAbout}>切韻音系自動推導器</span>
           </h1>
         </nav>
-        <a href="https://graphemecluster.github.io/qieyun-autoderiver">試用 v0.2 beta 版</a>
+        <span>
+          <a className="btn" onClick={showAlert} href="https://syimyuzya.github.io/qieyun-autoderiver">
+            🆙 新版本測試中 立即試用
+          </a>
+          <br />
+          <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-js/discussions/43">
+            ⏫ Qieyun.js v0.15 遷移指南
+          </a>
+        </span>
       </header>
       <Main />
     </div>

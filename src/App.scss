@@ -23,6 +23,9 @@ body {
   }
   nav {
     padding: 0 2em;
+    @media (max-width: 48rem) {
+      margin-top: 5rem;
+    }
     h1 {
       font-size: 1.75rem;
       text-align: center;
@@ -44,20 +47,27 @@ body {
         }
       }
     }
-    & + a:link {
+    & + span {
       position: absolute;
-      top: 1.5em;
+      top: 1em;
       right: 2em;
       border: none;
-      background-color: #555;
-      color: white;
-      line-height: 2.5;
-      font-size: 1.06rem;
-      padding: 0 1.25em;
-      border-radius: 9999px;
-      transition: 0.2s;
-      &:hover {
-        background-color: #606060;
+      text-align: right;
+      a {
+        font-size: 0.875rem;
+      }
+      a.btn {
+        display: inline-block;
+        background-color: #555;
+        color: white;
+        line-height: 2.4;
+        font-size: 1rem;
+        padding: 0 1.25em;
+        border-radius: 9999px;
+        transition: 0.2s;
+        &:hover {
+          background-color: #606060;
+        }
       }
     }
   }
