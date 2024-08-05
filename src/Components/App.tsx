@@ -101,7 +101,7 @@ const aboutModal = stylesheet`
     b {
       color: black;
     }
-    p {
+    p, li {
       color: #5c5c5c;
       font-size: 1rem;
     }
@@ -147,15 +147,25 @@ function showAbout() {
     <>
       <h2>關於</h2>
       <p>
-        切韻音系自動推導器（下稱「本頁面」）由 <a href="https://nk2028.shn.hk/">nk2028</a>{" "}
+        切韻音系自動推導器（下稱「本頁面」）由{" "}
+        <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/">
+          nk2028
+        </a>{" "}
         開發。我們開發有關語言學的項目，尤其是有關歷史漢語語音學，異體字和日語語言學的項目。
       </p>
       <p>
         歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram nk2028 社羣（
-        <a href="https://t.me/nk2028_discuss">@nk2028_discuss</a>）。
+        <a target="_blank" rel="noreferrer" href="https://t.me/nk2028_discuss">
+          @nk2028_discuss
+        </a>
+        ）。
       </p>
       <p>
-        本頁面原始碼公開於 <a href="https://github.com/nk2028/qieyun-autoderiver">GitHub</a>。
+        本頁面原始碼公開於{" "}
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-autoderiver">
+          GitHub
+        </a>
+        。
       </p>
       <h2>私隱權政策</h2>
       <p>
@@ -207,7 +217,10 @@ function showHelp() {
       <p>
         此外，若希望自訂某字需按某音推導，可在其後緊接一對半形圓括號 <code>()</code>
         ，當中寫下想要的音韻地位描述（格式可參見推導結果中的音韻地位顯示，或參見{" "}
-        <a href="https://nk2028.shn.hk/qieyun-js/">Qieyun.js</a> 文檔）
+        <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/qieyun-js/">
+          Qieyun.js
+        </a>{" "}
+        文檔）
       </p>
       <h3>編寫推導方案</h3>
       <p>
@@ -217,7 +230,10 @@ function showHelp() {
       <ul>
         <li>
           <code>音韻地位: Qieyun.音韻地位</code>：待推導之音韻地位，詳見{" "}
-          <a href="https://nk2028.shn.hk/qieyun-js/">Qieyun.js</a> 文檔
+          <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/qieyun-js/">
+            Qieyun.js
+          </a>{" "}
+          文檔
         </li>
         <li>
           <code>字頭: string | null</code>：當前被推導的字
@@ -237,8 +253,13 @@ function showHelp() {
       </p>
       <p>
         「方案設定」模式需回傳方案各設定項的列表（<code>Array</code>），各項格式請參見{" "}
-        <a>tshet-uinh-deriver-tools 文檔</a>。如果方案不需可變參數，可回傳空列表（<code>[]</code>）。
-        {/* TODO link */}
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://github.com/nk2028/tshet-uinh-deriver-tools/wiki/%E6%8E%A8%E5%B0%8E%E6%96%B9%E6%A1%88%E8%A8%AD%E5%AE%9A%E9%A0%85%E5%88%97%E8%A1%A8%E6%A0%BC%E5%BC%8F">
+          tshet-uinh-deriver-tools 文檔
+        </a>
+        。如果方案不需可變參數，可回傳空列表（<code>[]</code>）。
       </p>
     </>,
   );
