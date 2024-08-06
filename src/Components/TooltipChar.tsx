@@ -96,21 +96,31 @@ export default function TooltipChar({
                 ))}
               </span>
               {結果.map((條目, i) => {
-                const { 字頭, 釋義, 韻目原貌, 音韻地位 } = 條目;
+                const { 字頭, 釋義 = "", 來源 = null, 音韻地位 } = 條目;
                 const { 描述 } = 音韻地位;
-                let 各反切: string[];
+                const 各反切 = {
+                  反: new Set<string>(),
+                  切: new Set<string>(),
+                };
                 if (條目.反切) {
-                  各反切 = [條目.反切];
+                  各反切[來源?.文獻 === "王三" ? "反" : "切"].add(條目.反切);
                 } else {
-                  各反切 = [...new Set(資料.query音韻地位(音韻地位).flatMap(({ 反切 }) => (反切 ? [反切] : [])))];
+                  for (const { 反切, 來源 } of 資料.query音韻地位(音韻地位)) {
+                    if (!反切) continue;
+                    各反切[來源?.文獻 === "王三" ? "反" : "切"].add(反切);
+                  }
                 }
-                const 反切 = 各反切.length ? `${各反切.join("/")}切 ` : "";
-                const 韻目出處 = 韻目原貌 ? `（《廣韻》${韻目原貌}韻）` : "";
+                const 反切text =
+                  (["反", "切"] as const)
+                    .flatMap(x => (各反切[x].size ? [[...各反切[x]].join("/") + x] : []))
+                    .join(" ") + " ";
+                const 出處text =
+                  來源 && ["廣韻", "王三"].includes(來源.文獻) ? `（《${來源.文獻}》${來源.韻目}韻）` : "";
                 return (
                   <Fragment key={i}>
                     {i ? <br /> : " "}
                     <span onClick={onClick(index, 描述)}>
-                      <Char>{字頭}</Char> {描述} {反切 + 釋義 + 韻目出處}
+                      <Char>{字頭}</Char> {描述} {反切text + 釋義 + 出處text}
                     </span>
                   </Fragment>
                 );

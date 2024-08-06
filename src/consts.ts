@@ -3,7 +3,7 @@ import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetState
 import type { CustomNode } from "./Classes/CustomElement";
 import type ParameterSet from "./Classes/ParameterSet";
 import type samples from "./samples";
-import type { 音韻地位 } from "qieyun";
+import type { 資料 } from "qieyun";
 
 //export const qieyunExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@dev-qieyun-0.15/";
 export const qieyunExamplesURLPrefix = "https://raw.githubusercontent.com/nk2028/qieyun-examples/dev-qieyun-0.15/";
@@ -75,13 +75,7 @@ export type Entry = Readonly<{
   擬音: CustomNode[];
 }>;
 
-export type Query = Readonly<{
-  字頭: string;
-  釋義: string;
-  音韻地位: 音韻地位;
-  反切?: string | null;
-  韻目原貌?: string;
-}>;
+export type Query = Readonly<Pick<資料.檢索結果, "字頭" | "音韻地位"> & Partial<資料.檢索結果>>;
 
 type Values<T> = T extends Record<PropertyKey, infer T> ? Values<T> : T;
 export type Sample = Values<typeof samples>;
