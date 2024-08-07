@@ -8,6 +8,7 @@
     "postinstall": "patch-package",
     "start": "vite",
     "build": "vite build",
+    "build:cos": "vite build -c vite.cos.config.ts",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ./src",

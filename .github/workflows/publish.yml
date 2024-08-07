@@ -9,13 +9,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 22
       - run: npm ci
-      - run: npm run lint
-      - run: npm run build
+      - run: npm test
+      - run: npm run build:cos
       - name: Install coscmd
         run: sudo pip install coscmd
       - name: Configure coscmd
@@ -30,9 +30,6 @@ jobs:
           cd ./build/
           coscmd upload -rs --delete -f ./ / --ignore index.html
           rm -rf !(index.html)
-
-          # Rewrite links to static files
-          sed -i 's|"/index|"https://qieyun-autoderiver-1305783649.file.myqcloud.com/index|g' index.html
       - name: Publish to GitHub Pages
         run: |
           # Create a temporary directory
