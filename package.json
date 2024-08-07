@@ -1,6 +1,6 @@
 {
   "name": "qieyun-autoderiver",
-  "version": "0.2.0-beta.5",
+  "version": "0.2.0-beta.6",
   "description": "An automatic tool to generate the derivatives of the Qieyun phonological system",
   "private": true,
   "type": "module",
