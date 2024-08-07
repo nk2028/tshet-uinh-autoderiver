@@ -48,6 +48,6 @@
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }
     ],
-    "import/no-unresolved": ["error", { "ignore": ["^url:"] }]
+    "import/no-unresolved": ["error", { "ignore": ["\\?(?:worker|raw)$"] }]
   }
 }

@@ -3,10 +3,12 @@
   "version": "0.2.0-beta.5",
   "description": "An automatic tool to generate the derivatives of the Qieyun phonological system",
   "private": true,
+  "type": "module",
   "scripts": {
     "postinstall": "patch-package",
-    "start": "cross-env NPM_PACKAGE_VERSION=$npm_package_version parcel ./public/index.html --dist-dir build --open --port 8080",
-    "build": "cross-env NPM_PACKAGE_VERSION=$npm_package_version parcel build ./public/index.html --dist-dir build --public-url /qieyun-autoderiver --no-cache",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
@@ -44,41 +46,26 @@
     "yitizi": "^0.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.9",
-    "@emotion/babel-plugin": "^11.12.0",
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
-    "cross-env": "^7.0.3",
+    "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.35.0",
-    "parcel": "^2.12.0",
     "patch-package": "^8.0.0",
-    "path-browserify": "^1.0.1",
     "prettier": "^3.3.3",
-    "process": "^0.11.10",
-    "typescript": "^5.5.4"
-  },
-  "browserslist": {
-    "production": ">0.2% and not dead and supports es6-module",
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5"
   },
   "author": "Ngyoq Khuen 2028 Project",
   "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/nk2028/qieyun-autoderiver/issues"
   },
-  "homepage": "qieyun-autoderiver/",
-  "@parcel/bundler-default": {
-    "minBundleSize": 2147483647
-  }
+  "homepage": "qieyun-autoderiver/"
 }

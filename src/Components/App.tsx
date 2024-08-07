@@ -11,6 +11,9 @@ import Main from "./Main";
 import Swal from "../Classes/SwalReact";
 import { noop } from "../consts";
 
+// NOTE sweetalert2's ESM export does not setup styles properly, manually importing
+import "sweetalert2/dist/sweetalert2.css";
+
 injectGlobal`
   html,
   body {
@@ -343,7 +346,7 @@ export default function App() {
           <nav>
             <Title>
               <span>切韻音系自動推導器</span>
-              <Version>v{process.env["NPM_PACKAGE_VERSION"]}</Version>
+              <Version>v{__APP_VERSION__}</Version>
               <ApplyButton title="適用" onClick={useCallback(() => handleRef.current(), [])}>
                 <FontAwesomeIcon icon={faCirclePlay} />
               </ApplyButton>

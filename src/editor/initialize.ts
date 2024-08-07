@@ -1,18 +1,18 @@
 import { languages } from "monaco-editor";
+import TSWorker from "monaco-editor/esm/vs/language/typescript/ts.worker.js?worker";
 import { SuggestAdapter } from "monaco-editor/esm/vs/language/typescript/tsMode";
-import TSWorker from "url:monaco-editor/esm/vs/language/typescript/ts.worker.js";
 
 declare global {
   interface Window {
     MonacoEnvironment: {
-      getWorkerUrl(): string;
+      getWorker(): Worker;
     };
   }
 }
 
 self.MonacoEnvironment = {
-  getWorkerUrl() {
-    return TSWorker;
+  getWorker() {
+    return new TSWorker();
   },
 };
 

@@ -1,9 +1,8 @@
-import { readFileSync } from "fs";
-import { join } from "path";
+import qieyunDts from "qieyun/index.d.ts?raw";
 
-// https://parceljs.org/features/node-emulation/#inlining-fs.readfilesync
-// NOTE May not work if `qieyun` is installed via symlink
+import globalDts from "./types.d.ts?raw";
+
 export default {
-  "qieyun.d.ts": readFileSync("node_modules/qieyun/index.d.ts", "utf-8"),
-  "global.d.ts": readFileSync(join(__dirname, "types.d.ts"), "utf-8"),
+  "qieyun.d.ts": qieyunDts,
+  "global.d.ts": globalDts,
 };
