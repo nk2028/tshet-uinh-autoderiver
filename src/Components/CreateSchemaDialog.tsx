@@ -197,7 +197,7 @@ export default function CreateSchemaDialog({
     setCreateSchemaName(getDefaultFileName("") + ".js");
     setCreateSchemaSample("");
     setLoading(false);
-  }, [visible]);
+  }, [getDefaultFileName, visible]);
 
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
@@ -206,7 +206,7 @@ export default function CreateSchemaDialog({
     if (/[\0-\x1f"*/:<>?\\|\x7f-\x9f]/.test(name)) return "檔案名稱含有特殊字元";
     if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
     return "";
-  }, [createSchemaName]);
+  }, [createSchemaName, hasSchemaName]);
 
   function recursiveFolder(folder: Folder) {
     return Object.entries(folder).map(([name, sample]) => {
@@ -244,7 +244,7 @@ export default function CreateSchemaDialog({
     } catch {
       setLoading(false);
     }
-  }, [createSchemaName, createSchemaSample]);
+  }, [createSchemaName, createSchemaSample, schemaLoaded]);
 
   useEffect(() => {
     if (schemas.length) return;
@@ -277,7 +277,7 @@ export default function CreateSchemaDialog({
         );
       }
     })();
-  }, [schemas]);
+  }, [schemas, setState]);
 
   const inputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     event => setCreateSchemaName(event.target.value),

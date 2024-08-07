@@ -149,13 +149,14 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
   }, [state]);
 
   function useHandle<T extends keyof MainState, E>(key: T, handler: (event: E) => MainState[T]): (event: E) => void {
-    return useCallback(event => setState(state => ({ ...state, [key]: handler(event) })), [state[key]]);
+    return useCallback(event => setState(state => ({ ...state, [key]: handler(event) })), [handler, key]);
   }
 
   const [syncedArticle, setSyncedArticle] = useState<string[]>([]);
+
   useEffect(() => {
     if (syncCharPosition && syncedArticle.length) setState(state => ({ ...state, article: syncedArticle.join("") }));
-  }, [syncCharPosition && syncedArticle]);
+  }, [syncCharPosition, syncedArticle]);
 
   const ref = useRef(dummyOutput);
   const [operation, increaseOperation] = useReducer((operation: number) => operation + 1, 0);
@@ -215,7 +216,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
     return () => {
       document.removeEventListener("keydown", keyDown);
     };
-  }, []);
+  }, [handleRef]);
 
   const resetArticle = useCallback(async () => {
     if (
@@ -237,7 +238,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
         ).isDenied)
     )
       setState({ ...state, article: defaultArticle });
-  }, [state]);
+  }, [article, state]);
 
   return (
     <>

@@ -274,7 +274,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
       element.offsetWidth; // Trigger DOM reflow
       element.classList.add("rotate");
     },
-    [activeSchemaName],
+    [activeSchemaName, setState],
   );
 
   const [optionsVisible, setOptionsVisible] = useState(true);
@@ -461,7 +461,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
               if (typeof input !== "undefined" && activeSchema)
                 setState(actions.setSchemaInput(activeSchemaName, input));
             },
-            [activeSchemaName],
+            [activeSchema, activeSchemaName, setState],
           )}
         />
         {optionsVisible && <SeparatorShadow />}
@@ -508,10 +508,13 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
         setState={setState}
         visible={dialogVisible}
         closeDialog={useCallback(() => setDialogVisible(false), [])}
-        schemaLoaded={useCallback(schema => {
-          setState(actions.addSchema(schema));
-          setDialogVisible(false);
-        }, [])}
+        schemaLoaded={useCallback(
+          schema => {
+            setState(actions.addSchema(schema));
+            setDialogVisible(false);
+          },
+          [setState],
+        )}
         getDefaultFileName={getDefaultFileName}
         hasSchemaName={useCallback(name => !!schemas.find(schema => schema.name === name), [schemas])}
       />
