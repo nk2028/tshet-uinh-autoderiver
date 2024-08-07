@@ -35,7 +35,7 @@ const Popup = styled.div`
   display: grid;
   grid-template: auto 1fr auto auto / 1fr auto;
   //width: min(36vw + 360px, 960px, 100%); // with preview
-  width: min(24vw + 240px, 960px, 100%); // without preview
+  width: min(18vw + 360px, 960px, 100%); // without preview
   height: 100%;
   padding: 0;
   overflow: hidden;
