@@ -14,22 +14,27 @@ function getPageWidth() {
   );
 }
 
-const div = document.getElementById("tooltip") ?? document.createElement("div");
-div.id = "tooltip";
-div.style.visibility = "hidden";
-div.className = stylesheet`
+const tooltipStyle = stylesheet`
   position: absolute;
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 4px;
   box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.37);
   color: #333;
-  width: 25rem;
-  max-width: calc(100vw - 2rem);
+  min-width: 3rem;
+  max-width: min(25rem, calc(100vw - 2rem));
   z-index: 800;
   &:hover {
     visibility: visible !important;
   }
 `;
+const fixedWidthStyle = stylesheet`
+  width: 25rem;
+`;
+
+const div = document.getElementById("tooltip") ?? document.createElement("div");
+div.id = "tooltip";
+div.style.visibility = "hidden";
+div.className = tooltipStyle;
 document.body.appendChild(div);
 const root = createRoot(div);
 
@@ -39,7 +44,15 @@ function hideTooltip() {
   div.style.visibility = "hidden";
 }
 
-function TooltipAnchor({ relativeToNodeBox, children }: { relativeToNodeBox: DOMRect; children: ReactElement }) {
+function TooltipAnchor({
+  relativeToNodeBox,
+  children,
+  fixedWidth,
+}: {
+  relativeToNodeBox: DOMRect;
+  children: ReactElement;
+  fixedWidth: boolean;
+}) {
   useEffect(() => {
     const oneRemSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const margin = oneRemSize / 6;
@@ -54,6 +67,7 @@ function TooltipAnchor({ relativeToNodeBox, children }: { relativeToNodeBox: DOM
     targetLeft = Math.min(getPageWidth() - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
     targetLeft += window.scrollX;
 
+    div.className = tooltipStyle + (fixedWidth ? " " + fixedWidthStyle : "");
     div.style.top = targetTop + "px";
     div.style.left = targetLeft + "px";
     div.style.visibility = "visible";
@@ -62,23 +76,38 @@ function TooltipAnchor({ relativeToNodeBox, children }: { relativeToNodeBox: DOM
   return children;
 }
 
-export default function Tooltip({ element, children }: { element: ReactElement; children: ReactElement }) {
+export default function Tooltip({
+  element,
+  children,
+  fixedWidth = true,
+}: {
+  element: ReactElement;
+  children: ReactElement;
+  fixedWidth?: boolean;
+}) {
   const selfRef = useRef(Symbol("Tooltip"));
   const boxRef = useRef<DOMRect | null>(null);
+
+  const renderTooltip = useCallback(() => {
+    root.render(
+      <TooltipAnchor relativeToNodeBox={boxRef.current!} fixedWidth={fixedWidth}>
+        {element}
+      </TooltipAnchor>,
+    );
+  }, [element, fixedWidth]);
   const showTooltip = useCallback(
     (event: SyntheticEvent) => {
       boxRef.current = event.currentTarget.getBoundingClientRect();
-
-      root.render(<TooltipAnchor relativeToNodeBox={boxRef.current}>{element}</TooltipAnchor>);
+      renderTooltip();
       tooltipTarget = selfRef.current;
     },
-    [element],
+    [renderTooltip],
   );
   useEffect(() => {
     if (tooltipTarget === selfRef.current && boxRef.current && div.style.visibility === "visible") {
-      root.render(<TooltipAnchor relativeToNodeBox={boxRef.current}>{element}</TooltipAnchor>);
+      renderTooltip();
     }
-  }, [element]);
+  }, [renderTooltip]);
   useEffect(
     () => () => {
       if (tooltipTarget === selfRef.current) {
