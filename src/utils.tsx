@@ -96,7 +96,7 @@ export async function fetchFile(input: string) {
 }
 
 export function normalizeFileName(name: string) {
-  return name.normalize("NFC").replace(/\.js$/, "").trim();
+  return name.replace(/\.js$/, "").trim();
 }
 
 export function memoize<T extends PropertyKey, R>(fn: (arg: T) => R) {

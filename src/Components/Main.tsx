@@ -179,7 +179,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
   const [loading, setLoading] = useState(false);
 
   const handleCopy = useCallback(() => {
-    const txt = ref.current.textContent?.normalize("NFC").trim();
+    const txt = ref.current.textContent?.trim();
     if (txt) copy(txt);
     else notifyError("請先進行操作，再匯出結果");
   }, []);
