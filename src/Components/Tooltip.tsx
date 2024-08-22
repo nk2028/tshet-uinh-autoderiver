@@ -64,15 +64,21 @@ function TooltipAnchor({ relativeToNodeBox, children }: { relativeToNodeBox: DOM
 
 export default function Tooltip({ element, children }: { element: ReactElement; children: ReactElement }) {
   const selfRef = useRef(Symbol("Tooltip"));
+  const boxRef = useRef<DOMRect | null>(null);
   const showTooltip = useCallback(
     (event: SyntheticEvent) => {
-      const relativeToNodeBox = event.currentTarget.getBoundingClientRect();
+      boxRef.current = event.currentTarget.getBoundingClientRect();
 
-      root.render(<TooltipAnchor relativeToNodeBox={relativeToNodeBox}>{element}</TooltipAnchor>);
+      root.render(<TooltipAnchor relativeToNodeBox={boxRef.current}>{element}</TooltipAnchor>);
       tooltipTarget = selfRef.current;
     },
     [element],
   );
+  useEffect(() => {
+    if (tooltipTarget === selfRef.current && boxRef.current && div.style.visibility === "visible") {
+      root.render(<TooltipAnchor relativeToNodeBox={boxRef.current}>{element}</TooltipAnchor>);
+    }
+  }, [element]);
   useEffect(
     () => () => {
       if (tooltipTarget === selfRef.current) {
