@@ -130,7 +130,6 @@ export default class ParameterSet {
           return null;
         }
         const { key, text, description, value, options } = item;
-        const locked = !!item["locked"];
         const label = text ?? key;
         if (options) {
           return (
@@ -140,7 +139,6 @@ export default class ParameterSet {
               <select
                 onChange={event => onChange(this.set(key, options[+event.target.value].value))}
                 value={options.findIndex(option => option.value === value)}
-                disabled={locked}
                 autoComplete="off">
                 {options.map((option, i) => {
                   const { value, text } = option;
@@ -161,7 +159,6 @@ export default class ParameterSet {
                   <input
                     type="checkbox"
                     checked={value}
-                    disabled={locked}
                     onChange={event => onChange(this.set(key, event.target.checked))}
                   />
                   <span>{label}</span>
@@ -176,7 +173,6 @@ export default class ParameterSet {
                     type="number"
                     value={value}
                     step="any"
-                    disabled={locked}
                     onChange={event => onChange(this.set(key, +event.target.value))}
                     autoComplete="off"
                   />
@@ -190,7 +186,6 @@ export default class ParameterSet {
                   <input
                     type="text"
                     value={value}
-                    disabled={locked}
                     onChange={event => onChange(this.set(key, event.target.value))}
                     autoComplete="off"
                     autoCorrect="off"
