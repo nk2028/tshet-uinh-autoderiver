@@ -31,11 +31,15 @@ function serialize(callDeriver: Deriver): [string, CustomNode[]][] {
 }
 
 function iterate(callDeriver: Deriver) {
-  return 所有地位.map(音韻地位 => ({
-    描述: 音韻地位.描述,
-    擬音陣列: callDeriver(音韻地位),
-    代表字: 資料.query音韻地位(音韻地位)[0]?.字頭,
-  }));
+  return 所有地位.map(音韻地位 => {
+    const 各條目 = 資料.query音韻地位(音韻地位);
+    const 代表字 = 各條目.find(({ 來源 }) => 來源?.文獻 === "廣韻")?.字頭 ?? 各條目[0]?.字頭;
+    return {
+      描述: 音韻地位.描述,
+      擬音陣列: callDeriver(音韻地位),
+      代表字,
+    };
+  });
 }
 
 function finalize(result: ReturnType<typeof iterate>) {
