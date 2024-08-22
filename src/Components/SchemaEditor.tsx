@@ -6,7 +6,7 @@ import styled from "@emotion/styled";
 import { faFileCode } from "@fortawesome/free-regular-svg-icons";
 import { faChevronDown, faChevronUp, faPlus, faRotateLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Editor from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 
 import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
@@ -223,6 +223,18 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
     () => schemas.find(({ name }) => name === activeSchemaName),
     [schemas, activeSchemaName],
   );
+
+  const monaco = useMonaco();
+  useEffect(() => {
+    if (!monaco) return;
+    // Clean up deleted schemata
+    const schemaUris = new Set(schemas.map(({ name }) => monaco.Uri.parse(name).toString()));
+    monaco.editor.getModels().forEach(model => {
+      if (!schemaUris.has(model.uri.toString())) {
+        model.dispose();
+      }
+    });
+  }, [monaco, schemas]);
 
   const getDefaultFileName: (sample: Sample | "") => string = useMemo(
     () =>
