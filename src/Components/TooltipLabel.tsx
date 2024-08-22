@@ -26,7 +26,7 @@ export default function TooltipLabel({
   description?: string | undefined;
   children: ReactNode;
 }) {
-  return description ? (
+  return typeof description === "string" && description ? (
     <Tooltip
       element={
         <Wrapper>

@@ -116,7 +116,7 @@ export default class ParameterSet {
             <br />
             {"\n"}
             <Title>{text}</Title>
-            {description ? (
+            {typeof description === "string" && description ? (
               <Description>
                 {description.split(/[\n-\r\x85\u2028\u2029]+/u).map((line, i) => (
                   <p key={i}>{line}</p>
