@@ -28,6 +28,14 @@
     }
   },
   "rules": {
+    "@typescript-eslint/no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true,
+        "allowTaggedTemplates": true
+      }
+    ],
+
     "import/order": [
       "error",
       {

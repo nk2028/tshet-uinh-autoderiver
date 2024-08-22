@@ -271,7 +271,8 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
       setState(actions.resetSchemaParameters(activeSchemaName));
       const element = event.currentTarget;
       element.classList.remove("rotate");
-      element.offsetWidth; // Trigger DOM reflow
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions -- Trigger DOM reflow
+      element.offsetWidth;
       element.classList.add("rotate");
     },
     [activeSchemaName, setState],

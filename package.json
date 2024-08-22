@@ -1,6 +1,6 @@
 {
   "name": "qieyun-autoderiver",
-  "version": "0.2.0-beta.6",
+  "version": "0.2.0-beta.7",
   "description": "An automatic tool to generate the derivatives of the Qieyun phonological system",
   "private": true,
   "type": "module",
@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "@emotion/css": "^11.13.0",
-    "@emotion/react": "^11.13.0",
+    "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
@@ -43,16 +43,16 @@
     "react-dom": "^18.3.1",
     "sweetalert2": "<=11.4.8",
     "sweetalert2-react-content": "^5.0.7",
-    "tshet-uinh-deriver-tools": "^0.2.0-beta.5",
+    "tshet-uinh-deriver-tools": "^0.2.0-beta.6",
     "yitizi": "^0.1.1"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.12.0",
-    "@types/node": "^22.0.0",
-    "@types/react": "^18.3.3",
+    "@types/node": "^22.5.0",
+    "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.17.0",
-    "@typescript-eslint/parser": "^7.17.0",
+    "@typescript-eslint/eslint-plugin": "^8.2.0",
+    "@typescript-eslint/parser": "^8.2.0",
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -63,7 +63,7 @@
     "patch-package": "^8.0.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4",
-    "vite": "^5.3.5"
+    "vite": "^5.4.2"
   },
   "author": "Ngyoq Khuen 2028 Project",
   "license": "CC0-1.0",
