@@ -85,7 +85,7 @@ export default function TooltipChar({
           {entries.map(({ 擬音, 結果 }, index) => (
             <Item
               key={index}
-              textColor={結果.some(({ 釋義 }) => !釋義) ? "#c00" : multiple && index === currIndex ? "#00f" : "black"}
+              textColor={結果.some(({ 來源 }) => !來源) ? "#c00" : multiple && index === currIndex ? "#00f" : "black"}
               onClick={onClick(index, 結果[0].音韻地位.描述)}>
               <span key={CustomElement.stringify(擬音)} lang="och-Latn-fonipa">
                 {CustomElement.render(擬音, <Missing />).map((item, index) => (
@@ -110,12 +110,12 @@ export default function TooltipChar({
                     各反切[來源?.文獻 === "王三" ? "反" : "切"].add(反切);
                   }
                 }
+                各反切.反 = new Set(Array.from(各反切.反).filter(反切 => !各反切.切.has(反切)));
                 const 反切text =
                   (["反", "切"] as const)
                     .flatMap(x => (各反切[x].size ? [[...各反切[x]].join("/") + x] : []))
                     .join(" ") + " ";
-                const 出處text =
-                  來源 && ["廣韻", "王三"].includes(來源.文獻) ? `（《${來源.文獻}》${來源.韻目}韻）` : "";
+                const 出處text = 來源 && ["廣韻", "王三"].includes(來源.文獻) ? `［${來源.文獻} ${來源.韻目}韻］` : "";
                 return (
                   <Fragment key={i}>
                     {i ? <br /> : " "}
@@ -130,7 +130,7 @@ export default function TooltipChar({
         </Wrapper>
       }>
       <RubyWrapper
-        textColor={結果.some(({ 釋義 }) => !釋義) ? "#c00" : multiple ? (resolved ? "#708" : "#00f") : "black"}>
+        textColor={結果.some(({ 來源 }) => !來源) ? "#c00" : multiple ? (resolved ? "#708" : "#00f") : "black"}>
         <Ruby rb={ch} rt={CustomElement.render(擬音)} />
       </RubyWrapper>
     </Tooltip>
