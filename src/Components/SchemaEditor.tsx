@@ -165,10 +165,6 @@ const ParameterErrorHint = styled.p`
   margin: 0;
   font-size: 0.875rem;
   color: red;
-  a {
-    color: blue;
-    text-decoration: underline;
-  }
 `;
 const Options = styled.form`
   padding: 0 1rem;
@@ -507,9 +503,12 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
           {activeSchema?.parameters.errors.length ? (
             <ParameterErrorHint>
               部分設定項目無法解析{" "}
-              <a onClick={() => notifyError("部分設定項目無法解析", activeSchema.parameters.errors.join("\n"))}>
-                檢視詳情
-              </a>
+              <button
+                type="button"
+                className="pure-button"
+                onClick={() => notifyError("部分設定項目無法解析", activeSchema.parameters.errors.join("\n"))}>
+                檢視問題詳情
+              </button>
             </ParameterErrorHint>
           ) : null}
           <hr />

@@ -157,18 +157,24 @@ function showAbout() {
         開發。我們開發有關語言學的項目，尤其是有關歷史漢語語音學，異體字和日語語言學的項目。
       </p>
       <p>
-        歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和 Telegram nk2028 社羣（
+        歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和{" "}
         <a target="_blank" rel="noreferrer" href="https://t.me/nk2028_discuss">
-          @nk2028_discuss
-        </a>
-        ）。
-      </p>
-      <p>
-        本頁面原始碼公開於{" "}
-        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-autoderiver">
-          GitHub
+          Telegram nk2028 社羣（@nk2028_discuss）
         </a>
         。
+      </p>
+      <p>
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-autoderiver">
+          本頁面原始碼
+        </a>
+        公開於 GitHub。
+      </p>
+      <p>
+        推導器預置的
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-examples">
+          樣例推導方案程式碼
+        </a>
+        亦可於 Github 瀏覽。
       </p>
       <h2>私隱權政策</h2>
       <p>
@@ -226,12 +232,12 @@ function showHelp() {
         若「同步音韻地位選擇至輸入框」已勾選，則選擇的字音會被記住於文章中（詳見下段所述格式），下次推導會預設選擇同一字音。
       </p>
       <p>
-        此外，若希望自訂某字需按某音推導，可在其後緊接一對半形圓括號 <code>()</code>
-        ，當中寫下想要的音韻地位描述（格式可參見推導結果中的音韻地位顯示，或參見{" "}
+        此外，若希望自訂某字需按某音推導，可在其後緊接一對半形圓括號「<code>()</code>
+        」，當中寫下想要的音韻地位描述（格式可參見推導結果中的音韻地位顯示，或參見{" "}
         <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/qieyun-js/">
-          Qieyun.js
-        </a>{" "}
-        文檔）
+          Qieyun.js 文檔
+        </a>
+        ）
       </p>
       <h3>編寫推導方案</h3>
       <p>
@@ -242,9 +248,8 @@ function showHelp() {
         <li>
           <code>音韻地位: Qieyun.音韻地位</code>：待推導之音韻地位，詳見{" "}
           <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/qieyun-js/">
-            Qieyun.js
-          </a>{" "}
-          文檔
+            Qieyun.js 文檔
+          </a>
         </li>
         <li>
           <code>字頭: string | null</code>：當前被推導的字
@@ -253,9 +258,7 @@ function showHelp() {
           <code>選項: Record&lt;String, unknown&gt;</code>：物件，包含用戶指定的各項方案參數（詳見下述「方案設定模式」）
         </li>
       </ul>
-      <p>
-        在「方案設定」模式下，會在建立方案時、改變代碼後或用戶調整/重置參數選項後執行一次，需回傳方案支援的可調整參數。
-      </p>
+      <p>在「方案設定」模式下，會在建立方案時、改變代碼後或用戶調整/重置參數選項後執行，需回傳方案支援的可調整參數。</p>
       <p>
         該模式下僅 <code>選項</code> 引數會被傳入，<code>音韻地位</code> 與 <code>字頭</code> 均為{" "}
         <code>undefined</code>，可以透過 <code>if (!音韻地位)</code> 判斷處於哪一模式。<code>選項</code>{" "}
