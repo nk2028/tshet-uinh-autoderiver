@@ -59,7 +59,7 @@ injectGlobal`
     }
     input[type="text"],
     input[type="number"] {
-      width: 12.5rem;
+      width: 6.25rem;
       height: 2rem;
       vertical-align: baseline;
       margin-right: 0.125rem;
