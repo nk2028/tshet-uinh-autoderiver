@@ -7,9 +7,9 @@ export default {
   },
   "切韻音系擬音": {
     "王力擬音": "wangli",
-    "unt 切韻擬音": "unt",
+    "unt 擬音": "unt",
     "潘悟雲擬音": "panwuyun",
-    "msoeg 中古擬音 V8": "msoeg_v8",
+    "msoeg 擬音": "msoeg_v8",
   },
   "推導後世音系": {
     "推導盛中唐擬音": "mid_tang",
