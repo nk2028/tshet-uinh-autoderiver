@@ -299,9 +299,13 @@ const Title = styled.h1`
   border-bottom: 0.2rem solid #d0d2d4;
 `;
 const Version = styled.span`
+  display: inline-block;
   color: #888;
   font-size: 1rem;
   margin-left: 0.75rem;
+`;
+const Buttons = styled.span`
+  display: inline-block;
 `;
 const ShowButton = styled.span`
   display: inline-flex;
@@ -331,6 +335,10 @@ const ApplyButton = styled.span`
     color: #339cff;
   }
 `;
+const LinkToLegacy = styled.span`
+  font-size: 0.875rem;
+  float: right;
+`;
 const FontPreload = styled.span`
   position: absolute;
   top: -9999px;
@@ -350,15 +358,20 @@ export default function App() {
             <Title>
               <span>切韻音系自動推導器</span>
               <Version>v{__APP_VERSION__}</Version>
-              <ApplyButton title="適用" onClick={useCallback(() => handleRef.current(), [])}>
-                <FontAwesomeIcon icon={faCirclePlay} />
-              </ApplyButton>
-              <ShowButton title="關於" onClick={showAbout}>
-                <FontAwesomeIcon icon={faInfo} fixedWidth />
-              </ShowButton>
-              <ShowButton title="使用說明" onClick={showHelp}>
-                <FontAwesomeIcon icon={faQuestion} fixedWidth />
-              </ShowButton>
+              <LinkToLegacy>
+                <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">前往舊版</a>
+              </LinkToLegacy>
+              <Buttons>
+                <ApplyButton title="適用" onClick={useCallback(() => handleRef.current(), [])}>
+                  <FontAwesomeIcon icon={faCirclePlay} />
+                </ApplyButton>
+                <ShowButton title="關於" onClick={showAbout}>
+                  <FontAwesomeIcon icon={faInfo} fixedWidth />
+                </ShowButton>
+                <ShowButton title="使用說明" onClick={showHelp}>
+                  <FontAwesomeIcon icon={faQuestion} fixedWidth />
+                </ShowButton>
+              </Buttons>
             </Title>
           </nav>
         </header>
