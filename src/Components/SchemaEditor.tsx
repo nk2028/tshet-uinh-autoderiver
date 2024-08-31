@@ -4,7 +4,7 @@ import type { MouseEvent } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { faFileCode } from "@fortawesome/free-regular-svg-icons";
-import { faChevronDown, faChevronUp, faPlus, faRotateLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faRotateLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Editor, { useMonaco } from "@monaco-editor/react";
 
@@ -179,35 +179,6 @@ const SeparatorShadow = styled.div`
   height: 6px;
   box-shadow: #ddd 0 -6px 6px -6px inset;
 `;
-const ToggleButton = styled.div<{ collapsed: boolean }>`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  left: 0.5rem;
-  bottom: calc(1px - 0.2rem);
-  width: 3rem;
-  height: 1.75rem;
-  border-radius: 0.5rem 0.5rem 0 0;
-  background-color: #c4c6c8;
-  color: white;
-  &:hover {
-    transition:
-      background-color 150ms,
-      height 150ms;
-    height: 2.125rem;
-    background-color: #a2a4a6;
-  }
-  ${({ collapsed }) =>
-    collapsed &&
-    css`
-      bottom: 0rem;
-      background-color: #a2a4a6;
-      &:hover {
-        background-color: #409bf0;
-      }
-    `}
-`;
 
 interface SchemaEditorProps extends UseMainState {
   commonOptions: ReactNode;
@@ -285,8 +256,6 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
     },
     [activeSchemaName, setState],
   );
-
-  const [optionsVisible, setOptionsVisible] = useState(true);
 
   const tabBarRef = useRef<HTMLDivElement>(null);
   function drag(name: string, { clientX: startX }: { clientX: number }, isMouse?: boolean) {
@@ -416,19 +385,6 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
     }
   }
 
-  useEffect(() => {
-    function keyDown(event: KeyboardEvent) {
-      if (!event.altKey && (event.ctrlKey || event.metaKey) && event.key === "`") {
-        event.preventDefault();
-        setOptionsVisible(optionsVisible => !optionsVisible);
-      }
-    }
-    document.addEventListener("keydown", keyDown);
-    return () => {
-      document.removeEventListener("keydown", keyDown);
-    };
-  }, []);
-
   return (
     <>
       <TabBar ref={tabBarRef}>
@@ -473,48 +429,40 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
             [activeSchema, activeSchemaName, setState],
           )}
         />
-        {optionsVisible && <SeparatorShadow />}
-        <ToggleButton
-          title={(optionsVisible ? "隱藏" : "顯示") + "推導操作面板"}
-          collapsed={!optionsVisible}
-          onClick={useCallback(() => setOptionsVisible(!optionsVisible), [optionsVisible])}>
-          <FontAwesomeIcon icon={optionsVisible ? faChevronDown : faChevronUp} size="lg" />
-        </ToggleButton>
+        <SeparatorShadow />
       </EditorArea>
-      {optionsVisible && (
-        <Options className="pure-form">
-          <h3>
-            <span>選項</span>
-            {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
-              <ResetButton title="恢復成預設值" onClick={resetParameters}>
-                <FontAwesomeIcon icon={faRotateLeft} size="sm" />
-              </ResetButton>
-            ) : null}
-          </h3>
-          {activeSchema?.parameters.size ? (
-            <Parameters>
-              {activeSchema.parameters.render(parameters =>
-                setState(actions.setSchemaParameters(activeSchemaName, parameters)),
-              )}
-            </Parameters>
-          ) : (
-            <NoParameters>此推導方案無可用自訂選項。</NoParameters>
-          )}
-          {activeSchema?.parameters.errors.length ? (
-            <ParameterErrorHint>
-              部分設定項目無法解析{" "}
-              <button
-                type="button"
-                className="pure-button"
-                onClick={() => notifyError("部分設定項目無法解析", activeSchema.parameters.errors.join("\n"))}>
-                檢視問題詳情
-              </button>
-            </ParameterErrorHint>
+      <Options className="pure-form">
+        <h3>
+          <span>選項</span>
+          {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
+            <ResetButton title="恢復成預設值" onClick={resetParameters}>
+              <FontAwesomeIcon icon={faRotateLeft} size="sm" />
+            </ResetButton>
           ) : null}
-          <hr />
-          {commonOptions}
-        </Options>
-      )}
+        </h3>
+        {activeSchema?.parameters.size ? (
+          <Parameters>
+            {activeSchema.parameters.render(parameters =>
+              setState(actions.setSchemaParameters(activeSchemaName, parameters)),
+            )}
+          </Parameters>
+        ) : (
+          <NoParameters>此推導方案無可用自訂選項。</NoParameters>
+        )}
+        {activeSchema?.parameters.errors.length ? (
+          <ParameterErrorHint>
+            部分設定項目無法解析{" "}
+            <button
+              type="button"
+              className="pure-button"
+              onClick={() => notifyError("部分設定項目無法解析", activeSchema.parameters.errors.join("\n"))}>
+              檢視問題詳情
+            </button>
+          </ParameterErrorHint>
+        ) : null}
+        <hr />
+        {commonOptions}
+      </Options>
       <CreateSchemaDialog
         state={state}
         setState={setState}
