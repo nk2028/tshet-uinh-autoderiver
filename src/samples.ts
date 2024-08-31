@@ -3,7 +3,6 @@ export default {
   "切韻音系拼音或轉寫": {
     "切韻拼音": "tupa",
     "白一平轉寫": "baxter",
-    "有女羅馬字": "blankego",
   },
   "切韻音系擬音": {
     "王力擬音": "wangli",
