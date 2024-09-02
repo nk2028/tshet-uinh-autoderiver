@@ -1,8 +1,8 @@
-import qieyunDts from "qieyun/index.d.ts?raw";
+import tshetUinhDts from "tshet-uinh/index.d.ts?raw";
 
 import globalDts from "./types.d.ts?raw";
 
 export default {
-  "qieyun.d.ts": qieyunDts,
+  "tshet-uinh.d.ts": tshetUinhDts,
   "global.d.ts": globalDts,
 };

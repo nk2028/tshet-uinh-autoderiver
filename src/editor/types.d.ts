@@ -1,12 +1,12 @@
-import Qieyun from "qieyun";
+import TshetUinh from "tshet-uinh";
 
 import type { SchemaFromRequire } from "../evaluate";
 
-type Qieyun = typeof Qieyun;
-type 音韻地位 = Qieyun.音韻地位;
+type TshetUinh = typeof TshetUinh;
+type 音韻地位 = TshetUinh.音韻地位;
 
 declare global {
-  const Qieyun: Qieyun;
+  const TshetUinh: TshetUinh;
   const 音韻地位: 音韻地位;
   const 字頭: string | null;
   const 選項: Record<string, unknown>;

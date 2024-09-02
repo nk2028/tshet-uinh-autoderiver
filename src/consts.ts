@@ -3,11 +3,12 @@ import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetState
 import type { CustomNode } from "./Classes/CustomElement";
 import type ParameterSet from "./Classes/ParameterSet";
 import type samples from "./samples";
-import type { 資料 } from "qieyun";
+import type { 資料 } from "tshet-uinh";
 
-//export const qieyunExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@dev-qieyun-0.15/";
-export const qieyunExamplesURLPrefix = "https://raw.githubusercontent.com/nk2028/qieyun-examples/dev-qieyun-0.15/";
-export const qieyunTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@dev-qieyun-0.15/";
+//export const tshetUinhExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@dev-qieyun-0.15/";
+export const tshetUinhExamplesURLPrefix =
+  "https://raw.githubusercontent.com/nk2028/qieyun-examples/dev-tshet-uinh-0.15/";
+export const tshetUinhTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@dev-qieyun-0.15/";
 
 export const newFileTemplate = /* js */ `
 /* 在此輸入描述……

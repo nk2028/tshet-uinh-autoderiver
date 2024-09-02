@@ -164,7 +164,7 @@ function showAbout() {
         。
       </p>
       <p>
-        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-autoderiver">
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-autoderiver">
           本頁面原始碼
         </a>
         公開於 GitHub。
@@ -234,8 +234,8 @@ function showHelp() {
       <p>
         此外，若希望自訂某字需按某音推導，可在其後緊接一對半形圓括號「<code>()</code>
         」，當中寫下想要的音韻地位描述（格式可參見推導結果中的音韻地位顯示，或參見{" "}
-        <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/qieyun-js/">
-          Qieyun.js 文檔
+        <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/tshet-uinh-js/">
+          TshetUinh.js 文檔
         </a>
         ）
       </p>
@@ -246,9 +246,9 @@ function showHelp() {
       <p>在「推導」模式下，會對推導的每個字/音韻地位執行一次函數，需回傳推導結果，可用的引數有：</p>
       <ul>
         <li>
-          <code>音韻地位: Qieyun.音韻地位</code>：待推導之音韻地位，詳見{" "}
-          <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/qieyun-js/">
-            Qieyun.js 文檔
+          <code>音韻地位: TshetUinh.音韻地位</code>：待推導之音韻地位，詳見{" "}
+          <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/tshet-uinh-js/">
+            TshetUinh.js 文檔
           </a>
         </li>
         <li>

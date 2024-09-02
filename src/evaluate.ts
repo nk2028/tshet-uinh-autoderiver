@@ -1,12 +1,12 @@
 import { 推導方案 } from "tshet-uinh-deriver-tools";
 
 import { CustomNode, Formatter } from "./Classes/CustomElement";
-import { qieyunTextLabelURLPrefix } from "./consts";
+import { tshetUinhTextLabelURLPrefix } from "./consts";
 import { evaluateOption, getArticle, setArticle } from "./options";
 import { fetchFile, normalizeFileName, notifyError } from "./utils";
 
 import type { MainState, ReactNode } from "./consts";
-import type { 音韻地位 } from "qieyun";
+import type { 音韻地位 } from "tshet-uinh";
 import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools";
 
 type Require = (音韻地位: 音韻地位, 字頭?: string | null) => RequireFunction;
@@ -26,7 +26,7 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
   const { schemas, option } = state;
 
   if (option === "convertPresetArticle" && !getArticle())
-    setArticle(await fetchFile(qieyunTextLabelURLPrefix + "index.txt"));
+    setArticle(await fetchFile(tshetUinhTextLabelURLPrefix + "index.txt"));
   else if (option === "compareSchemas" && schemas.length < 2) throw notifyError("此選項需要兩個或以上方案");
   else await new Promise(resolve => setTimeout(resolve));
 

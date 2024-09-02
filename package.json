@@ -1,5 +1,5 @@
 {
-  "name": "qieyun-autoderiver",
+  "name": "tshet-uinh-autoderiver",
   "version": "0.2.0-beta.7",
   "description": "An automatic tool to generate the derivatives of the Qieyun phonological system",
   "private": true,
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nk2028/qieyun-autoderiver.git"
+    "url": "git+https://github.com/nk2028/tshet-uinh-autoderiver.git"
   },
   "keywords": [
     "historical-linguistics",
@@ -38,12 +38,12 @@
     "@monaco-editor/react": "^4.6.0",
     "monaco-editor": "^0.33.0",
     "purecss": "^3.0.0",
-    "qieyun": "^0.15.0-beta.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sweetalert2": "<=11.4.8",
     "sweetalert2-react-content": "^5.0.7",
-    "tshet-uinh-deriver-tools": "^0.2.0-beta.6",
+    "tshet-uinh": "^0.15.0-beta.7",
+    "tshet-uinh-deriver-tools": "^0.2.0-beta.7",
     "yitizi": "^0.1.2"
   },
   "devDependencies": {
@@ -68,7 +68,7 @@
   "author": "Ngyoq Khuen 2028 Project",
   "license": "CC0-1.0",
   "bugs": {
-    "url": "https://github.com/nk2028/qieyun-autoderiver/issues"
+    "url": "https://github.com/nk2028/tshet-uinh-autoderiver/issues"
   },
-  "homepage": "qieyun-autoderiver/"
+  "homepage": "https://nk2028.shn.hk/tshet-uinh-autoderiver/"
 }

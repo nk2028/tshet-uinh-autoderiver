@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 
-import { 資料 } from "qieyun";
+import { 資料 } from "tshet-uinh";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";

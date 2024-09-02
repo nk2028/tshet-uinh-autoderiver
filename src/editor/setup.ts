@@ -1,5 +1,5 @@
 import * as monaco from "monaco-editor";
-import * as Qieyun from "qieyun";
+import TshetUinh from "tshet-uinh";
 
 import { loader } from "@monaco-editor/react";
 
@@ -9,12 +9,12 @@ import libs from "./libs";
 declare global {
   interface Window {
     monaco: typeof monaco;
-    Qieyun: typeof Qieyun;
+    TshetUinh: typeof TshetUinh;
   }
 }
 
 self.monaco = monaco;
-self.Qieyun = Qieyun;
+self.TshetUinh = TshetUinh;
 
 loader.config({ monaco });
 

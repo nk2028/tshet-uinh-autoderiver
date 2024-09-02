@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react";
 
 import type { UserConfig } from "vite";
 
-const base = "/qieyun-autoderiver/";
+const base = "/tshet-uinh-autoderiver/";
 
 export function makeConfig(assetLocation = base) {
   if (!assetLocation.endsWith("/")) {

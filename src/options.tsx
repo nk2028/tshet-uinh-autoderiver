@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import { 資料, 音韻地位 } from "qieyun";
+import { 資料, 音韻地位 } from "tshet-uinh";
 import Yitizi from "yitizi";
 
 import styled from "@emotion/styled";

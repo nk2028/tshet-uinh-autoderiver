@@ -10,7 +10,7 @@ import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import { newFileTemplate, qieyunExamplesURLPrefix, UseMainState } from "../consts";
+import { newFileTemplate, tshetUinhExamplesURLPrefix, UseMainState } from "../consts";
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
 
@@ -238,7 +238,7 @@ export default function CreateSchemaDialog({
       schemaLoaded({
         name: normalizeFileName(createSchemaName) + ".js",
         input: createSchemaSample
-          ? await fetchFile(qieyunExamplesURLPrefix + createSchemaSample + ".js")
+          ? await fetchFile(tshetUinhExamplesURLPrefix + createSchemaSample + ".js")
           : newFileTemplate,
       });
     } catch {
@@ -264,7 +264,7 @@ export default function CreateSchemaDialog({
         setState(
           actions.addSchema({
             name: "tupa.js",
-            input: await fetchFile(qieyunExamplesURLPrefix + "tupa.js"),
+            input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js"),
           }),
         );
         Swal.close();
