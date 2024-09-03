@@ -15,22 +15,24 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm test
-      - run: npm run build:cos
-      - name: Install coscmd
-        run: sudo pip install coscmd
-      - name: Configure coscmd
-        env:
-          SECRET_ID: ${{ secrets.SecretId }}
-          SECRET_KEY: ${{ secrets.SecretKey }}
-          BUCKET: ${{ secrets.Bucket }}
-          REGION: ${{ secrets.Region }}
-        run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
-      - name: Publish static files to COS
-        run: |
-          cd ./build/
-          coscmd upload -rs --delete -f ./ / --ignore index.html
-          #rm -rf !(index.html)
-          rm -rf assets
+      # FIXME CORS broken, building non-COS version for now
+      #- run: npm run build:cos
+      - run: npm run build
+      # FIXME CORS broken, deploying everything on GH Pages for now
+      #- name: Install coscmd
+      #  run: sudo pip install coscmd
+      #- name: Configure coscmd
+      #  env:
+      #    SECRET_ID: ${{ secrets.SecretId }}
+      #    SECRET_KEY: ${{ secrets.SecretKey }}
+      #    BUCKET: ${{ secrets.Bucket }}
+      #    REGION: ${{ secrets.Region }}
+      #  run: coscmd config -a $SECRET_ID -s $SECRET_KEY -b $BUCKET -r $REGION
+      #- name: Publish static files to COS
+      #  run: |
+      #    cd ./build/
+      #    coscmd upload -rs --delete -f ./ / --ignore index.html
+      #    rm -rf assets
       - name: Publish to GitHub Pages
         run: |
           # Create a temporary directory
