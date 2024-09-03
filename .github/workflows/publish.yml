@@ -29,7 +29,8 @@ jobs:
         run: |
           cd ./build/
           coscmd upload -rs --delete -f ./ / --ignore index.html
-          rm -rf !(index.html)
+          #rm -rf !(index.html)
+          rm -rf assets
       - name: Publish to GitHub Pages
         run: |
           # Create a temporary directory
