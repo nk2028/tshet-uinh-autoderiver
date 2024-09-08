@@ -1,6 +1,13 @@
 import { languages } from "monaco-editor";
-import TSWorker from "monaco-editor/esm/vs/language/typescript/ts.worker.js?worker&inline";
+import tsWorkerUrl from "monaco-editor/esm/vs/language/typescript/ts.worker.js?worker&url";
 import { SuggestAdapter } from "monaco-editor/esm/vs/language/typescript/tsMode";
+
+// NOTE Workaround for cross-origin loading.
+// See: https://github.com/vitejs/vite/issues/13680#issuecomment-1819274694
+// Normally we could just import the worker like `import TSWorker from "...?worker";` and then `new TSWorker()`,
+// but it doesn't work if the assets are deployed on a different site.
+const tsWorkerWrapperScript = `import ${JSON.stringify(new URL(tsWorkerUrl, import.meta.url))}`;
+const tsWorkerWrapperBlob = new Blob([tsWorkerWrapperScript], { type: "application/javascript" });
 
 declare global {
   interface Window {
@@ -12,7 +19,7 @@ declare global {
 
 self.MonacoEnvironment = {
   getWorker() {
-    return new TSWorker();
+    return new Worker(URL.createObjectURL(tsWorkerWrapperBlob), { type: "module" });
   },
 };
 

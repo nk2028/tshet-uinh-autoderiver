@@ -57,6 +57,6 @@
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }
     ],
-    "import/no-unresolved": ["error", { "ignore": ["\\?(?:worker(&inline)?|raw)$"] }]
+    "import/no-unresolved": ["error", { "ignore": ["\\?(?:worker(&inline|&url)?|raw)$"] }]
   }
 }
