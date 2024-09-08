@@ -22,7 +22,7 @@ export function makeConfig(assetLocation = base) {
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
     build: {
-      chunkSizeWarningLimit: 8192,
+      chunkSizeWarningLimit: 10240,
       outDir: "build",
     },
     experimental: {

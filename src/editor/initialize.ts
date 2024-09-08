@@ -1,5 +1,5 @@
 import { languages } from "monaco-editor";
-import TSWorker from "monaco-editor/esm/vs/language/typescript/ts.worker.js?worker";
+import TSWorker from "monaco-editor/esm/vs/language/typescript/ts.worker.js?worker&inline";
 import { SuggestAdapter } from "monaco-editor/esm/vs/language/typescript/tsMode";
 
 declare global {
