@@ -5,10 +5,9 @@ import type ParameterSet from "./Classes/ParameterSet";
 import type samples from "./samples";
 import type { 資料 } from "tshet-uinh";
 
-//export const tshetUinhExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-examples@dev-qieyun-0.15/";
-export const tshetUinhExamplesURLPrefix =
-  "https://raw.githubusercontent.com/nk2028/qieyun-examples/dev-tshet-uinh-0.15/";
-export const tshetUinhTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/qieyun-text-label@dev-qieyun-0.15/";
+export const tshetUinhExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/tshet-uinh-examples@main/";
+//export const tshetUinhExamplesURLPrefix = "https://raw.githubusercontent.com/nk2028/tshet-uinh-examples/main/";
+export const tshetUinhTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/tshet-uinh-text-label@main/";
 
 export const newFileTemplate = /* js */ `
 /* 在此輸入描述……

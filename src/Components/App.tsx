@@ -171,7 +171,7 @@ function showAbout() {
       </p>
       <p>
         推導器預置的
-        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/qieyun-examples">
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-examples">
           樣例推導方案程式碼
         </a>
         亦可於 Github 瀏覽。
