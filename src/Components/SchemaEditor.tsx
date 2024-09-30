@@ -88,7 +88,7 @@ const Name = styled.div<{ checked: boolean }>`
       }
     `}
 `;
-const DeleteButton = styled.div`
+const DeleteButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -111,7 +111,7 @@ const Separator = styled.div<{ visible: boolean }>`
       background-color: #888;
     `}
 `;
-const CreateSchemaButton = styled.div`
+const CreateSchemaButton = styled.button`
   align-self: center;
   margin-left: 0.5rem;
   display: inline-flex;
@@ -132,7 +132,7 @@ const EditorArea = styled.div`
   position: relative;
   min-height: calc(6rem + 20vh);
 `;
-const ResetButton = styled.div`
+const ResetButton = styled.button`
   display: inline-block;
   margin-left: 0.75rem;
   transition: color 0.2s;
@@ -249,7 +249,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
   }
 
   const resetParameters = useCallback(
-    (event: MouseEvent<HTMLDivElement>) => {
+    (event: MouseEvent<HTMLButtonElement>) => {
       setState(actions.resetSchemaParameters(activeSchemaName));
       const element = event.currentTarget;
       element.classList.remove("rotate");

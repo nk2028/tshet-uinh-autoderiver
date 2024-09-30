@@ -32,6 +32,22 @@ injectGlobal`
   br:first-child {
     display: none;
   }
+  button {
+    box-sizing: inherit;
+    appearance: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+  }
+  button::-moz-focus-inner {
+    border: none;
+    padding: 0;
+  }
   hr {
     border: none;
     border-top: 1px solid #d4d6d8;
@@ -311,7 +327,7 @@ const Version = styled.span`
 const Buttons = styled.span`
   display: inline-block;
 `;
-const ShowButton = styled.span`
+const ShowButton = styled.button`
   display: inline-flex;
   align-items: center;
   border-radius: 9999px;
@@ -330,7 +346,7 @@ const ShowButton = styled.span`
     border-color: #0078e7;
   }
 `;
-const ApplyButton = styled.span`
+const ApplyButton = styled.button`
   margin-left: 0.75rem;
   color: #0078e7;
   cursor: pointer;

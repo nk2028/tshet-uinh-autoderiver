@@ -112,7 +112,7 @@ const Title = styled.h1`
   margin: 0 0.25rem;
   font-size: 1.75rem;
 `;
-const CopyButton = styled.div`
+const CopyButton = styled.button`
   margin-left: 1rem;
   transition: color 0.2s;
   color: #888;
