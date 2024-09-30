@@ -130,7 +130,7 @@ const aboutModal = stylesheet`
     }
     a:link {
       position: relative;
-      color: inherit;
+      color: #315177;
       text-decoration: none;
       transition: color 150ms;
       &:after {
@@ -138,9 +138,16 @@ const aboutModal = stylesheet`
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 0.125rem;
+        bottom: 1px;
         border-bottom: 1px dashed currentColor;
       }
+      &:hover,
+      &:focus {
+        color: black;
+      }
+    }
+    a:visited {
+      color: #5c4c86;
       &:hover,
       &:focus {
         color: black;
