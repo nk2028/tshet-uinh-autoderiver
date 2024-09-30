@@ -1,7 +1,7 @@
 {
   "name": "tshet-uinh-autoderiver",
   "version": "0.2.0",
-  "description": "An automatic tool to generate the derivatives of the Qieyun phonological system",
+  "description": "An automatic tool to generate derivatives of the Qieyun phonological system",
   "private": true,
   "type": "module",
   "scripts": {
@@ -23,6 +23,7 @@
   },
   "keywords": [
     "historical-linguistics",
+    "linguistics",
     "middle-chinese",
     "tshet-uinh",
     "qieyun"
@@ -65,7 +66,7 @@
     "typescript": "^5.5.4",
     "vite": "^5.4.2"
   },
-  "author": "Ngyoq Khuen 2028 Project",
+  "author": "Project NK2028",
   "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/nk2028/tshet-uinh-autoderiver/issues"
