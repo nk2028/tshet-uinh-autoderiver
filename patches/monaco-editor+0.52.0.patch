@@ -1,21 +1,21 @@
 diff --git a/node_modules/monaco-editor/esm/metadata.d.ts b/node_modules/monaco-editor/esm/metadata.d.ts
-index 754e807..81eaa55 100644
+index 11b22bd..93322b5 100644
 --- a/node_modules/monaco-editor/esm/metadata.d.ts
 +++ b/node_modules/monaco-editor/esm/metadata.d.ts
 @@ -20,7 +20,7 @@ export const features: IFeatureDefinition[];
  
  export const languages: IFeatureDefinition[];
  
--export type EditorLanguage = 'abap' | 'apex' | 'azcli' | 'bat' | 'bicep' | 'cameligo' | 'clojure' | 'coffee' | 'cpp' | 'csharp' | 'csp' | 'css' | 'dart' | 'dockerfile' | 'ecl' | 'elixir' | 'flow9' | 'freemarker2' | 'fsharp' | 'go' | 'graphql' | 'handlebars' | 'hcl' | 'html' | 'ini' | 'java' | 'javascript' | 'json' | 'julia' | 'kotlin' | 'less' | 'lexon' | 'liquid' | 'lua' | 'm3' | 'markdown' | 'mips' | 'msdax' | 'mysql' | 'objective-c' | 'pascal' | 'pascaligo' | 'perl' | 'pgsql' | 'php' | 'pla' | 'postiats' | 'powerquery' | 'powershell' | 'protobuf' | 'pug' | 'python' | 'qsharp' | 'r' | 'razor' | 'redis' | 'redshift' | 'restructuredtext' | 'ruby' | 'rust' | 'sb' | 'scala' | 'scheme' | 'scss' | 'shell' | 'solidity' | 'sophia' | 'sparql' | 'sql' | 'st' | 'swift' | 'systemverilog' | 'tcl' | 'twig' | 'typescript' | 'vb' | 'xml' | 'yaml';
+-export type EditorLanguage = 'abap' | 'apex' | 'azcli' | 'bat' | 'bicep' | 'cameligo' | 'clojure' | 'coffee' | 'cpp' | 'csharp' | 'csp' | 'css' | 'cypher' | 'dart' | 'dockerfile' | 'ecl' | 'elixir' | 'flow9' | 'freemarker2' | 'fsharp' | 'go' | 'graphql' | 'handlebars' | 'hcl' | 'html' | 'ini' | 'java' | 'javascript' | 'json' | 'julia' | 'kotlin' | 'less' | 'lexon' | 'liquid' | 'lua' | 'm3' | 'markdown' | 'mdx' | 'mips' | 'msdax' | 'mysql' | 'objective-c' | 'pascal' | 'pascaligo' | 'perl' | 'pgsql' | 'php' | 'pla' | 'postiats' | 'powerquery' | 'powershell' | 'protobuf' | 'pug' | 'python' | 'qsharp' | 'r' | 'razor' | 'redis' | 'redshift' | 'restructuredtext' | 'ruby' | 'rust' | 'sb' | 'scala' | 'scheme' | 'scss' | 'shell' | 'solidity' | 'sophia' | 'sparql' | 'sql' | 'st' | 'swift' | 'systemverilog' | 'tcl' | 'twig' | 'typescript' | 'typespec' | 'vb' | 'wgsl' | 'xml' | 'yaml';
 +export type EditorLanguage = 'javascript' | 'typescript';
  
- export type EditorFeature = 'accessibilityHelp' | 'anchorSelect' | 'bracketMatching' | 'browser' | 'caretOperations' | 'clipboard' | 'codeAction' | 'codelens' | 'colorPicker' | 'comment' | 'contextmenu' | 'cursorUndo' | 'dnd' | 'documentSymbols' | 'find' | 'folding' | 'fontZoom' | 'format' | 'gotoError' | 'gotoLine' | 'gotoSymbol' | 'hover' | 'iPadShowKeyboard' | 'inPlaceReplace' | 'indentation' | 'inlayHints' | 'inlineCompletions' | 'inspectTokens' | 'lineSelection' | 'linesOperations' | 'linkedEditing' | 'links' | 'multicursor' | 'parameterHints' | 'quickCommand' | 'quickHelp' | 'quickOutline' | 'referenceSearch' | 'rename' | 'smartSelect' | 'snippet' | 'suggest' | 'toggleHighContrast' | 'toggleTabFocusMode' | 'tokenization' | 'unicodeHighlighter' | 'unusualLineTerminators' | 'viewportSemanticTokens' | 'wordHighlighter' | 'wordOperations' | 'wordPartOperations';
+ export type EditorFeature = 'anchorSelect' | 'bracketMatching' | 'browser' | 'caretOperations' | 'clipboard' | 'codeAction' | 'codeEditor' | 'codelens' | 'colorPicker' | 'comment' | 'contextmenu' | 'cursorUndo' | 'diffEditor' | 'diffEditorBreadcrumbs' | 'dnd' | 'documentSymbols' | 'dropOrPasteInto' | 'find' | 'folding' | 'fontZoom' | 'format' | 'gotoError' | 'gotoLine' | 'gotoSymbol' | 'hover' | 'iPadShowKeyboard' | 'inPlaceReplace' | 'indentation' | 'inlayHints' | 'inlineCompletions' | 'inlineEdit' | 'inlineEdits' | 'inlineProgress' | 'inspectTokens' | 'lineSelection' | 'linesOperations' | 'linkedEditing' | 'links' | 'longLinesHelper' | 'multicursor' | 'parameterHints' | 'placeholderText' | 'quickCommand' | 'quickHelp' | 'quickOutline' | 'readOnlyMessage' | 'referenceSearch' | 'rename' | 'sectionHeaders' | 'semanticTokens' | 'smartSelect' | 'snippet' | 'stickyScroll' | 'suggest' | 'toggleHighContrast' | 'toggleTabFocusMode' | 'tokenization' | 'unicodeHighlighter' | 'unusualLineTerminators' | 'wordHighlighter' | 'wordOperations' | 'wordPartOperations';
  
 diff --git a/node_modules/monaco-editor/esm/metadata.js b/node_modules/monaco-editor/esm/metadata.js
-index 1e87648..acc9d2b 100644
+index 1e98235..f8ea2c7 100644
 --- a/node_modules/monaco-editor/esm/metadata.js
 +++ b/node_modules/monaco-editor/esm/metadata.js
-@@ -212,124 +212,6 @@ exports.features = [
+@@ -268,328 +268,10 @@ exports.features = [
    }
  ];
  exports.languages = [
@@ -73,6 +73,10 @@ index 1e87648..acc9d2b 100644
 -      "id": "vs/language/css/cssWorker",
 -      "entry": "vs/language/css/css.worker"
 -    }
+-  },
+-  {
+-    "label": "cypher",
+-    "entry": "vs/basic-languages/cypher/cypher.contribution"
 -  },
 -  {
 -    "label": "dart",
@@ -140,10 +144,15 @@ index 1e87648..acc9d2b 100644
    {
      "label": "javascript",
      "entry": "vs/basic-languages/javascript/javascript.contribution"
-@@ -342,190 +224,6 @@ exports.languages = [
-       "entry": "vs/language/json/json.worker"
-     }
    },
+-  {
+-    "label": "json",
+-    "entry": "vs/language/json/monaco.contribution",
+-    "worker": {
+-      "id": "vs/language/json/jsonWorker",
+-      "entry": "vs/language/json/json.worker"
+-    }
+-  },
 -  {
 -    "label": "julia",
 -    "entry": "vs/basic-languages/julia/julia.contribution"
@@ -175,6 +184,10 @@ index 1e87648..acc9d2b 100644
 -  {
 -    "label": "markdown",
 -    "entry": "vs/basic-languages/markdown/markdown.contribution"
+-  },
+-  {
+-    "label": "mdx",
+-    "entry": "vs/basic-languages/mdx/mdx.contribution"
 -  },
 -  {
 -    "label": "mips",
@@ -331,14 +344,22 @@ index 1e87648..acc9d2b 100644
    {
      "label": "typescript",
      "entry": [
-@@ -536,17 +234,5 @@ exports.languages = [
+@@ -600,25 +282,5 @@ exports.languages = [
        "id": "vs/language/typescript/tsWorker",
        "entry": "vs/language/typescript/ts.worker"
      }
 -  },
 -  {
+-    "label": "typespec",
+-    "entry": "vs/basic-languages/typespec/typespec.contribution"
+-  },
+-  {
 -    "label": "vb",
 -    "entry": "vs/basic-languages/vb/vb.contribution"
+-  },
+-  {
+-    "label": "wgsl",
+-    "entry": "vs/basic-languages/wgsl/wgsl.contribution"
 -  },
 -  {
 -    "label": "xml",
@@ -350,17 +371,18 @@ index 1e87648..acc9d2b 100644
    }
  ];
 diff --git a/node_modules/monaco-editor/esm/vs/base/common/buffer.js b/node_modules/monaco-editor/esm/vs/base/common/buffer.js
-index 9518d6d..f322611 100644
+index 4534981..024fdcc 100644
 --- a/node_modules/monaco-editor/esm/vs/base/common/buffer.js
 +++ b/node_modules/monaco-editor/esm/vs/base/common/buffer.js
-@@ -1,33 +1,17 @@
+@@ -2,22 +2,9 @@
+  *  Copyright (c) Microsoft Corporation. All rights reserved.
+  *  Licensed under the MIT License. See License.txt in the project root for license information.
+  *--------------------------------------------------------------------------------------------*/
+-import { Lazy } from './lazy.js';
 -const hasBuffer = (typeof Buffer !== 'undefined');
+-const indexOfTable = new Lazy(() => new Uint8Array(256));
  let textDecoder;
  export class VSBuffer {
-     constructor(buffer) {
-         this.buffer = buffer;
-         this.byteLength = this.buffer.byteLength;
-     }
 -    /**
 -     * When running in a nodejs context, if `actual` is not a nodejs Buffer, the backing store for
 -     * the returned `VSBuffer` instance might use a nodejs Buffer allocated from node's Buffer pool,
@@ -373,6 +395,10 @@ index 9518d6d..f322611 100644
 -            actual = Buffer.from(actual.buffer, actual.byteOffset, actual.byteLength);
 -        }
          return new VSBuffer(actual);
+     }
+     constructor(buffer) {
+@@ -25,15 +12,10 @@ export class VSBuffer {
+         this.byteLength = this.buffer.byteLength;
      }
      toString() {
 -        if (hasBuffer) {
@@ -390,41 +416,12 @@ index 9518d6d..f322611 100644
      }
  }
  export function readUInt16LE(source, offset) {
-diff --git a/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js b/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js
-index f9807f9..b243e3b 100644
---- a/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js
-+++ b/node_modules/monaco-editor/esm/vs/base/common/marked/marked.js
-@@ -9,15 +9,6 @@
-  * The code in this file is generated from files in ./src/
-  */
- 
--// ESM-uncomment-begin
--let __marked_exports = {};
--(function() {
--  function define(deps, factory) {
--    factory(__marked_exports);
--  }
--  define.amd = true;
--// ESM-uncomment-end
--
-  (function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-@@ -2942,8 +2933,3 @@ let __marked_exports = {};
- 
-   Object.defineProperty(exports, '__esModule', { value: true });
- }));
--
--// ESM-uncomment-begin
--})();
--export var marked = (__marked_exports || exports);
--// ESM-uncomment-end
 diff --git a/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js b/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js
-index a6b7213..4378e30 100644
+index 4681708..e5f01c4 100644
 --- a/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js
 +++ b/node_modules/monaco-editor/esm/vs/basic-languages/monaco.contribution.js
-@@ -7,80 +7,5 @@ import '../editor/editor.api.js';
-  *-----------------------------------------------------------------------------*/
+@@ -8,84 +8,5 @@ import '../editor/editor.api.js';
+ 
  
  // src/basic-languages/monaco.contribution.ts
 -import "./abap/abap.contribution.js";
@@ -439,6 +436,7 @@ index a6b7213..4378e30 100644
 -import "./csharp/csharp.contribution.js";
 -import "./csp/csp.contribution.js";
 -import "./css/css.contribution.js";
+-import "./cypher/cypher.contribution.js";
 -import "./dart/dart.contribution.js";
 -import "./dockerfile/dockerfile.contribution.js";
 -import "./ecl/ecl.contribution.js";
@@ -462,6 +460,7 @@ index a6b7213..4378e30 100644
 -import "./liquid/liquid.contribution.js";
 -import "./m3/m3.contribution.js";
 -import "./markdown/markdown.contribution.js";
+-import "./mdx/mdx.contribution.js";
 -import "./mips/mips.contribution.js";
 -import "./msdax/msdax.contribution.js";
 -import "./mysql/mysql.contribution.js";
@@ -501,6 +500,8 @@ index a6b7213..4378e30 100644
 -import "./tcl/tcl.contribution.js";
 -import "./twig/twig.contribution.js";
  import "./typescript/typescript.contribution.js";
+-import "./typespec/typespec.contribution.js";
 -import "./vb/vb.contribution.js";
+-import "./wgsl/wgsl.contribution.js";
 -import "./xml/xml.contribution.js";
 -import "./yaml/yaml.contribution.js";

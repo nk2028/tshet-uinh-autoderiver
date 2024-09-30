@@ -7,15 +7,7 @@ import { SuggestAdapter } from "monaco-editor/esm/vs/language/typescript/tsMode"
 // Normally we could just import the worker like `import TSWorker from "...?worker";` and then `new TSWorker()`,
 // but it doesn't work if the assets are deployed on a different site.
 const tsWorkerWrapperScript = `import ${JSON.stringify(new URL(tsWorkerUrl, import.meta.url))}`;
-const tsWorkerWrapperBlob = new Blob([tsWorkerWrapperScript], { type: "application/javascript" });
-
-declare global {
-  interface Window {
-    MonacoEnvironment: {
-      getWorker(): Worker;
-    };
-  }
-}
+const tsWorkerWrapperBlob = new Blob([tsWorkerWrapperScript], { type: "text/javascript" });
 
 self.MonacoEnvironment = {
   getWorker() {
