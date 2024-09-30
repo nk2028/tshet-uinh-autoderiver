@@ -57,24 +57,29 @@ const OutputWrapper = styled.div`
 const OutputContent = styled.output`
   display: block;
   font-size: 105%;
-  margin-top: 0.875rem;
+  margin-top: 0.75rem;
   overflow-wrap: break-word;
   white-space: pre-wrap;
   white-space: break-spaces;
   h3,
   p {
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.2;
   }
   :not(rt):lang(och-Latn-fonipa) {
     white-space: initial;
   }
   ruby {
     margin: 0 3px;
+    display: inline-flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    vertical-align: bottom;
   }
   rt {
     font-size: 82.5%;
     line-height: 1.1;
+    text-align: center;
   }
   table {
     margin-top: -0.5rem;
