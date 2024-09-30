@@ -4,7 +4,7 @@ import { useCallback, useRef } from "react";
 
 import { injectGlobal, css as stylesheet } from "@emotion/css";
 import styled from "@emotion/styled";
-import { faCirclePlay, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlay, faExternalLink, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Main from "./Main";
@@ -299,7 +299,7 @@ const Title = styled.h1`
   font-size: 1.75rem;
   margin: 0;
   line-height: 1;
-  padding: 0.625rem 0.625rem 0.5rem;
+  padding: 0.625rem 0.875rem 0.5rem 0.625rem;
   border-bottom: 0.2rem solid #d0d2d4;
 `;
 const Version = styled.span`
@@ -342,6 +342,21 @@ const ApplyButton = styled.span`
 const LinkToLegacy = styled.span`
   font-size: 0.875rem;
   float: right;
+  line-height: 1.75rem;
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    text-decoration: none;
+    color: hsl(210, 16%, 40%);
+    transition: color 150ms;
+    &:hover {
+      color: hsl(210, 8%, 50%);
+    }
+    svg {
+      font-size: 0.75rem;
+    }
+  }
 `;
 const FontPreload = styled.span`
   position: absolute;
@@ -363,7 +378,10 @@ export default function App() {
               <span>切韻音系自動推導器</span>
               <Version>v{__APP_VERSION__}</Version>
               <LinkToLegacy>
-                <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">前往舊版</a>
+                <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">
+                  前往舊版
+                  <FontAwesomeIcon icon={faExternalLink} />
+                </a>
               </LinkToLegacy>
               <Buttons>
                 <ApplyButton title="適用" onClick={useCallback(() => handleRef.current(), [])}>
