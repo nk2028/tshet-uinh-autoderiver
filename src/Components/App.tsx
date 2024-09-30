@@ -32,6 +32,10 @@ injectGlobal`
   br:first-child {
     display: none;
   }
+  hr {
+    border: none;
+    border-top: 1px solid #d4d6d8;
+  }
   body .pure-button {
     padding-top: 0.2em;
     padding-bottom: 0.2em;

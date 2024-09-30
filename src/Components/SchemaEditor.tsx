@@ -179,6 +179,9 @@ const SeparatorShadow = styled.div`
   height: 6px;
   box-shadow: #ddd 0 -6px 6px -6px inset;
 `;
+const OptionsSeparator = styled.hr`
+  margin: 1rem -1rem;
+`;
 
 interface SchemaEditorProps extends UseMainState {
   commonOptions: ReactNode;
@@ -460,7 +463,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
             </button>
           </ParameterErrorHint>
         ) : null}
-        <hr />
+        <OptionsSeparator />
         {commonOptions}
       </Options>
       <CreateSchemaDialog
