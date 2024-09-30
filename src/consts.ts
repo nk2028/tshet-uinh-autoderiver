@@ -37,9 +37,10 @@ export const defaultArticle =
   "橫(匣合二庚平)柯上(常開三陽上)蔽，在(從開一咍上)晝猶(以三尤平)昏；疏(生開三魚平)條交映(影開三B庚去)，有時見(見開四先去)日。";
 
 export const codeFontFamily = `
-  monospace, "CharisSILW", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR",
-  "Source Han Serif SC", "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC",
-  "Noto Serif CJK TC", "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "HanaMin", monospace, monospace`;
+  ui-monospace, "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New",
+  "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+  "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
+  "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", monospace, monospace`;
 
 export const options = {
   convertArticle: "從輸入框中讀取文章，並注音",

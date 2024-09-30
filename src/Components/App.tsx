@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Main from "./Main";
 import Swal from "../Classes/SwalReact";
-import { noop } from "../consts";
+import { codeFontFamily, noop } from "../consts";
 
 // NOTE sweetalert2's ESM export does not setup styles properly, manually importing
 import "sweetalert2/dist/sweetalert2.css";
@@ -19,9 +19,9 @@ injectGlobal`
   body {
     line-height: 1.6;
     font-size: 16px;
-    font-family: "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+    font-family: ui-sans-serif, "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
       "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
-      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", serif;
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", serif;
     font-language-override: "KOR";
     overflow: hidden;
     touch-action: none;
@@ -153,6 +153,29 @@ const aboutModal = stylesheet`
         color: black;
       }
     }
+    kbd, code {
+      font-family: ${codeFontFamily};
+    }
+    kbd:not(kbd kbd) {
+      display: inline-flex;
+      gap: 2.5px;
+      font-size: 0.8125em;
+      padding: 0 0.375em;
+      background-color: #f4f6f8;
+      border: 1px solid #d8e2e4;
+      border-bottom-width: 2px;
+      border-radius: 0.5em;
+      color: #333;
+      vertical-align: middle;
+    }
+    code:not(code code) {
+      font-size: 0.875em;
+      padding: 0.1875em 0.25em;
+      background-color: #f4f4f4;
+      border-radius: 0.375em;
+      color: #f0506e;
+      vertical-align: middle;
+    }
   }
   .swal2-close {
     font-size: 3.5rem;
@@ -236,7 +259,12 @@ function showHelp() {
           <kbd>
             <kbd>Meta</kbd>+<kbd>`</kbd>
           </kbd>{" "}
-          (<kbd>⌘`</kbd>)：隱藏或顯示推導操作面板
+          (
+          <kbd>
+            <kbd>⌘</kbd>
+            <kbd>`</kbd>
+          </kbd>
+          )：隱藏或顯示推導操作面板
         </li>
         <li>
           <kbd>
@@ -246,7 +274,12 @@ function showHelp() {
           <kbd>
             <kbd>Shift</kbd>+<kbd>Enter</kbd>
           </kbd>{" "}
-          (<kbd>⇧↩</kbd>)：執行推導，顯示推導結果
+          (
+          <kbd>
+            <kbd>⇧</kbd>
+            <kbd>↩</kbd>
+          </kbd>
+          )：執行推導，顯示推導結果
         </li>
         <li>
           <kbd>Esc</kbd> (<kbd>⎋</kbd>)：關閉推導結果面板
