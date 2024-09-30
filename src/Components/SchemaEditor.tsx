@@ -426,6 +426,11 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
               horizontalScrollbarSize: 10,
               verticalScrollbarSize: 10,
             },
+            unicodeHighlight: {
+              nonBasicASCII: false,
+              invisibleCharacters: false,
+              ambiguousCharacters: false,
+            },
           }}
           onChange={useCallback(
             input => {
