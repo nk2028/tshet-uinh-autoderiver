@@ -253,6 +253,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
 
   const resetParameters = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
       setState(actions.resetSchemaParameters(activeSchemaName));
       const element = event.currentTarget;
       element.classList.remove("rotate");
