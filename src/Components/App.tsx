@@ -141,7 +141,8 @@ const aboutModal = stylesheet`
         bottom: 0.125rem;
         border-bottom: 1px dashed currentColor;
       }
-      &:hover {
+      &:hover,
+      &:focus {
         color: black;
       }
     }
@@ -341,7 +342,8 @@ const ShowButton = styled.button`
   transition:
     color 150ms,
     border-color 150ms;
-  &:hover {
+  &:hover,
+  &:focus {
     color: #0078e7;
     border-color: #0078e7;
   }
@@ -351,7 +353,8 @@ const ApplyButton = styled.button`
   color: #0078e7;
   cursor: pointer;
   transition: color 150ms;
-  &:hover {
+  &:hover,
+  &:focus {
     color: #339cff;
   }
 `;
@@ -366,7 +369,8 @@ const LinkToLegacy = styled.span`
     text-decoration: none;
     color: hsl(210, 16%, 40%);
     transition: color 150ms;
-    &:hover {
+    &:hover,
+    &:focus {
       color: hsl(210, 8%, 50%);
     }
     svg {

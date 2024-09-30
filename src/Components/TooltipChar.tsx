@@ -25,7 +25,8 @@ const Item = styled.p<{ textColor: string }>`
     onClick &&
     css`
       cursor: pointer;
-      &:hover {
+      &:hover,
+      &:focus {
         color: #0078e7;
       }
     `}

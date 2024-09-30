@@ -23,7 +23,8 @@ const tooltipStyle = stylesheet`
   min-width: 3rem;
   max-width: min(25rem, calc(100vw - 2rem));
   z-index: 800;
-  &:hover {
+  &:hover,
+  &:focus {
     visibility: visible !important;
   }
 `;

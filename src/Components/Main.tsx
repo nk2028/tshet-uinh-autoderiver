@@ -117,7 +117,8 @@ const CopyButton = styled.button`
   transition: color 0.2s;
   color: #888;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     color: #0078e7;
   }
 `;

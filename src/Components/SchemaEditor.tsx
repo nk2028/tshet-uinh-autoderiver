@@ -97,7 +97,8 @@ const DeleteButton = styled.button`
   border-radius: 9999px;
   color: #666;
   transition: background-color 150ms;
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: #ccc;
   }
 `;
@@ -123,7 +124,8 @@ const CreateSchemaButton = styled.button`
   font-size: 1rem;
   color: #555;
   transition: background-color 150ms;
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: #ccc;
   }
 `;
@@ -138,7 +140,8 @@ const ResetButton = styled.button`
   transition: color 0.2s;
   color: #555;
   cursor: pointer;
-  &:hover {
+  &:hover,
+  &:focus {
     color: #0078e7;
   }
   &.rotate {
