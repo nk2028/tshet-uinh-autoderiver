@@ -26,10 +26,10 @@ export function notifyError(msg: string, err?: unknown) {
     let curErr: Error = err;
     while (curErr.cause instanceof Error) {
       curErr = curErr.cause;
-      technical += "\n" + curErr.message;
+      technical += `\n${curErr.message}`;
     }
     if (curErr.stack) {
-      technical += "\n\n" + curErr.stack;
+      technical += `\n\n${curErr.stack}`;
     }
   }
   const config: SweetAlertOptions = {

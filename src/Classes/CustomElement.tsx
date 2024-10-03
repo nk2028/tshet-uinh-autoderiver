@@ -1,10 +1,10 @@
 import { createElement, Fragment } from "react";
-import type { HTMLAttributes, ReactElement } from "react";
 
 import styled from "@emotion/styled";
 
 import type { ReactNode } from "../consts";
 import type { Property } from "csstype";
+import type { HTMLAttributes, ReactElement } from "react";
 
 const Missing = styled.span`
   &:after {
@@ -12,7 +12,7 @@ const Missing = styled.span`
   }
 `;
 
-type TagToProp = {
+interface TagToProp {
   f: undefined;
   b: undefined;
   i: undefined;
@@ -23,7 +23,7 @@ type TagToProp = {
   fg: Property.Color;
   bg: Property.BackgroundColor;
   size: Property.FontSize<string | number>;
-};
+}
 
 type AllTags = keyof TagToProp;
 type Tag = {

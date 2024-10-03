@@ -1,8 +1,9 @@
-import { cloneElement, ReactElement, useCallback, useEffect, useRef } from "react";
-import type { SyntheticEvent } from "react";
+import { cloneElement, useCallback, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 
 import { css as stylesheet } from "@emotion/css";
+
+import type { ReactElement, SyntheticEvent } from "react";
 
 function getPageWidth() {
   return Math.max(
@@ -68,9 +69,9 @@ function TooltipAnchor({
     targetLeft = Math.min(getPageWidth() - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
     targetLeft += window.scrollX;
 
-    div.className = tooltipStyle + (fixedWidth ? " " + fixedWidthStyle : "");
-    div.style.top = targetTop + "px";
-    div.style.left = targetLeft + "px";
+    div.className = tooltipStyle + (fixedWidth ? ` ${fixedWidthStyle}` : "");
+    div.style.top = `${targetTop}px`;
+    div.style.left = `${targetLeft}px`;
     div.style.visibility = "visible";
   });
 
