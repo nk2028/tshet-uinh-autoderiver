@@ -2,6 +2,9 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ES2020", "ES2022.Error"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
 
     "strict": true,
     "allowUnusedLabels": false,
@@ -12,13 +15,15 @@
     "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
 
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "skipLibCheck": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "noEmit": true,
     "jsx": "react-jsx"
   },
   "include": ["./src"]
