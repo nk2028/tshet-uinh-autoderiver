@@ -1,4 +1,4 @@
-import { ChangeEventHandler, forwardRef, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
@@ -10,11 +10,12 @@ import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix, UseMainState } from "../consts";
+import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix } from "../consts";
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
 
-import type { Folder, Sample, SchemaState } from "../consts";
+import type { Folder, Sample, SchemaState, UseMainState } from "../consts";
+import type { ChangeEventHandler, RefObject } from "react";
 
 const Container = styled.dialog`
   transform: scale(0.9);
@@ -183,12 +184,12 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   { state: { schemas }, setState, getDefaultFileName, schemaLoaded, hasSchemaName },
   ref,
 ) {
-  const [createSchemaName, setCreateSchemaName] = useState(() => getDefaultFileName("") + ".js");
+  const [createSchemaName, setCreateSchemaName] = useState(() => `${getDefaultFileName("")}.js`);
   const [createSchemaSample, setCreateSchemaSample] = useState<Sample | "">("");
   const [loading, setLoading] = useState(false);
 
   const resetDialog = useCallback(() => {
-    setCreateSchemaName(getDefaultFileName("") + ".js");
+    setCreateSchemaName(`${getDefaultFileName("")}.js`);
     setCreateSchemaSample("");
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -199,7 +200,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
     const name = normalizeFileName(createSchemaName);
     if (!name) return "檔案名稱為空";
     if (invalidCharsRegex.test(name)) return "檔案名稱含有特殊字元";
-    if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
+    if (hasSchemaName(`${name}.js`)) return "檔案名稱與現有檔案重複";
     return "";
   }, [createSchemaName, hasSchemaName]);
 
@@ -216,7 +217,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
           onClick={() => {
             const name = normalizeFileName(createSchemaName);
             if (!name || name === getDefaultFileName(createSchemaSample))
-              setCreateSchemaName(getDefaultFileName(sample) + ".js");
+              setCreateSchemaName(`${getDefaultFileName(sample)}.js`);
             setCreateSchemaSample(sample);
           }}>
           <div>
@@ -236,9 +237,9 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
     setLoading(true);
     try {
       schemaLoaded({
-        name: normalizeFileName(createSchemaName) + ".js",
+        name: `${normalizeFileName(createSchemaName)}.js`,
         input: createSchemaSample
-          ? await fetchFile(tshetUinhExamplesURLPrefix + createSchemaSample + ".js")
+          ? await fetchFile(`${tshetUinhExamplesURLPrefix + createSchemaSample}.js`)
           : newFileTemplate,
       });
     } catch {
@@ -266,7 +267,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         setState(
           actions.addSchema({
             name: "tupa.js",
-            input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js"),
+            input: await fetchFile(`${tshetUinhExamplesURLPrefix}tupa.js`),
           }),
         );
         Swal.close();
@@ -296,7 +297,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
               onClick={() => {
                 const name = normalizeFileName(createSchemaName);
                 if (!name || name === getDefaultFileName(createSchemaSample))
-                  setCreateSchemaName(getDefaultFileName("") + ".js");
+                  setCreateSchemaName(`${getDefaultFileName("")}.js`);
                 setCreateSchemaSample("");
               }}>
               <div>

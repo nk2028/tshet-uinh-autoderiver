@@ -1,8 +1,7 @@
-import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetStateAction } from "react";
-
 import type { CustomNode } from "./Classes/CustomElement";
 import type ParameterSet from "./Classes/ParameterSet";
 import type samples from "./samples";
+import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetStateAction } from "react";
 import type { 資料 } from "tshet-uinh";
 
 export const tshetUinhExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/tshet-uinh-examples@main/";
@@ -85,7 +84,9 @@ export type Query = Readonly<Pick<資料.檢索結果, "字頭" | "音韻地位"
 
 type Values<T> = T extends Record<PropertyKey, infer T> ? Values<T> : T;
 export type Sample = Values<typeof samples>;
-export type Folder = { [name: string]: Folder | Sample };
+export interface Folder {
+  [name: string]: Folder | Sample;
+}
 
 type UseGet<K extends string, T> = { [P in K]: T };
 type UseSet<K extends string, T> = { [P in `set${Capitalize<K>}`]: Dispatch<SetStateAction<T>> };

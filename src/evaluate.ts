@@ -1,10 +1,11 @@
 import { 推導方案 } from "tshet-uinh-deriver-tools";
 
-import { CustomNode, Formatter } from "./Classes/CustomElement";
+import { Formatter } from "./Classes/CustomElement";
 import { tshetUinhTextLabelURLPrefix } from "./consts";
 import { evaluateOption, getArticle, setArticle } from "./options";
 import { fetchFile, normalizeFileName, notifyError } from "./utils";
 
+import type { CustomNode } from "./Classes/CustomElement";
 import type { MainState, ReactNode } from "./consts";
 import type { 音韻地位 } from "tshet-uinh";
 import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools";
@@ -26,7 +27,7 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
   const { schemas, option } = state;
 
   if (option === "convertPresetArticle" && !getArticle())
-    setArticle(await fetchFile(tshetUinhTextLabelURLPrefix + "index.txt"));
+    setArticle(await fetchFile(`${tshetUinhTextLabelURLPrefix}index.txt`));
   else if (option === "compareSchemas" && schemas.length < 2) throw notifyError("此選項需要兩個或以上方案");
   else await new Promise(resolve => setTimeout(resolve));
 
@@ -47,9 +48,9 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
 
   function require(current: string, references: string[] = []): Require {
     const newReferences = references.concat(current);
-    if (references.includes(current)) throw notifyError("Circular reference detected: " + newReferences.join(" -> "));
+    if (references.includes(current)) throw notifyError(`Circular reference detected: ${newReferences.join(" -> ")}`);
     return (音韻地位, 字頭) => sample => {
-      const schema = schemas.find(({ name }) => name === normalizeFileName(sample) + ".js");
+      const schema = schemas.find(({ name }) => name === `${normalizeFileName(sample)}.js`);
       if (!schema) throw notifyError("Schema not found");
       return new SchemaFromRequire(rawDeriverFrom(schema.input), require(sample, newReferences), 音韻地位, 字頭);
     };

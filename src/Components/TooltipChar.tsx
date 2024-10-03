@@ -112,10 +112,9 @@ export default function TooltipChar({
                   }
                 }
                 各反切.反 = new Set(Array.from(各反切.反).filter(反切 => !各反切.切.has(反切)));
-                const 反切text =
-                  (["反", "切"] as const)
-                    .flatMap(x => (各反切[x].size ? [[...各反切[x]].join("/") + x] : []))
-                    .join(" ") + " ";
+                const 反切text = `${(["反", "切"] as const)
+                  .flatMap(x => (各反切[x].size ? [[...各反切[x]].join("/") + x] : []))
+                  .join(" ")} `;
                 const 出處text = 來源 && ["廣韻", "王三"].includes(來源.文獻) ? `［${來源.文獻} ${來源.韻目}韻］` : "";
                 return (
                   <Fragment key={i}>

@@ -1,6 +1,8 @@
-import "purecss/build/pure.css";
-
 import { useCallback, useRef } from "react";
+
+import "purecss/build/pure.css";
+// NOTE sweetalert2's ESM export does not setup styles properly, manually importing
+import "sweetalert2/dist/sweetalert2.css";
 
 import { injectGlobal, css as stylesheet } from "@emotion/css";
 import styled from "@emotion/styled";
@@ -11,9 +13,7 @@ import Main from "./Main";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, noop } from "../consts";
 
-// NOTE sweetalert2's ESM export does not setup styles properly, manually importing
-import "sweetalert2/dist/sweetalert2.css";
-
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 injectGlobal`
   html,
   body {

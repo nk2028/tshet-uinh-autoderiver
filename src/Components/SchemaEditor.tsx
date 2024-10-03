@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { MouseEvent, MutableRefObject } from "react";
 import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
@@ -18,6 +17,7 @@ import "../editor/setup";
 import { memoize, normalizeFileName, notifyError } from "../utils";
 
 import type { UseMainState, ReactNode } from "../consts";
+import type { MouseEvent, MutableRefObject } from "react";
 
 const TabBar = styled.div`
   display: flex;
@@ -234,10 +234,10 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         sample ||= "untitled";
         const indices = schemaNames
           .map(name => {
-            if (name === sample + ".js") return 0;
-            if (!name.startsWith(sample + "-") || !name.endsWith(".js")) return -1;
+            if (name === `${sample}.js`) return 0;
+            if (!name.startsWith(`${sample}-`) || !name.endsWith(".js")) return -1;
             const start = sample.length + 1;
-            for (let i = start; i < name.length - 3; i++) if (name[i] < +(i === start) + "" || name[i] > "9") return -1;
+            for (let i = start; i < name.length - 3; i++) if (name[i] < `${+(i === start)}` || name[i] > "9") return -1;
             return +name.slice(start, -3);
           })
           .sort((a, b) => a - b);
@@ -268,10 +268,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         for (const file of files) {
           // POSIX allows all characters other than `\0` and `/` in file names,
           // this is necessary to ensure that the file name is valid on all platforms.
-          const name =
-            getDefaultFileNameWithSchemaNames(currSchemaNames)(
-              normalizeFileName(file.name).replace(invalidCharsRegex, "_"),
-            ) + ".js";
+          const name = `${getDefaultFileNameWithSchemaNames(currSchemaNames)(
+            normalizeFileName(file.name).replace(invalidCharsRegex, "_"),
+          )}.js`;
           currSchemaNames.push(name);
           newState = actions.addSchema({ name, input: contents[i++] })(newState);
         }
@@ -408,7 +407,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
     const index = schemas.findIndex(schema => schema.name === name);
     const children = [].slice.call(tabBarRef.current.children, 0, -1) as HTMLElement[];
     const widths = children.map(element => element.getBoundingClientRect().width);
-    const currentWidth = widths[index] + "px";
+    const currentWidth = `${widths[index]}px`;
     const threshold: number[] = [];
     threshold[index] = 0;
 
@@ -424,9 +423,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
     let clientX = startX;
 
     function move(event: { clientX: number } | TouchEvent) {
-      clientX = "clientX" in event ? event.clientX : (event.touches?.[0]?.clientX ?? clientX);
+      clientX = "clientX" in event ? event.clientX : (event.touches[0].clientX ?? clientX);
       let value = clientX - startX;
-      children[index].style.left = value + "px";
+      children[index].style.left = `${value}px`;
       if (value < 0) {
         value = -value;
         for (let i = 0; i < index; i++) children[i].style.left = value >= threshold[i] ? currentWidth : "";
@@ -434,12 +433,12 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       } else {
         for (let i = 0; i < index; i++) children[i].style.left = "";
         for (let i = length - 1; i > index; i--)
-          children[i].style.left = value >= threshold[i] ? "-" + currentWidth : "";
+          children[i].style.left = value >= threshold[i] ? `-${currentWidth}` : "";
       }
     }
 
     function end(event: { clientX: number } | TouchEvent) {
-      clientX = "clientX" in event ? event.clientX : (event.touches?.[0]?.clientX ?? clientX);
+      clientX = "clientX" in event ? event.clientX : (event.touches[0].clientX ?? clientX);
       let value = clientX - startX;
       children.forEach(element => (element.style.left = ""));
       let i: number;
@@ -475,7 +474,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
     const hasSchemaName = (name: string) => schemas.find(schema => schema.name === name);
     if (!name) return "檔案名稱為空";
     if (invalidCharsRegex.test(name)) return "檔案名稱含有特殊字元";
-    if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
+    if (hasSchemaName(`${name}.js`)) return "檔案名稱與現有檔案重複";
     return "";
   }
 
@@ -497,15 +496,15 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         confirmButtonText: "確定",
         cancelButtonText: "取消",
       });
-      const confirmButton = Swal.getConfirmButton() as HTMLButtonElement;
+      const confirmButton = Swal.getConfirmButton()!;
       confirmButton.disabled = true;
       confirmButton.style.pointerEvents = "none";
-      const input = Swal.getInput() as HTMLInputElement;
+      const input = Swal.getInput()!;
       input.addEventListener("input", () => {
         const newName = normalizeFileName(input.value);
         const validation = validateFileName(newName);
         if (validation) {
-          if (newName + ".js" !== name) {
+          if (`${newName}.js` !== name) {
             const { selectionStart, selectionEnd, selectionDirection } = input;
             Swal.showValidationMessage(validation);
             input.setSelectionRange(selectionStart, selectionEnd, selectionDirection || undefined);
@@ -521,7 +520,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       const { isConfirmed, value } = await promise;
       if (isConfirmed) {
         const newName = normalizeFileName(value);
-        if (!validateFileName(newName)) setState(actions.renameSchema(name, newName + ".js"));
+        if (!validateFileName(newName)) setState(actions.renameSchema(name, `${newName}.js`));
       }
     }
   }
