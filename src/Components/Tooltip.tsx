@@ -40,10 +40,6 @@ const root = createRoot(div);
 
 let tooltipTarget: symbol | null = null;
 
-function hideTooltip() {
-  div.style.visibility = "hidden";
-}
-
 function TooltipAnchor({
   relativeToNodeBox,
   children,
@@ -80,10 +76,12 @@ export default function Tooltip({
   element,
   children,
   fixedWidth = true,
+  onHideTooltip,
 }: {
   element: ReactElement;
   children: ReactElement;
   fixedWidth?: boolean;
+  onHideTooltip?: (() => void) | undefined;
 }) {
   const selfRef = useRef(Symbol("Tooltip"));
   const boxRef = useRef<DOMRect | null>(null);
@@ -109,14 +107,20 @@ export default function Tooltip({
       renderTooltip();
     }
   }, [renderTooltip]);
+
+  const hideTooltip = useCallback(() => {
+    div.style.visibility = "hidden";
+    onHideTooltip?.();
+  }, [onHideTooltip]);
   useEffect(
     () => () => {
       if (tooltipTarget === selfRef.current) {
         hideTooltip();
       }
     },
-    [],
+    [hideTooltip],
   );
+
   return cloneElement(children, {
     onMouseEnter: showTooltip,
     onTouchStart: showTooltip,

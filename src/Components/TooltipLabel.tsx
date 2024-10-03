@@ -22,9 +22,11 @@ const Option = styled.label`
 export default function TooltipLabel({
   description,
   children,
+  onHideTooltip,
 }: {
   description?: string | undefined;
   children: ReactNode;
+  onHideTooltip?: (() => void) | undefined;
 }) {
   return typeof description === "string" && description ? (
     <Tooltip
@@ -35,7 +37,8 @@ export default function TooltipLabel({
             <p key={i}>{line}</p>
           ))}
         </Wrapper>
-      }>
+      }
+      onHideTooltip={onHideTooltip}>
       <Option>{children}</Option>
     </Tooltip>
   ) : (
