@@ -36,7 +36,6 @@ const div = document.getElementById("tooltip") ?? document.createElement("div");
 div.id = "tooltip";
 div.style.visibility = "hidden";
 div.className = tooltipStyle;
-document.body.appendChild(div);
 const root = createRoot(div);
 
 let tooltipTarget: symbol | null = null;
@@ -90,6 +89,7 @@ export default function Tooltip({
   const boxRef = useRef<DOMRect | null>(null);
 
   const renderTooltip = useCallback(() => {
+    (document.querySelector("dialog[open]") ?? document.body).appendChild(div);
     root.render(
       <TooltipAnchor relativeToNodeBox={boxRef.current!} fixedWidth={fixedWidth}>
         {element}
