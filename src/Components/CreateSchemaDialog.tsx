@@ -10,7 +10,7 @@ import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import { newFileTemplate, tshetUinhExamplesURLPrefix, UseMainState } from "../consts";
+import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix, UseMainState } from "../consts";
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
 
@@ -174,9 +174,9 @@ const LoadModal = styled.div`
 `;
 
 interface CreateSchemaDialogProps extends UseMainState {
-  getDefaultFileName: (sample: Sample | "") => string;
-  schemaLoaded: (schema: Omit<SchemaState, "parameters">) => void;
-  hasSchemaName: (name: string) => boolean;
+  getDefaultFileName(sample: string): string;
+  schemaLoaded(schema: Omit<SchemaState, "parameters">): void;
+  hasSchemaName(name: string): boolean;
 }
 
 const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps>(function CreateSchemaDialog(
@@ -198,8 +198,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
     if (!name) return "檔案名稱為空";
-    // eslint-disable-next-line no-control-regex
-    if (/[\0-\x1f"*/:<>?\\|\x7f-\x9f]/.test(name)) return "檔案名稱含有特殊字元";
+    if (invalidCharsRegex.test(name)) return "檔案名稱含有特殊字元";
     if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
     return "";
   }, [createSchemaName, hasSchemaName]);

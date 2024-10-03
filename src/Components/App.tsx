@@ -289,14 +289,75 @@ function showHelp() {
     <>
       <h2>使用說明</h2>
       <h3>快速鍵</h3>
+      <p>快速鍵僅在編輯器處於焦點狀態時有效。</p>
       <ul>
         <li>
+          <kbd>
+            <kbd>Alt</kbd>+<kbd>N</kbd>
+          </kbd>{" "}
+          或{" "}
+          <kbd>
+            <kbd>Option</kbd>+<kbd>N</kbd>
+          </kbd>{" "}
+          (
+          <kbd>
+            <kbd>⌥</kbd>
+            <kbd>N</kbd>
+          </kbd>
+          )：新增檔案
+        </li>
+        <li>
+          <kbd>
+            <kbd>Alt</kbd>+<kbd>S</kbd>
+          </kbd>{" "}
+          或{" "}
+          <kbd>
+            <kbd>Option</kbd>+<kbd>S</kbd>
+          </kbd>{" "}
+          (
+          <kbd>
+            <kbd>⌥</kbd>
+            <kbd>S</kbd>
+          </kbd>
+          )：刪除檔案
+        </li>
+        <li>
+          <kbd>
+            <kbd>Ctrl</kbd>+<kbd>O</kbd>
+          </kbd>{" "}
+          或{" "}
+          <kbd>
+            <kbd>Cmd</kbd>+<kbd>O</kbd>
+          </kbd>{" "}
+          (
+          <kbd>
+            <kbd>⌘</kbd>
+            <kbd>O</kbd>
+          </kbd>
+          )：從本機開啟檔案
+        </li>
+        <li>
+          <kbd>
+            <kbd>Ctrl</kbd>+<kbd>S</kbd>
+          </kbd>{" "}
+          或{" "}
+          <kbd>
+            <kbd>Cmd</kbd>+<kbd>S</kbd>
+          </kbd>{" "}
+          (
+          <kbd>
+            <kbd>⌘</kbd>
+            <kbd>S</kbd>
+          </kbd>
+          )：儲存檔案至本機
+        </li>
+        <li hidden>
           <kbd>
             <kbd>Ctrl</kbd>+<kbd>`</kbd>
           </kbd>{" "}
           或{" "}
           <kbd>
-            <kbd>Meta</kbd>+<kbd>`</kbd>
+            <kbd>Cmd</kbd>+<kbd>`</kbd>
           </kbd>{" "}
           (
           <kbd>
@@ -307,9 +368,18 @@ function showHelp() {
         </li>
         <li>
           <kbd>
-            <kbd>Alt</kbd>+<kbd>S</kbd>
+            <kbd>Alt</kbd>+<kbd>R</kbd>
           </kbd>{" "}
           或{" "}
+          <kbd>
+            <kbd>Option</kbd>+<kbd>R</kbd>
+          </kbd>{" "}
+          (
+          <kbd>
+            <kbd>⌥</kbd>
+            <kbd>R</kbd>
+          </kbd>
+          ) 或{" "}
           <kbd>
             <kbd>Shift</kbd>+<kbd>Enter</kbd>
           </kbd>{" "}
@@ -318,12 +388,13 @@ function showHelp() {
             <kbd>⇧</kbd>
             <kbd>↩</kbd>
           </kbd>
-          )：執行推導，顯示推導結果
+          )：執行推導並顯示推導結果
         </li>
         <li>
-          <kbd>Esc</kbd> (<kbd>⎋</kbd>)：關閉推導結果面板
+          <kbd>Esc</kbd> (<kbd>⎋</kbd>)：關閉「新增方案」或「推導結果」面板
         </li>
       </ul>
+      <p>此外，檔案亦可透過拖曳載入。</p>
       <h3>指定個別字音</h3>
       <p>
         推導自訂文章時，若某字有多個音，且推導結果不同，則在推導結果介面上，該字會被著色。指標移至其上（或觸控螢幕上點按）會出現選單，可以點選想要的字音。
@@ -467,7 +538,7 @@ const FontPreload = styled.span`
 `;
 
 export default function App() {
-  const handleRef = useRef(noop);
+  const evaluateHandlerRef = useRef(noop);
   return (
     <Container>
       <Content>
@@ -483,7 +554,7 @@ export default function App() {
                 </a>
               </LinkToLegacy>
               <Buttons>
-                <ApplyButton title="適用" onClick={useCallback(() => handleRef.current(), [])}>
+                <ApplyButton title="適用" onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
                   <FontAwesomeIcon icon={faCirclePlay} />
                 </ApplyButton>
                 <ShowButton title="關於" onClick={showAbout}>
@@ -496,7 +567,7 @@ export default function App() {
             </Title>
           </nav>
         </header>
-        <Main handleRef={handleRef} />
+        <Main evaluateHandlerRef={evaluateHandlerRef} />
       </Content>
       <FontPreload aria-hidden>結果</FontPreload>
     </Container>

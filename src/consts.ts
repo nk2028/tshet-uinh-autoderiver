@@ -53,6 +53,10 @@ export const options = {
 export type Option = keyof typeof options;
 export const allOptions = Object.entries(options) as [Option, string][];
 
+/** Characters invalid in file names on Windows */
+// eslint-disable-next-line no-control-regex
+export const invalidCharsRegex = /[\0-\x1f"*/:<>?\\|\x7f-\x9f]/g;
+
 export function noop() {
   // no operation
 }

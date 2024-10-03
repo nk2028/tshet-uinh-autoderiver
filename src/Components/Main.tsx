@@ -139,7 +139,7 @@ const Loading = styled.div`
 
 let evaluationResult: ReactNode = [];
 
-export default function Main({ handleRef }: { handleRef: MutableRefObject<() => void> }) {
+export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: MutableRefObject<() => void> }) {
   const [state, setState] = useState(initialState);
   const { article, option, convertVariant, syncCharPosition } = state;
   useEffect(() => {
@@ -160,7 +160,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
   const [operation, increaseOperation] = useReducer((operation: number) => operation + 1, 0);
 
   const dialogRef = useRef<HTMLDialogElement>(null);
-  handleRef.current = useCallback(async () => {
+  evaluateHandlerRef.current = useCallback(async () => {
     evaluationResult = [];
     dialogRef.current?.showModal();
     setLoading(true);
@@ -193,25 +193,6 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
       });
     });
   }, []);
-
-  useEffect(() => {
-    function keyDown(event: KeyboardEvent) {
-      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "s") {
-        // TODO Test on macOS.
-        // AFAIK it might be more appropriate to use something like "⌥⌘" (option+command) instead,
-        // because "⌥S" on macOS is supposed to behave more like "AltGr+S" on a PC.
-        event.preventDefault();
-        handleRef.current();
-      } else if (!event.ctrlKey && !event.metaKey && event.shiftKey && event.key === "Enter") {
-        event.preventDefault();
-        handleRef.current();
-      }
-    }
-    document.addEventListener("keydown", keyDown);
-    return () => {
-      document.removeEventListener("keydown", keyDown);
-    };
-  }, [handleRef]);
 
   const resetArticle = useCallback(async () => {
     if (
@@ -256,7 +237,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
                 className="pure-button pure-button-primary"
                 type="button"
                 value="適用"
-                onClick={handleRef.current}
+                onClick={evaluateHandlerRef.current}
               />
               <label hidden={option !== "convertArticle"}>
                 <input
@@ -299,6 +280,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
             </p>
           </>
         }
+        evaluateHandlerRef={evaluateHandlerRef}
       />
       {createPortal(
         <OutputContainer ref={dialogRef}>

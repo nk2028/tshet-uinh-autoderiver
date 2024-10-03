@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { MouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { MouseEvent, MutableRefObject } from "react";
+import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -12,11 +13,11 @@ import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import { codeFontFamily } from "../consts";
+import { codeFontFamily, invalidCharsRegex, noop } from "../consts";
 import "../editor/setup";
 import { memoize, normalizeFileName, notifyError } from "../utils";
 
-import type { Sample, UseMainState, ReactNode } from "../consts";
+import type { UseMainState, ReactNode } from "../consts";
 
 const TabBar = styled.div`
   display: flex;
@@ -185,12 +186,30 @@ const SeparatorShadow = styled.div`
 const OptionsSeparator = styled.hr`
   margin: 1rem -1rem;
 `;
+const DropContainer = styled.div<{ isDragging: boolean }>`
+  position: fixed;
+  inset: 0;
+  display: ${({ isDragging }) => (isDragging ? "grid" : "none")};
+  background-color: rgba(127, 127, 127, 0.7);
+  padding: 3rem;
+  z-index: 2147483647;
+`;
+const DropArea = styled.div`
+  border: 0.5rem dashed #ccc;
+  border-radius: 2.5rem;
+  font-size: 4rem;
+  display: grid;
+  place-items: center;
+  color: white;
+  background-color: rgba(191, 191, 191, 0.7);
+`;
 
 interface SchemaEditorProps extends UseMainState {
   commonOptions: ReactNode;
+  evaluateHandlerRef: MutableRefObject<() => void>;
 }
 
-export default function SchemaEditor({ state, setState, commonOptions }: SchemaEditorProps) {
+export default function SchemaEditor({ state, setState, commonOptions, evaluateHandlerRef }: SchemaEditorProps) {
   const { schemas, activeSchemaName } = state;
   const activeSchema = useMemo(
     () => schemas.find(({ name }) => name === activeSchemaName),
@@ -202,19 +221,19 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
     if (!monaco) return;
     // Clean up deleted schemata
     const schemaUris = new Set(schemas.map(({ name }) => monaco.Uri.parse(name).toString()));
-    monaco.editor.getModels().forEach(model => {
+    for (const model of monaco.editor.getModels()) {
       if (!schemaUris.has(model.uri.toString())) {
         model.dispose();
       }
-    });
+    }
   }, [monaco, schemas]);
 
-  const getDefaultFileName: (sample: Sample | "") => string = useMemo(
-    () =>
+  const getDefaultFileNameWithSchemaNames = useCallback(
+    (schemaNames: string[]) =>
       memoize((sample: string) => {
         sample ||= "untitled";
-        const indices = schemas
-          .map(({ name }) => {
+        const indices = schemaNames
+          .map(name => {
             if (name === sample + ".js") return 0;
             if (!name.startsWith(sample + "-") || !name.endsWith(".js")) return -1;
             const start = sample.length + 1;
@@ -227,29 +246,145 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
         while (indices[i] - indices[i - 1] <= 1) i++;
         return sample + (~indices[i - 1] || "");
       }),
-    [schemas],
+    [],
   );
+  const getDefaultFileName = useMemo(
+    () => getDefaultFileNameWithSchemaNames(schemas.map(({ name }) => name)),
+    [getDefaultFileNameWithSchemaNames, schemas],
+  );
+
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  async function deleteSchema(name: string) {
-    if (
-      (
-        await Swal.fire({
-          title: "要刪除此方案嗎？",
-          text: "此動作無法復原。",
-          icon: "warning",
-          showConfirmButton: false,
-          focusConfirm: false,
-          showDenyButton: true,
-          showCancelButton: true,
-          focusCancel: true,
-          denyButtonText: "確定",
-          cancelButtonText: "取消",
-        })
-      ).isDenied
-    )
-      setState(actions.deleteSchema(name));
-  }
+  const createSchema = useRef(noop);
+  createSchema.current = useCallback(() => dialogRef.current?.showModal(), []);
+
+  const addFilesToSchema = useCallback(
+    async (files: Iterable<File>) => {
+      const contents = await Promise.all(Array.from(files, file => file.text()));
+      const currSchemaNames = schemas.map(({ name }) => name);
+      setState(currState => {
+        let newState = currState;
+        let i = 0;
+        for (const file of files) {
+          // POSIX allows all characters other than `\0` and `/` in file names,
+          // this is necessary to ensure that the file name is valid on all platforms.
+          const name =
+            getDefaultFileNameWithSchemaNames(currSchemaNames)(
+              normalizeFileName(file.name).replace(invalidCharsRegex, "_"),
+            ) + ".js";
+          currSchemaNames.push(name);
+          newState = actions.addSchema({ name, input: contents[i++] })(newState);
+        }
+        return newState;
+      });
+    },
+    [schemas, setState, getDefaultFileNameWithSchemaNames],
+  );
+
+  const deleteSchema = useCallback(
+    async (name: string) => {
+      if (
+        (
+          await Swal.fire({
+            title: "要刪除此方案嗎？",
+            text: "此動作無法復原。",
+            icon: "warning",
+            showConfirmButton: false,
+            focusConfirm: false,
+            showDenyButton: true,
+            showCancelButton: true,
+            focusCancel: true,
+            denyButtonText: "確定",
+            cancelButtonText: "取消",
+          })
+        ).isDenied
+      )
+        setState(actions.deleteSchema(name));
+    },
+    [setState],
+  );
+
+  const deleteActiveSchema = useRef(noop);
+  deleteActiveSchema.current = useCallback(() => {
+    deleteSchema(activeSchemaName);
+  }, [deleteSchema, activeSchemaName]);
+
+  const openFileFromDisk = useRef(noop);
+  openFileFromDisk.current = useCallback(() => {
+    if ("showOpenFilePicker" in window) {
+      (async () => {
+        try {
+          const handles = await showOpenFilePicker({
+            id: "autoderiver-open-file",
+            types: [
+              {
+                description: "JavaScript file",
+                accept: { "text/javascript": [".js"] },
+              },
+            ],
+            multiple: true,
+          });
+          addFilesToSchema(await Promise.all(handles.map(handle => handle.getFile())));
+        } catch (error) {
+          if ((error as Error | null)?.name !== "AbortError") {
+            notifyError("開啟檔案時發生錯誤", error);
+          }
+        }
+      })();
+    } else {
+      const input = document.createElement("input");
+      input.hidden = true;
+      input.type = "file";
+      input.multiple = true;
+      document.body.appendChild(input);
+      input.addEventListener("change", async () => {
+        document.body.removeChild(input);
+        if (input.files) {
+          addFilesToSchema(input.files);
+        }
+      });
+      input.showPicker();
+    }
+  }, [addFilesToSchema]);
+
+  const saveFileToDisk = useRef(noop);
+  saveFileToDisk.current = useCallback(() => {
+    if (!activeSchema?.input) return;
+    const file = new Blob([activeSchema.input], { type: "text/javascript" });
+    if ("showSaveFilePicker" in window) {
+      (async () => {
+        try {
+          const handle = await showSaveFilePicker({
+            id: "autoderiver-save-file",
+            types: [
+              {
+                description: "JavaScript file",
+                accept: { "text/javascript": [".js"] },
+              },
+            ],
+            suggestedName: activeSchema.name,
+          });
+          const writable = await handle.createWritable();
+          await writable.write(file);
+          await writable.close();
+        } catch (error) {
+          if ((error as Error | null)?.name !== "AbortError") {
+            notifyError("儲存檔案時發生錯誤", error);
+          }
+        }
+      })();
+    } else {
+      const url = URL.createObjectURL(file);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = activeSchema.name;
+      anchor.hidden = true;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(url);
+    }
+  }, [activeSchema]);
 
   const resetParameters = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
@@ -339,8 +474,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
   function validateFileName(name: string) {
     const hasSchemaName = (name: string) => schemas.find(schema => schema.name === name);
     if (!name) return "檔案名稱為空";
-    // eslint-disable-next-line no-control-regex
-    if (/[\0-\x1f"*/:<>?\\|\x7f-\x9f]/.test(name)) return "檔案名稱含有特殊字元";
+    if (invalidCharsRegex.test(name)) return "檔案名稱含有特殊字元";
     if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
     return "";
   }
@@ -392,6 +526,45 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
     }
   }
 
+  const dropContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  useEffect(() => {
+    function onDragStart(event: DragEvent) {
+      if (!event.dataTransfer?.types.includes("Files")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      setIsDragging(true);
+    }
+
+    function onDragEnd(event: DragEvent) {
+      if (!event.dataTransfer?.types.includes("Files")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.target === dropContainerRef.current) setIsDragging(false);
+    }
+
+    async function onDrop(event: DragEvent) {
+      if (!event.dataTransfer?.types.includes("Files")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      setIsDragging(false);
+      addFilesToSchema(event.dataTransfer.files);
+    }
+
+    window.addEventListener("dragenter", onDragStart);
+    window.addEventListener("dragover", onDragStart);
+    window.addEventListener("dragend", onDragEnd);
+    window.addEventListener("dragleave", onDragEnd);
+    window.addEventListener("drop", onDrop);
+    return () => {
+      window.removeEventListener("dragenter", onDragStart);
+      window.removeEventListener("dragover", onDragStart);
+      window.removeEventListener("dragend", onDragEnd);
+      window.removeEventListener("dragleave", onDragEnd);
+      window.removeEventListener("drop", onDrop);
+    };
+  }, [addFilesToSchema]);
+
   return (
     <>
       <TabBar ref={tabBarRef}>
@@ -411,7 +584,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
             <Separator visible={activeSchemaName !== schemas[index + 1]?.name && activeSchemaName !== name} />
           </Tab>
         ))}
-        <CreateSchemaButton title="新增方案" onClick={useCallback(() => dialogRef.current?.showModal(), [])}>
+        <CreateSchemaButton title="新增方案" onClick={createSchema.current}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
         </CreateSchemaButton>
       </TabBar>
@@ -433,6 +606,53 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
               ambiguousCharacters: false,
             },
           }}
+          onMount={useCallback(
+            (editor, monaco) => {
+              editor.addAction({
+                id: "create-file",
+                label: "新增檔案……",
+                // Ctrl/Cmd + N cannot be overridden in browsers
+                keybindings: [monaco.KeyMod.Alt | monaco.KeyCode.KeyN],
+                run() {
+                  createSchema.current();
+                },
+              });
+              editor.addAction({
+                id: "delete-file",
+                label: "刪除檔案……",
+                // Ctrl/Cmd + W cannot be overridden in browsers
+                keybindings: [monaco.KeyMod.Alt | monaco.KeyCode.KeyW],
+                run() {
+                  deleteActiveSchema.current();
+                },
+              });
+              editor.addAction({
+                id: "open-file-from-disk",
+                label: "從本機開啟檔案……",
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO],
+                run() {
+                  openFileFromDisk.current();
+                },
+              });
+              editor.addAction({
+                id: "save-file-to-disk",
+                label: "儲存檔案至本機……",
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
+                run() {
+                  saveFileToDisk.current();
+                },
+              });
+
+              function evaluate() {
+                evaluateHandlerRef.current();
+              }
+              // Using `addCommand` instead of `addAction`
+              // as this does not need to be in the command palette
+              editor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KeyR, evaluate);
+              editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, evaluate);
+            },
+            [saveFileToDisk, evaluateHandlerRef],
+          )}
           onChange={useCallback(
             input => {
               if (typeof input !== "undefined" && activeSchema)
@@ -483,6 +703,14 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
         getDefaultFileName={getDefaultFileName}
         hasSchemaName={useCallback(name => !!schemas.find(schema => schema.name === name), [schemas])}
       />
+      {createPortal(
+        <DropContainer ref={dropContainerRef} isDragging={isDragging}>
+          <DropArea>
+            <div>將檔案拖曳至此</div>
+          </DropArea>
+        </DropContainer>,
+        document.body,
+      )}
     </>
   );
 }
