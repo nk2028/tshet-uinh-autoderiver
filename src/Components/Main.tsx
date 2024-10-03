@@ -13,7 +13,7 @@ import { allOptions, defaultArticle } from "../consts";
 import evaluate from "../evaluate";
 import { listenArticle } from "../options";
 import initialState, { stateStorageLocation } from "../state";
-import { copy, notifyError } from "../utils";
+import TooltipLabel from "./TooltipLabel";
 
 import type { MainState, Option, ReactNode } from "../consts";
 
@@ -176,11 +176,19 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
 
   const [loading, setLoading] = useState(false);
 
-  const handleCopy = useCallback(() => {
-    const txt = ref.current.textContent?.trim();
-    if (txt) copy(txt);
-    else notifyError("請先進行操作，再匯出結果");
+  const [copyTooltipText, setCopyTooltipText] = useState("複製到剪貼簿");
+  const copyEvaluationResult = useCallback(async () => {
+    const content = ref.current.textContent?.trim();
+    if (content) {
+      try {
+        await navigator.clipboard.writeText(content);
+        setCopyTooltipText("成功複製到剪貼簿");
+      } catch {
+        setCopyTooltipText("無法複製到剪貼簿");
+      }
+    }
   }, []);
+  const onHideTooltip = useCallback(() => setCopyTooltipText("複製到剪貼簿"), []);
 
   // XXX Please Rewrite
   useEffect(() => {
@@ -287,14 +295,20 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
           <OutputPopup>
             <Title>
               <span>推導結果</span>
-              <CopyButton title="匯出至剪貼簿" hidden={loading} onClick={handleCopy}>
-                <FontAwesomeIcon icon={faCopy} size="sm" />
-              </CopyButton>
-              <form method="dialog">
-                <CloseButton type="submit" className="swal2-close" title="關閉" hidden={loading}>
-                  ×
-                </CloseButton>
-              </form>
+              {!loading && (
+                <>
+                  <TooltipLabel description={copyTooltipText} onHideTooltip={onHideTooltip}>
+                    <CopyButton onClick={copyEvaluationResult}>
+                      <FontAwesomeIcon icon={faCopy} size="sm" />
+                    </CopyButton>
+                  </TooltipLabel>
+                  <form method="dialog">
+                    <CloseButton type="submit" className="swal2-close" title="關閉">
+                      ×
+                    </CloseButton>
+                  </form>
+                </>
+              )}
             </Title>
             <OutputContent key={operation} ref={ref}>
               {evaluationResult}

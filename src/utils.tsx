@@ -53,38 +53,6 @@ export function notifyError(msg: string, err?: unknown) {
   return new Error(msg, err instanceof Error ? { cause: err } : {});
 }
 
-export async function copy(txt: string) {
-  if (
-    await (async () => {
-      try {
-        await navigator.clipboard.writeText(txt);
-        return true;
-      } catch {
-        const textArea = document.createElement("textarea");
-        textArea.value = txt;
-        textArea.style.position = "fixed";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          return document.execCommand("copy");
-        } catch {
-          return false;
-        } finally {
-          document.body.removeChild(textArea);
-        }
-      }
-    })()
-  )
-    Swal.fire({
-      icon: "success",
-      title: "成功",
-      text: "已成功匯出至剪貼簿",
-      confirmButtonText: "確定",
-    });
-  else notifyError("瀏覽器不支援匯出至剪貼簿，操作失敗");
-}
-
 export async function fetchFile(input: string) {
   try {
     const text = await (await fetch(input, { cache: "no-cache" })).text();
