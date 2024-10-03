@@ -32,6 +32,45 @@ injectGlobal`
   br:first-child {
     display: none;
   }
+  dialog {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    opacity: 0;
+    transition:
+      opacity 200ms ease-out,
+      transform 200ms ease-out,
+      overlay 200ms ease-out allow-discrete,
+      display 200ms ease-out allow-discrete;
+    @starting-style {
+      opacity: 0;
+    }
+    &[open] {
+      display: grid;
+      grid-template: 1fr / 1fr;
+      opacity: 1;
+    }
+    &::backdrop {
+      opacity: 0;
+      transition:
+        opacity 200ms ease-out,
+        overlay 200ms ease-out allow-discrete,
+        display 200ms ease-out allow-discrete;
+      @starting-style {
+        opacity: 0;
+      }
+    }
+    &[open]::backdrop {
+      opacity: 1;
+    }
+  }
   button {
     box-sizing: inherit;
     appearance: none;

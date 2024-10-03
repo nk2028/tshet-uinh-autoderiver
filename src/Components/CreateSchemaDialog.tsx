@@ -17,46 +17,15 @@ import { fetchFile, normalizeFileName } from "../utils";
 import type { Folder, Sample, SchemaState } from "../consts";
 
 const Container = styled.dialog`
-  position: fixed;
-  inset: 0;
-  margin: 0;
-  padding: 0;
-  background: none;
-  border: none;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  max-height: none;
-  opacity: 0;
   transform: scale(0.9);
-  transition:
-    opacity 200ms ease-out,
-    transform 200ms ease-out,
-    overlay 200ms ease-out allow-discrete,
-    display 200ms ease-out allow-discrete;
   @starting-style {
-    opacity: 0;
     transform: scale(0.9);
   }
   &[open] {
-    display: grid;
-    grid-template: 1fr / 1fr;
-    opacity: 1;
     transform: scale(1);
   }
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    transition:
-      opacity 200ms ease-out,
-      overlay 200ms ease-out allow-discrete,
-      display 200ms ease-out allow-discrete;
-    @starting-style {
-      opacity: 0;
-    }
-  }
-  &[open]::backdrop {
-    opacity: 1;
   }
 `;
 const Popup = styled.div`

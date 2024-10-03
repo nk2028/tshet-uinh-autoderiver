@@ -1,4 +1,5 @@
 import { MutableRefObject, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
@@ -23,35 +24,26 @@ const ArticleInput = styled.textarea`
   resize: none;
   width: 100%;
 `;
-const OutputBackdrop = styled.div`
-  position: fixed;
-  z-index: 500;
-  background-color: rgba(0, 0, 0, 0.1);
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
+const OutputContainer = styled.dialog`
+  transform: translateY(10%);
+  @starting-style {
+    transform: translateY(10%);
+  }
+  &[open] {
+    transform: translateY(0);
+  }
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 `;
-const OutputArea = styled.div`
-  display: flex;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  max-height: 100%;
+const OutputPopup = styled.div`
+  height: fit-content;
+  box-sizing: border-box;
+  margin-top: auto;
   background-color: white;
-  border-top: 0.375rem solid #ccc;
-  transition: bottom 0.5s;
-`;
-const OutputContainer = styled.div`
+  border-top: 0.25rem solid #ccc;
   position: relative;
-  flex: 1;
   overflow: auto;
-`;
-const OutputWrapper = styled.div`
   padding: 1rem;
 `;
 const OutputContent = styled.output`
@@ -167,21 +159,21 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
   const ref = useRef(dummyOutput);
   const [operation, increaseOperation] = useReducer((operation: number) => operation + 1, 0);
 
+  const dialogRef = useRef<HTMLDialogElement>(null);
   handleRef.current = useCallback(async () => {
     evaluationResult = [];
-    setVisible(true);
+    dialogRef.current?.showModal();
     setLoading(true);
     try {
       evaluationResult = await evaluate(state);
       increaseOperation();
     } catch {
-      setVisible(false);
+      dialogRef.current?.close();
     } finally {
       setLoading(false);
     }
   }, [state]);
 
-  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleCopy = useCallback(() => {
@@ -204,10 +196,7 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
 
   useEffect(() => {
     function keyDown(event: KeyboardEvent) {
-      if (!event.altKey && !event.ctrlKey && !event.metaKey && event.key === "Escape") {
-        event.preventDefault();
-        setVisible(false);
-      } else if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "s") {
+      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "s") {
         // TODO Test on macOS.
         // AFAIK it might be more appropriate to use something like "⌥⌘" (option+command) instead,
         // because "⌥S" on macOS is supposed to behave more like "AltGr+S" on a PC.
@@ -311,36 +300,32 @@ export default function Main({ handleRef }: { handleRef: MutableRefObject<() => 
           </>
         }
       />
-      <OutputBackdrop hidden={!visible}>
-        <OutputArea>
-          <OutputContainer>
-            <OutputWrapper>
-              <Title>
-                <span>推導結果</span>
-                <CopyButton title="匯出至剪貼簿" hidden={loading} onClick={handleCopy}>
-                  <FontAwesomeIcon icon={faCopy} size="sm" />
-                </CopyButton>
-                <CloseButton
-                  type="button"
-                  className="swal2-close"
-                  title="關閉"
-                  hidden={loading}
-                  onClick={useCallback(() => setVisible(false), [])}>
+      {createPortal(
+        <OutputContainer ref={dialogRef}>
+          <OutputPopup>
+            <Title>
+              <span>推導結果</span>
+              <CopyButton title="匯出至剪貼簿" hidden={loading} onClick={handleCopy}>
+                <FontAwesomeIcon icon={faCopy} size="sm" />
+              </CopyButton>
+              <form method="dialog">
+                <CloseButton type="submit" className="swal2-close" title="關閉" hidden={loading}>
                   ×
                 </CloseButton>
-              </Title>
-              <OutputContent key={operation} ref={ref}>
-                {evaluationResult}
-              </OutputContent>
-              {loading && (
-                <Loading>
-                  <Spinner />
-                </Loading>
-              )}
-            </OutputWrapper>
-          </OutputContainer>
-        </OutputArea>
-      </OutputBackdrop>
+              </form>
+            </Title>
+            <OutputContent key={operation} ref={ref}>
+              {evaluationResult}
+            </OutputContent>
+            {loading && (
+              <Loading>
+                <Spinner />
+              </Loading>
+            )}
+          </OutputPopup>
+        </OutputContainer>,
+        document.body,
+      )}
     </>
   );
 }
