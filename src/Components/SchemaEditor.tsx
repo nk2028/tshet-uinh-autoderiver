@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { MouseEvent } from "react";
 
 import { css } from "@emotion/react";
@@ -229,7 +229,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
       }),
     [schemas],
   );
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   async function deleteSchema(name: string) {
     if (
@@ -411,7 +411,7 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
             <Separator visible={activeSchemaName !== schemas[index + 1]?.name && activeSchemaName !== name} />
           </Tab>
         ))}
-        <CreateSchemaButton title="新增方案" onClick={useCallback(() => setDialogVisible(true), [])}>
+        <CreateSchemaButton title="新增方案" onClick={useCallback(() => dialogRef.current?.showModal(), [])}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
         </CreateSchemaButton>
       </TabBar>
@@ -476,17 +476,10 @@ export default function SchemaEditor({ state, setState, commonOptions }: SchemaE
         {commonOptions}
       </Options>
       <CreateSchemaDialog
+        ref={dialogRef}
         state={state}
         setState={setState}
-        visible={dialogVisible}
-        closeDialog={useCallback(() => setDialogVisible(false), [])}
-        schemaLoaded={useCallback(
-          schema => {
-            setState(actions.addSchema(schema));
-            setDialogVisible(false);
-          },
-          [setState],
-        )}
+        schemaLoaded={useCallback(schema => setState(actions.addSchema(schema)), [setState])}
         getDefaultFileName={getDefaultFileName}
         hasSchemaName={useCallback(name => !!schemas.find(schema => schema.name === name), [schemas])}
       />

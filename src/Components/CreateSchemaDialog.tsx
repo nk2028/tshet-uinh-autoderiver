@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEventHandler, forwardRef, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
@@ -16,48 +16,84 @@ import { fetchFile, normalizeFileName } from "../utils";
 
 import type { Folder, Sample, SchemaState } from "../consts";
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const Container = styled.dialog`
   position: fixed;
   inset: 0;
-  box-sizing: border-box;
-  transition: background-color 0.2s;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  z-index: 1024;
-  @media (max-width: 720px) {
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out,
+    overlay 200ms ease-out allow-discrete,
+    display 200ms ease-out allow-discrete;
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  &[open] {
+    display: grid;
+    grid-template: 1fr / 1fr;
+    opacity: 1;
+    transform: scale(1);
+  }
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition:
+      opacity 200ms ease-out,
+      overlay 200ms ease-out allow-discrete,
+      display 200ms ease-out allow-discrete;
+    @starting-style {
+      opacity: 0;
+    }
+  }
+  &[open]::backdrop {
+    opacity: 1;
   }
 `;
 const Popup = styled.div`
+  background-color: #f9fafb;
   display: grid;
   grid-template: auto 1fr auto auto / 1fr auto;
-  //width: min(36vw + 360px, 960px, 100%); // with preview
-  width: min(18vw + 360px, 960px, 100%); // without preview
-  height: 100%;
-  padding: 0;
+  // width: min(36vw + 360px, 960px, 100%); // with preview
+  width: min(22vw + 360px, 960px, 100%); // without preview
+  // gap: 1rem; // with preview
+  row-gap: 1rem; // without preview
+  height: calc(100% - 3rem);
+  box-sizing: border-box;
+  margin: auto;
+  padding: 1rem 1.625rem;
+  border-radius: 0.5rem;
   overflow: hidden;
-  // overflow-y: scroll;
-  @media (max-width: 720px) {
+  // @media (max-width: 720px) { // with preview
+  @media (max-width: 640px) {
     width: 100%;
-    border-radius: 0;
+    margin-bottom: 0;
+    border-radius: 1rem 1rem 0 0;
   }
 `;
 const Title = styled.h2`
   grid-area: 1 / 1 / 2 / 3;
   text-align: left;
   color: #111;
+  margin: 0;
 `;
 const Explorer = styled.div`
   grid-area: 2 / 1 / 3 / 2;
   overflow-y: scroll;
   user-select: none;
   line-height: 1.625;
+  background-color: white;
   color: #111;
   border: 1px solid #aaa;
-  margin: 1rem 0 1rem 1.6rem;
   padding: 0.5rem;
   ul {
     padding: 0;
@@ -87,7 +123,6 @@ const FileName = styled.div<{ selected: boolean }>`
 `;
 const Preview = styled.div`
   grid-area: 2 / 2 / 3 / 3;
-  margin: 1rem 1.6rem 1rem 1rem;
   color: #333;
 `;
 const PreviewFrame = styled.div`
@@ -110,11 +145,10 @@ const Metadata = styled.div`
     padding: 0 1rem 0 2rem;
   }
 `;
-const Action = styled.div`
+const Action = styled.form`
   grid-area: 3 / 1 / 4 / 3;
   display: flex;
   align-items: center;
-  margin: 0 1.6rem;
   button {
     margin: 0 0 0 0.5rem;
     padding: 0 1.1rem;
@@ -122,32 +156,29 @@ const Action = styled.div`
     transition:
       opacity 200ms,
       background-image 200ms;
-    &:disabled {
-      opacity: 0.8;
-      pointer-events: none;
-    }
+  }
+  &:invalid button[value="confirm"] {
+    cursor: not-allowed;
+    opacity: 0.4;
+    pointer-events: none;
   }
 `;
-const Rename = styled.div<{ invalid: boolean }>`
+const Rename = styled.div`
   display: contents;
-  form {
+  .pure-form & label {
     display: contents;
-    label {
-      display: contents;
-      svg {
-        color: #222;
-        margin: 0 0.375rem 0 0.125rem;
-      }
-      input[type="text"] {
-        display: block;
-        width: 100%;
-        height: 2.25rem;
-        flex: 1;
-        ${({ invalid }) =>
-          invalid &&
-          css`
-            border-color: red;
-          `}
+    svg {
+      color: #222;
+      margin: 0 0.375rem 0 0.125rem;
+    }
+    input[type="text"] {
+      display: block;
+      width: 100%;
+      height: 2.25rem;
+      flex: 1;
+      &:invalid {
+        color: red;
+        border-color: red;
       }
     }
   }
@@ -155,17 +186,18 @@ const Rename = styled.div<{ invalid: boolean }>`
 const Validation = styled.div`
   grid-area: 4 / 1 / 5 / 3;
   font-size: 0.75rem;
+  font-weight: bold;
   color: red;
-  margin: 0.625rem 3.85rem;
+  margin: -0.375rem 2.25rem -0.25rem;
   line-height: 1;
 `;
 const Loading = styled.div`
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1 / -1 / -1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(249, 250, 251, 0.6);
+  margin: -2rem;
 `;
 const LoadModal = styled.div`
   margin-top: 3rem;
@@ -173,31 +205,26 @@ const LoadModal = styled.div`
 `;
 
 interface CreateSchemaDialogProps extends UseMainState {
-  visible: boolean;
-  closeDialog: () => void;
   getDefaultFileName: (sample: Sample | "") => string;
   schemaLoaded: (schema: Omit<SchemaState, "parameters">) => void;
   hasSchemaName: (name: string) => boolean;
 }
 
-export default function CreateSchemaDialog({
-  state: { schemas },
-  setState,
-  visible,
-  closeDialog,
-  getDefaultFileName,
-  schemaLoaded,
-  hasSchemaName,
-}: CreateSchemaDialogProps) {
+const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps>(function CreateSchemaDialog(
+  { state: { schemas }, setState, getDefaultFileName, schemaLoaded, hasSchemaName },
+  ref,
+) {
   const [createSchemaName, setCreateSchemaName] = useState(() => getDefaultFileName("") + ".js");
   const [createSchemaSample, setCreateSchemaSample] = useState<Sample | "">("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const resetDialog = useCallback(() => {
     setCreateSchemaName(getDefaultFileName("") + ".js");
     setCreateSchemaSample("");
     setLoading(false);
-  }, [getDefaultFileName, visible]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getDefaultFileName, schemas]);
+  useEffect(resetDialog, [resetDialog]);
 
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
@@ -207,6 +234,11 @@ export default function CreateSchemaDialog({
     if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
     return "";
   }, [createSchemaName, hasSchemaName]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    inputRef.current?.setCustomValidity(validation);
+  }, [validation]);
 
   function recursiveFolder(folder: Folder) {
     return Object.entries(folder).map(([name, sample]) => {
@@ -243,8 +275,10 @@ export default function CreateSchemaDialog({
       });
     } catch {
       setLoading(false);
+    } finally {
+      (ref as RefObject<HTMLDialogElement>).current?.close();
     }
-  }, [createSchemaName, createSchemaSample, schemaLoaded]);
+  }, [createSchemaName, createSchemaSample, schemaLoaded, ref]);
 
   useEffect(() => {
     if (schemas.length) return;
@@ -284,113 +318,107 @@ export default function CreateSchemaDialog({
     [],
   );
 
-  return visible
-    ? createPortal(
-        <Container className="swal2-container swal2-center swal2-backdrop-show">
-          <Popup className="swal2-popup swal2-modal" tabIndex={-1} role="dialog" aria-live="assertive" aria-modal>
-            <Title className="swal2-title">新增方案</Title>
-            <Explorer>
-              <ul>
-                <li
-                  onClick={() => {
-                    const name = normalizeFileName(createSchemaName);
-                    if (!name || name === getDefaultFileName(createSchemaSample))
-                      setCreateSchemaName(getDefaultFileName("") + ".js");
-                    setCreateSchemaSample("");
-                  }}>
-                  <div>
-                    <FontAwesomeIcon icon={faFile} fixedWidth />
-                    <FileName selected={!createSchemaSample}>新增空白方案……</FileName>
-                  </div>
-                </li>
-                {recursiveFolder(samples)}
-              </ul>
-            </Explorer>
-            {/* TODO preview disabled for now */}
-            <Preview hidden>
-              <PreviewFrame>
-                <div>
-                  <ruby>
-                    遙<rp>(</rp>
-                    <rt lang="och-Latn-fonipa">eu</rt>
-                    <rp>)</rp>
-                  </ruby>
-                  <ruby>
-                    襟<rp>(</rp>
-                    <rt lang="och-Latn-fonipa">kim</rt>
-                    <rp>)</rp>
-                  </ruby>
-                  <ruby>
-                    甫<rp>(</rp>
-                    <rt lang="och-Latn-fonipa">pu</rt>
-                    <rp>)</rp>
-                  </ruby>
-                  <ruby>
-                    暢<rp>(</rp>
-                    <rt lang="och-Latn-fonipa">tyang</rt>
-                    <rp>)</rp>
-                  </ruby>
-                </div>
-              </PreviewFrame>
-              <Description>eu kim pu tyang, it kyong sen pi.</Description>
-              <Metadata>
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>作者</th>
-                      <td>nk2028</td>
-                    </tr>
-                    <tr>
-                      <th>版本</th>
-                      <td>0.0.0</td>
-                    </tr>
-                    <tr>
-                      <th>日期</th>
-                      <td>2028-01-01</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </Metadata>
-            </Preview>
-            <Action>
-              <Rename invalid={!!validation}>
-                <form
-                  className="pure-form"
-                  onSubmit={e => {
-                    e.preventDefault();
-                    validation || addSchema();
-                  }}>
-                  <label>
-                    <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-                    <input
-                      type="text"
-                      placeholder="輸入方案名稱……"
-                      value={createSchemaName}
-                      onChange={inputChange}
-                      autoComplete="off"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                      spellCheck="false"
-                    />
-                  </label>
-                </form>
-              </Rename>
-              <button className="swal2-cancel swal2-styled" onClick={closeDialog}>
-                取消
-              </button>
-              <button className="swal2-confirm swal2-styled" disabled={!!validation} onClick={addSchema}>
-                新增
-              </button>
-            </Action>
-            <Validation>{validation || "\xa0"}</Validation>
-            {loading && (
-              <Loading>
-                <Spinner />
-              </Loading>
-            )}
-          </Popup>
-        </Container>,
-        document.body,
-      )
-    : null;
-}
+  return createPortal(
+    <Container ref={ref}>
+      <Popup>
+        <Title>新增方案</Title>
+        <Explorer>
+          <ul>
+            <li
+              onClick={() => {
+                const name = normalizeFileName(createSchemaName);
+                if (!name || name === getDefaultFileName(createSchemaSample))
+                  setCreateSchemaName(getDefaultFileName("") + ".js");
+                setCreateSchemaSample("");
+              }}>
+              <div>
+                <FontAwesomeIcon icon={faFile} fixedWidth />
+                <FileName selected={!createSchemaSample}>新增空白方案……</FileName>
+              </div>
+            </li>
+            {recursiveFolder(samples)}
+          </ul>
+        </Explorer>
+        {/* TODO preview disabled for now */}
+        <Preview hidden>
+          <PreviewFrame>
+            <div>
+              <ruby>
+                遙<rp>(</rp>
+                <rt lang="och-Latn-fonipa">eu</rt>
+                <rp>)</rp>
+              </ruby>
+              <ruby>
+                襟<rp>(</rp>
+                <rt lang="och-Latn-fonipa">kim</rt>
+                <rp>)</rp>
+              </ruby>
+              <ruby>
+                甫<rp>(</rp>
+                <rt lang="och-Latn-fonipa">pu</rt>
+                <rp>)</rp>
+              </ruby>
+              <ruby>
+                暢<rp>(</rp>
+                <rt lang="och-Latn-fonipa">tyang</rt>
+                <rp>)</rp>
+              </ruby>
+            </div>
+          </PreviewFrame>
+          <Description>eu kim pu tyang, it kyong sen pi.</Description>
+          <Metadata>
+            <table>
+              <tbody>
+                <tr>
+                  <th>作者</th>
+                  <td>nk2028</td>
+                </tr>
+                <tr>
+                  <th>版本</th>
+                  <td>0.0.0</td>
+                </tr>
+                <tr>
+                  <th>日期</th>
+                  <td>2028-01-01</td>
+                </tr>
+              </tbody>
+            </table>
+          </Metadata>
+        </Preview>
+        <Action method="dialog" className="pure-form">
+          <Rename>
+            <label>
+              <FontAwesomeIcon icon={faPenToSquare} size="lg" />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="輸入方案名稱……"
+                value={createSchemaName}
+                onChange={inputChange}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+              />
+            </label>
+          </Rename>
+          <button type="submit" className="pure-button" formNoValidate onClick={resetDialog}>
+            取消
+          </button>
+          <button type="button" className="pure-button pure-button-primary" onClick={addSchema}>
+            新增
+          </button>
+        </Action>
+        <Validation>{validation || "\xa0"}</Validation>
+        {loading && (
+          <Loading>
+            <Spinner />
+          </Loading>
+        )}
+      </Popup>
+    </Container>,
+    document.body,
+  );
+});
+
+export default CreateSchemaDialog;
