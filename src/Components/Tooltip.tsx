@@ -1,8 +1,9 @@
-import { cloneElement, ReactElement, useCallback, useEffect, useRef } from "react";
-import type { SyntheticEvent } from "react";
+import { cloneElement, useCallback, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 
 import { css as stylesheet } from "@emotion/css";
+
+import type { ReactElement, SyntheticEvent } from "react";
 
 function getPageWidth() {
   return Math.max(

@@ -1,8 +1,6 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
+  "root": true,
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -13,19 +11,13 @@
     "plugin:import/typescript",
     "prettier"
   ],
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "project": true
   },
   "plugins": ["react", "@typescript-eslint", "import"],
   "settings": {
-    "react": {
-      "version": "detect"
-    }
+    "import/core-modules": ["react", "react-dom", "react-dom/client"]
   },
   "rules": {
     "@typescript-eslint/no-unused-expressions": [
@@ -39,22 +31,18 @@
     "import/order": [
       "error",
       {
-        "groups": [["builtin", "external"], "internal", ["parent", "sibling", "index"], "type", "unknown", "object"],
+        "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"], "type", "unknown", "object"],
         "pathGroups": [
-          {
-            "pattern": "{react,react-dom,react-dom/client}",
-            "group": "builtin",
-            "position": "before"
-          },
           {
             "pattern": "@**/**",
             "group": "external",
             "position": "after"
           }
         ],
-        "pathGroupsExcludedImportTypes": ["{react,react-dom,react-dom/client}", "@**/**"],
+        "pathGroupsExcludedImportTypes": ["@**/**"],
         "newlines-between": "always",
-        "alphabetize": { "order": "asc", "caseInsensitive": true }
+        "alphabetize": { "order": "asc", "orderImportKind": "asc", "caseInsensitive": true },
+        "warnOnUnassignedImports": true
       }
     ],
     "import/no-unresolved": ["error", { "ignore": ["\\?(?:worker(&inline|&url)?|raw)$"] }]

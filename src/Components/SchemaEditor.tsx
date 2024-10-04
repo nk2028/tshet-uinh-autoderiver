@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { MouseEvent, MutableRefObject } from "react";
 import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
@@ -18,6 +17,7 @@ import "../editor/setup";
 import { memoize, normalizeFileName, notifyError } from "../utils";
 
 import type { UseMainState, ReactNode } from "../consts";
+import type { MouseEvent, MutableRefObject } from "react";
 
 const TabBar = styled.div`
   display: flex;

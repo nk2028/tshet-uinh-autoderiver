@@ -1,4 +1,4 @@
-import { ChangeEventHandler, forwardRef, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
@@ -10,11 +10,12 @@ import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix, UseMainState } from "../consts";
+import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix } from "../consts";
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
 
-import type { Folder, Sample, SchemaState } from "../consts";
+import type { Folder, Sample, SchemaState, UseMainState } from "../consts";
+import type { ChangeEventHandler, RefObject } from "react";
 
 const Container = styled.dialog`
   transform: scale(0.9);

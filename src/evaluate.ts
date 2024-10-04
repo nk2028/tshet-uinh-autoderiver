@@ -1,10 +1,11 @@
 import { 推導方案 } from "tshet-uinh-deriver-tools";
 
-import { CustomNode, Formatter } from "./Classes/CustomElement";
+import { Formatter } from "./Classes/CustomElement";
 import { tshetUinhTextLabelURLPrefix } from "./consts";
 import { evaluateOption, getArticle, setArticle } from "./options";
 import { fetchFile, normalizeFileName, notifyError } from "./utils";
 
+import type { CustomNode } from "./Classes/CustomElement";
 import type { MainState, ReactNode } from "./consts";
 import type { 音韻地位 } from "tshet-uinh";
 import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools";

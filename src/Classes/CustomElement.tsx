@@ -1,10 +1,10 @@
 import { createElement, Fragment } from "react";
-import type { HTMLAttributes, ReactElement } from "react";
 
 import styled from "@emotion/styled";
 
 import type { ReactNode } from "../consts";
 import type { Property } from "csstype";
+import type { HTMLAttributes, ReactElement } from "react";
 
 const Missing = styled.span`
   &:after {

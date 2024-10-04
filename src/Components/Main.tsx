@@ -1,4 +1,4 @@
-import { MutableRefObject, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import styled from "@emotion/styled";
@@ -16,6 +16,7 @@ import initialState, { stateStorageLocation } from "../state";
 import TooltipLabel from "./TooltipLabel";
 
 import type { MainState, Option, ReactNode } from "../consts";
+import type { MutableRefObject } from "react";
 
 const dummyOutput = document.createElement("output");
 
