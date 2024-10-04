@@ -8,13 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
-import actions from "../actions";
-import Swal from "../Classes/SwalReact";
 import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix } from "../consts";
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
 
-import type { Folder, Sample, SchemaState, UseMainState } from "../consts";
+import type { Folder, MainState, Sample, SchemaState } from "../consts";
 import type { ChangeEventHandler, RefObject } from "react";
 
 const Container = styled.dialog`
@@ -169,19 +167,16 @@ const Loading = styled.div`
   background-color: rgba(249, 250, 251, 0.6);
   margin: -2rem;
 `;
-const LoadModal = styled.div`
-  margin-top: 3rem;
-  color: #bbb;
-`;
 
-interface CreateSchemaDialogProps extends UseMainState {
+interface CreateSchemaDialogProps {
+  state: MainState;
   getDefaultFileName(sample: string): string;
   schemaLoaded(schema: Omit<SchemaState, "parameters">): void;
   hasSchemaName(name: string): boolean;
 }
 
 const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps>(function CreateSchemaDialog(
-  { state: { schemas }, setState, getDefaultFileName, schemaLoaded, hasSchemaName },
+  { state: { schemas }, getDefaultFileName, schemaLoaded, hasSchemaName },
   ref,
 ) {
   const [createSchemaName, setCreateSchemaName] = useState(() => getDefaultFileName("") + ".js");
@@ -248,39 +243,6 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
       (ref as RefObject<HTMLDialogElement>).current?.close();
     }
   }, [createSchemaName, createSchemaSample, schemaLoaded, ref]);
-
-  useEffect(() => {
-    if (schemas.length) return;
-    Swal.fire({
-      html: (
-        <LoadModal>
-          <Spinner />
-          <h2>載入中……</h2>
-        </LoadModal>
-      ),
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showConfirmButton: false,
-    });
-    (async () => {
-      try {
-        setState(
-          actions.addSchema({
-            name: "tupa.js",
-            input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js"),
-          }),
-        );
-        Swal.close();
-      } catch {
-        setState(
-          actions.addSchema({
-            name: "untitled.js",
-            input: newFileTemplate,
-          }),
-        );
-      }
-    })();
-  }, [schemas, setState]);
 
   const inputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     event => setCreateSchemaName(event.target.value),

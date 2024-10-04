@@ -1,32 +1,26 @@
 import { css as stylesheet } from "@emotion/css";
+import styled from "@emotion/styled";
 
 import Swal from "./Classes/SwalReact";
 import Spinner from "./Components/Spinner";
 
 import type { SweetAlertOptions } from "sweetalert2";
 
-const loadingModal = stylesheet`
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  margin: 1rem;
-  overflow: unset;
+const LoadModal = styled.div`
+  margin-top: 3rem;
+  color: #bbb;
 `;
 
-export function showLoadingDialog(msg: string, abortController: AbortController) {
+export function showLoadingModal(abortController: AbortController) {
   Swal.fire({
-    title: "載入中",
     html: (
-      <>
-        <div>{msg}</div>
+      <LoadModal>
         <Spinner />
-      </>
+        <h2>正在載入方案……</h2>
+      </LoadModal>
     ),
-    customClass: {
-      htmlContainer: loadingModal,
-    },
     allowOutsideClick: false,
+    allowEscapeKey: false,
     showConfirmButton: false,
     showCancelButton: true,
     cancelButtonText: "取消",
@@ -82,14 +76,14 @@ export function notifyError(msg: string, err?: unknown) {
   return new Error(msg, err instanceof Error ? { cause: err } : {});
 }
 
-export async function fetchFile(input: string) {
+export async function fetchFile(href: string | URL, signal: AbortSignal | null = null) {
   try {
-    const response = await fetch(input, { cache: "no-cache" });
+    const response = await fetch(href, { cache: "no-cache", signal });
     const text = await response.text();
     if (!response.ok) throw new Error(text);
     return text;
   } catch (err) {
-    throw notifyError("載入檔案失敗", err);
+    throw signal?.aborted ? err : notifyError("載入檔案失敗", err);
   }
 }
 

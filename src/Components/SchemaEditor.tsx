@@ -12,9 +12,9 @@ import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import { codeFontFamily, invalidCharsRegex, noop } from "../consts";
+import { codeFontFamily, invalidCharsRegex, newFileTemplate, noop, tshetUinhExamplesURLPrefix } from "../consts";
 import "../editor/setup";
-import { memoize, normalizeFileName, notifyError, showLoadingDialog } from "../utils";
+import { fetchFile, memoize, normalizeFileName, notifyError, showLoadingModal } from "../utils";
 
 import type { UseMainState, ReactNode } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
@@ -282,14 +282,33 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
   );
 
   useEffect(() => {
-    async function fetchQueryFiles() {
+    async function loadSchemas() {
       const query = new URLSearchParams(location.search);
       history.replaceState(null, document.title, location.pathname); // Remove query
       const hrefs = query.getAll("script");
-      if (!hrefs.length) return;
+      if (!hrefs.length && schemas.length) return;
       const abortController = new AbortController();
       const { signal } = abortController;
-      showLoadingDialog("正在載入檔案，請稍候……", abortController);
+      showLoadingModal(abortController);
+      if (!hrefs.length) {
+        try {
+          setState(
+            actions.addSchema({
+              name: "tupa.js",
+              input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js", signal),
+            }),
+          );
+        } catch {
+          setState(
+            actions.addSchema({
+              name: "untitled.js",
+              input: newFileTemplate,
+            }),
+          );
+        }
+        Swal.close();
+        return;
+      }
       const names = query.getAll("name");
       let i = 0;
       const fetchResults = await Promise.allSettled(
@@ -329,18 +348,21 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
           errors.push(result.reason);
         }
       }
+      // The file names may be incorrect in strict mode, but are fine in production build
       await addFilesToSchema(files);
+      // Add `tupa.js` if all fetches failed and no schemas present
+      if (errors.length === fetchResults.length && !schemas.length) await loadSchemas();
       Swal.close();
       if (!signal.aborted) {
         if (errors.length > 1) {
-          notifyError(`${errors.length} 個檔案無法載入`, new AggregateError(errors));
+          notifyError(`${errors.length} 個方案無法載入`, new AggregateError(errors));
         } else if (errors.length === 1) {
-          notifyError(fetchResults.length === 1 ? "無法載入檔案" : "1 個檔案無法載入", errors[0]);
+          notifyError(fetchResults.length === 1 ? "無法載入方案" : "1 個方案無法載入", errors[0]);
         }
       }
     }
-    fetchQueryFiles();
-  }, [addFilesToSchema]);
+    loadSchemas();
+  }, [schemas, setState, addFilesToSchema]);
 
   const deleteSchema = useCallback(
     async (name: string) => {
@@ -759,7 +781,6 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       <CreateSchemaDialog
         ref={dialogRef}
         state={state}
-        setState={setState}
         schemaLoaded={useCallback(schema => setState(actions.addSchema(schema)), [setState])}
         getDefaultFileName={getDefaultFileName}
         hasSchemaName={useCallback(name => !!schemas.find(schema => schema.name === name), [schemas])}
