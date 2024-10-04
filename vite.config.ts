@@ -22,6 +22,7 @@ export function makeConfig(assetLocation = base) {
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
     build: {
+      target: "esnext",
       chunkSizeWarningLimit: 8192,
       outDir: "build",
     },

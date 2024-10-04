@@ -14,7 +14,7 @@ import actions from "../actions";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, invalidCharsRegex, noop } from "../consts";
 import "../editor/setup";
-import { memoize, normalizeFileName, notifyError } from "../utils";
+import { memoize, normalizeFileName, notifyError, showLoadingDialog } from "../utils";
 
 import type { UseMainState, ReactNode } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
@@ -280,6 +280,66 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
     },
     [schemas, setState, getDefaultFileNameWithSchemaNames],
   );
+
+  useEffect(() => {
+    async function fetchQueryFiles() {
+      const query = new URLSearchParams(location.search);
+      history.replaceState(null, document.title, location.pathname); // Remove query
+      const hrefs = query.getAll("script");
+      if (!hrefs.length) return;
+      const abortController = new AbortController();
+      const { signal } = abortController;
+      showLoadingDialog("正在載入檔案，請稍候……", abortController);
+      const names = query.getAll("name");
+      let i = 0;
+      const fetchResults = await Promise.allSettled(
+        hrefs.map(async href => {
+          // Adds a protocol if the input seems to lack one
+          // This also prevents `example.com:` from being treated as a protocol if the input is `example.com:8080`
+          const url = new URL(/^[a-z]+:/i.test(href) ? href : `https://${href}`);
+          const name =
+            i < names.length
+              ? names[i++] // Use user-specified name
+              : url.protocol === "data:"
+                ? "" // Let `getDefaultFileName` name it
+                : /([^/]*)\/*$/.exec(url.pathname)![1]; // Use the last segment of the path as name
+          if (url.hostname === "github.com") {
+            url.searchParams.append("raw", "true"); // Fetch raw file content for GitHub files
+          } else if (url.hostname === "gist.github.com") {
+            url.pathname += "/raw"; // Fetch raw file content for GitHub gists
+          }
+          const response = await fetch(url, {
+            headers: {
+              Accept: "text/javascript, text/plain", // githubusercontent.com always responses with `Content-Type: text/plain`
+            },
+            cache: "no-cache",
+            signal,
+          });
+          const blob = await response.blob();
+          return new File([blob], name);
+        }),
+      );
+      const files: File[] = [];
+      const errors: unknown[] = [];
+      for (const result of fetchResults) {
+        if (result.status === "fulfilled") {
+          files.push(result.value);
+        } else {
+          errors.push(result.reason);
+        }
+      }
+      await addFilesToSchema(files);
+      Swal.close();
+      if (!signal.aborted) {
+        if (errors.length > 1) {
+          notifyError(`${errors.length} 個檔案無法載入`, new AggregateError(errors));
+        } else if (errors.length === 1) {
+          notifyError(fetchResults.length === 1 ? "無法載入檔案" : "1 個檔案無法載入", errors[0]);
+        }
+      }
+    }
+    fetchQueryFiles();
+  }, [addFilesToSchema]);
 
   const deleteSchema = useCallback(
     async (name: string) => {

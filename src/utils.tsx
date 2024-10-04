@@ -1,8 +1,37 @@
 import { css as stylesheet } from "@emotion/css";
 
 import Swal from "./Classes/SwalReact";
+import Spinner from "./Components/Spinner";
 
 import type { SweetAlertOptions } from "sweetalert2";
+
+const loadingModal = stylesheet`
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin: 1rem;
+  overflow: unset;
+`;
+
+export function showLoadingDialog(msg: string, abortController: AbortController) {
+  Swal.fire({
+    title: "載入中",
+    html: (
+      <>
+        <div>{msg}</div>
+        <Spinner />
+      </>
+    ),
+    customClass: {
+      htmlContainer: loadingModal,
+    },
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    showCancelButton: true,
+    cancelButtonText: "取消",
+  }).then(result => result.dismiss === Swal.DismissReason.cancel && abortController.abort());
+}
 
 const errorModal = stylesheet`
   width: 60vw;
