@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-
 import { 資料, 音韻地位 } from "tshet-uinh";
 import Yitizi from "yitizi";
 
@@ -192,7 +191,7 @@ export const evaluateOption: Record<Option, Handler> = {
     return (
       <Table
         head={[...title(schemas), "計數"]}
-        body={result.sort((a, b) => b[2] - a[2]).map(([, 擬音陣列, count]) => [...wrap(擬音陣列), count + ""])}
+        body={result.sort((a, b) => b[2] - a[2]).map(([, 擬音陣列, count]) => [...wrap(擬音陣列), `${count}`])}
       />
     );
   },

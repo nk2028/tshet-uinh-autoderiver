@@ -1,62 +1,133 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
+  "root": true,
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/strict",
     "prettier"
   ],
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "project": true
   },
-  "plugins": ["react", "@typescript-eslint", "import"],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
+  "plugins": ["@typescript-eslint", "import", "react", "jsx-a11y", "react-refresh", "no-array-concat"],
+	"settings": {
+		"import/core-modules": ["react", "react-dom", "react-dom/client"]
+	},
   "rules": {
-    "@typescript-eslint/no-unused-expressions": [
+    "default-case-last": "error",
+    "eqeqeq": "error",
+    "func-style": ["error", "declaration"],
+    "grouped-accessor-pairs": ["error", "getBeforeSet"],
+    "logical-assignment-operators": "error",
+    "no-array-concat/no-array-concat": "error",
+    "no-constant-binary-expression": "error",
+    "no-control-regex": "off",
+    "no-irregular-whitespace": [
       "error",
       {
-        "allowShortCircuit": true,
-        "allowTaggedTemplates": true
+        "skipStrings": true,
+        "skipComments": true,
+        "skipRegExps": true,
+        "skipTemplates": true,
+        "skipJSXText": true
+      }
+    ],
+    "no-negated-condition": "warn",
+    "no-self-compare": "error",
+    "no-template-curly-in-string": "warn",
+    "no-undef-init": "error",
+    "no-unmodified-loop-condition": "warn",
+    "no-unneeded-ternary": "error",
+    "no-unreachable-loop": "warn",
+    "no-useless-computed-key": "error",
+    "no-useless-concat": "error",
+    "no-useless-return": "error",
+    "no-var": "error",
+    "operator-assignment": "error",
+    "prefer-const": "error",
+    "prefer-exponentiation-operator": "error",
+    "prefer-object-spread": "error",
+    "prefer-regex-literals": "error",
+    "prefer-rest-params": "error",
+    "prefer-template": "warn",
+
+    "@typescript-eslint/consistent-type-exports": "error",
+    "@typescript-eslint/default-param-last": "error",
+    "@typescript-eslint/no-confusing-void-expression": "off",
+    "@typescript-eslint/no-loop-func": "warn",
+    "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unnecessary-qualifier": "error",
+    "@typescript-eslint/no-useless-empty-export": "error",
+    "@typescript-eslint/parameter-properties": ["error", { "prefer": "parameter-property" }],
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/prefer-regexp-exec": "error",
+    "@typescript-eslint/prefer-string-starts-ends-with": "off",
+    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/restrict-plus-operands": [
+      "error",
+      {
+        "allowAny": true,
+        "allowBoolean": true,
+        "allowNumberAndString": true
+      }
+    ],
+    "@typescript-eslint/restrict-template-expressions": [
+      "error",
+      {
+        "allowAny": true,
+        "allowBoolean": true,
+        "allowNumber": true,
+        "allowNever": true
       }
     ],
 
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "import/extensions": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-absolute-path": "error",
+    "import/no-anonymous-default-export": ["warn", { "allowCallExpression": false }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["*.config.ts"],
+        "includeInternal": true,
+        "includeTypes": true
+      }
+    ],
+    "import/no-named-default": "error",
+    "import/no-self-import": "error",
+    "import/no-unresolved": ["error", { "ignore": ["\\?(?:worker(&inline|&url)?|raw)$"] }],
+    "import/no-useless-path-segments": ["error", { "noUselessIndex": true }],
     "import/order": [
       "error",
       {
         "groups": [["builtin", "external"], "internal", ["parent", "sibling", "index"], "type", "unknown", "object"],
         "pathGroups": [
           {
-            "pattern": "{react,react-dom,react-dom/client}",
-            "group": "builtin",
-            "position": "before"
-          },
-          {
             "pattern": "@**/**",
             "group": "external",
             "position": "after"
           }
         ],
-        "pathGroupsExcludedImportTypes": ["{react,react-dom,react-dom/client}", "@**/**"],
+        "pathGroupsExcludedImportTypes": ["@**/**"],
         "newlines-between": "always",
-        "alphabetize": { "order": "asc", "caseInsensitive": true }
+        "alphabetize": { "order": "asc", "orderImportKind": "asc", "caseInsensitive": true },
+        "warnOnUnassignedImports": true
       }
     ],
-    "import/no-unresolved": ["error", { "ignore": ["\\?(?:worker(&inline|&url)?|raw)$"] }]
+
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+
+    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }]
   }
 }
