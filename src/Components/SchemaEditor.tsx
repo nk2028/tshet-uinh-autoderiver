@@ -305,7 +305,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
                 : /([^/]*)\/*$/.exec(url.pathname)![1]; // Use the last segment of the path as name
           if (url.hostname === "github.com") {
             url.searchParams.append("raw", "true"); // Fetch raw file content for GitHub files
-          } else if (url.hostname === "gist.github.com") {
+          } else if (url.hostname === "gist.github.com" && !url.pathname.endsWith("/raw")) {
             url.pathname += "/raw"; // Fetch raw file content for GitHub gists
           }
           const response = await fetch(url, {
@@ -315,6 +315,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             cache: "no-cache",
             signal,
           });
+          if (!response.ok) throw new Error(await response.text());
           const blob = await response.blob();
           return new File([blob], name);
         }),

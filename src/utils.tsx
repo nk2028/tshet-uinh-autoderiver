@@ -84,8 +84,9 @@ export function notifyError(msg: string, err?: unknown) {
 
 export async function fetchFile(input: string) {
   try {
-    const text = await (await fetch(input, { cache: "no-cache" })).text();
-    if (text.startsWith("Failed to fetch")) throw new Error(text);
+    const response = await fetch(input, { cache: "no-cache" });
+    const text = await response.text();
+    if (!response.ok) throw new Error(text);
     return text;
   } catch (err) {
     throw notifyError("載入檔案失敗", err);
