@@ -98,3 +98,24 @@ export function memoize<T extends PropertyKey, R>(fn: (arg: T) => R) {
     return (results[arg] = fn(arg));
   };
 }
+
+export async function settleAndGroupPromise<T>(values: Iterable<T | PromiseLike<T>>) {
+  const settledResults = await Promise.allSettled(values);
+  const returnResults: { fulfilled: T[]; rejected: unknown[] } = { fulfilled: [], rejected: [] };
+  for (const result of settledResults) {
+    if (result.status === "fulfilled") {
+      returnResults.fulfilled.push(result.value);
+    } else {
+      returnResults.rejected.push(result.reason);
+    }
+  }
+  return returnResults;
+}
+
+export function displaySchemaLoadingErrors(errors: unknown[], nSchemas: number) {
+  if (errors.length > 1) {
+    notifyError(`${errors.length} 個方案無法載入`, new AggregateError(errors));
+  } else if (errors.length === 1) {
+    notifyError(nSchemas === 1 ? "無法載入方案" : "1 個方案無法載入", errors[0]);
+  }
+}

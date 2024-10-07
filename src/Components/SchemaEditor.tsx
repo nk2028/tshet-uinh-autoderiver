@@ -14,7 +14,15 @@ import actions from "../actions";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, invalidCharsRegex, newFileTemplate, noop, tshetUinhExamplesURLPrefix } from "../consts";
 import "../editor/setup";
-import { fetchFile, memoize, normalizeFileName, notifyError, showLoadingModal } from "../utils";
+import {
+  displaySchemaLoadingErrors,
+  fetchFile,
+  memoize,
+  normalizeFileName,
+  notifyError,
+  settleAndGroupPromise,
+  showLoadingModal,
+} from "../utils";
 
 import type { UseMainState, ReactNode } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
@@ -260,23 +268,24 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
 
   const addFilesToSchema = useCallback(
     async (files: Iterable<File>) => {
-      const contents = await Promise.all(Array.from(files, file => file.text()));
-      const currSchemaNames = schemas.map(({ name }) => name);
-      setState(currState => {
-        let newState = currState;
-        let i = 0;
-        for (const file of files) {
+      const { fulfilled: fileNamesAndContents, rejected: errors } = await settleAndGroupPromise(
+        Array.from(files, async file => [file.name, await file.text()] as const),
+      );
+      setState(newState => {
+        const currSchemaNames = schemas.map(({ name }) => name);
+        for (const [name, content] of fileNamesAndContents) {
           // POSIX allows all characters other than `\0` and `/` in file names,
           // this is necessary to ensure that the file name is valid on all platforms.
-          const name =
+          const formattedName =
             getDefaultFileNameWithSchemaNames(currSchemaNames)(
-              normalizeFileName(file.name).replace(invalidCharsRegex, "_"),
+              normalizeFileName(name).replace(invalidCharsRegex, "_"),
             ) + ".js";
-          currSchemaNames.push(name);
-          newState = actions.addSchema({ name, input: contents[i++] })(newState);
+          currSchemaNames.push(formattedName);
+          newState = actions.addSchema({ name: formattedName, input: content })(newState);
         }
         return newState;
       });
+      return errors;
     },
     [schemas, setState, getDefaultFileNameWithSchemaNames],
   );
@@ -311,7 +320,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       }
       const names = query.getAll("name");
       let i = 0;
-      const fetchResults = await Promise.allSettled(
+      const { fulfilled: files, rejected: errors } = await settleAndGroupPromise(
         hrefs.map(async href => {
           // Adds a protocol if the input seems to lack one
           // This also prevents `example.com:` from being treated as a protocol if the input is `example.com:8080`
@@ -339,27 +348,12 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
           return new File([blob], name);
         }),
       );
-      const files: File[] = [];
-      const errors: unknown[] = [];
-      for (const result of fetchResults) {
-        if (result.status === "fulfilled") {
-          files.push(result.value);
-        } else {
-          errors.push(result.reason);
-        }
-      }
       // The file names may be incorrect in strict mode, but are fine in production build
-      await addFilesToSchema(files);
+      errors.push(...(await addFilesToSchema(files)));
       // Add `tupa.js` if all fetches failed and no schemas present
-      if (errors.length === fetchResults.length && !schemas.length) await loadSchemas();
+      if (errors.length === hrefs.length && !schemas.length) await loadSchemas();
       Swal.close();
-      if (!signal.aborted) {
-        if (errors.length > 1) {
-          notifyError(`${errors.length} 個方案無法載入`, new AggregateError(errors));
-        } else if (errors.length === 1) {
-          notifyError(fetchResults.length === 1 ? "無法載入方案" : "1 個方案無法載入", errors[0]);
-        }
-      }
+      signal.aborted || displaySchemaLoadingErrors(errors, hrefs.length);
     }
     loadSchemas();
   }, [schemas, setState, addFilesToSchema]);
@@ -407,7 +401,11 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             ],
             multiple: true,
           });
-          addFilesToSchema(await Promise.all(handles.map(handle => handle.getFile())));
+          const { fulfilled: files, rejected: errors } = await settleAndGroupPromise(
+            handles.map(handle => handle.getFile()),
+          );
+          errors.push(...(await addFilesToSchema(files)));
+          displaySchemaLoadingErrors(errors, handles.length);
         } catch (error) {
           if ((error as Error | null)?.name !== "AbortError") {
             notifyError("開啟檔案時發生錯誤", error);
@@ -421,10 +419,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       input.multiple = true;
       document.body.appendChild(input);
       input.addEventListener("change", async () => {
+        const { files } = input;
         document.body.removeChild(input);
-        if (input.files) {
-          addFilesToSchema(input.files);
-        }
+        files && displaySchemaLoadingErrors(await addFilesToSchema(files), files.length);
       });
       input.showPicker();
     }
@@ -631,7 +628,8 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       event.preventDefault();
       event.stopPropagation();
       setIsDragging(false);
-      addFilesToSchema(event.dataTransfer.files);
+      const { files } = event.dataTransfer;
+      displaySchemaLoadingErrors(await addFilesToSchema(files), files.length);
     }
 
     window.addEventListener("dragenter", onDragStart);
