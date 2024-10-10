@@ -10,7 +10,9 @@ export const tshetUinhTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/t
 
 export const newFileTemplate = /* js */ `
 /* 在此輸入描述……
- * 
+ * 有用工具：
+ * Tshet-uinh Extrapolation Tool：https://nk2028.shn.hk/tshet-uinh-extrapolation-tool/
+ * 音韻地位查詢器：https://nk2028.shn.hk/tshet-uinh-tools/
  * @author your_name
  */
 
