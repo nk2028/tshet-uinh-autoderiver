@@ -6,12 +6,13 @@ export default {
   },
   "切韻音系擬音": {
     "王力擬音": "wangli",
-    "unt 擬音": "unt",
     "潘悟雲擬音": "panwuyun",
+    "unt 擬音": "unt",
     "msoeg 擬音": "msoeg_v8",
   },
   "推導後世音系": {
     "推導盛中唐擬音": "mid_tang",
+    "推導北宋擬音（聲音唱和圖）": "n_song",
     "推導《蒙古字韻》": "mongol",
     "推導《中原音韻》擬音": "zhongyuan",
   },
