@@ -5,6 +5,7 @@ export default {
     "白一平轉寫": "baxter",
   },
   "切韻音系擬音": {
+    "高本漢擬音": "karlgren",
     "王力擬音": "wangli",
     "潘悟雲擬音": "panwuyun",
     "unt 擬音": "unt",
