@@ -23,6 +23,7 @@ export default {
     "推導上海話": "zaonhe",
   },
   "人造音系": {
+    "綾香思考音系": "ayaka_v8",
     "不通話": "yec_en_hua",
   },
 } as const;
