@@ -778,7 +778,6 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       </Options>
       <CreateSchemaDialog
         ref={dialogRef}
-        state={state}
         schemaLoaded={useCallback(schema => setState(actions.addSchema(schema)), [setState])}
         getDefaultFileName={getDefaultFileName}
         hasSchemaName={useCallback(name => !!schemas.find(schema => schema.name === name), [schemas])}

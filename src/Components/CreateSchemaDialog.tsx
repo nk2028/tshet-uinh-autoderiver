@@ -12,8 +12,8 @@ import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix } from "
 import samples from "../samples";
 import { fetchFile, normalizeFileName } from "../utils";
 
-import type { Folder, MainState, Sample, SchemaState } from "../consts";
-import type { ChangeEventHandler, RefObject } from "react";
+import type { Folder, Sample, SchemaState } from "../consts";
+import type { ChangeEventHandler, FormEvent, RefObject } from "react";
 
 const Container = styled.dialog`
   transform: scale(0.9);
@@ -63,6 +63,7 @@ const Explorer = styled.div`
   color: #111;
   border: 1px solid #aaa;
   padding: 0.5rem;
+  outline: none;
   ul {
     padding: 0;
     margin: 0;
@@ -72,9 +73,53 @@ const Explorer = styled.div`
   > ul {
     margin-left: 0;
   }
-  div {
+  button {
     display: flex;
     align-items: center;
+    width: 100%;
+    text-align: left;
+    * {
+      transition:
+        color 100ms,
+        background-color 100ms;
+    }
+    &:hover *,
+    &:focus * {
+      color: #0078e7;
+    }
+  }
+  details {
+    summary {
+      display: flex;
+      align-items: center;
+      outline: none;
+      &::-moz-focus-inner {
+        border: none;
+        padding: 0;
+      }
+      &::marker {
+        display: none;
+      }
+      transition: color 100ms;
+      &:hover,
+      &:focus {
+        color: #0078e7;
+      }
+    }
+    .marker-open {
+      display: none;
+    }
+    .marker-close {
+      display: block;
+    }
+    &[open] {
+      .marker-open {
+        display: block;
+      }
+      .marker-close {
+        display: none;
+      }
+    }
   }
 `;
 const FileName = styled.div<{ selected: boolean }>`
@@ -86,7 +131,7 @@ const FileName = styled.div<{ selected: boolean }>`
     selected &&
     css`
       background-color: #0078e7;
-      color: white;
+      color: white !important;
     `}
 `;
 const Preview = styled.div`
@@ -169,14 +214,13 @@ const Loading = styled.div`
 `;
 
 interface CreateSchemaDialogProps {
-  state: MainState;
   getDefaultFileName(sample: string): string;
   schemaLoaded(schema: Omit<SchemaState, "parameters">): void;
   hasSchemaName(name: string): boolean;
 }
 
 const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps>(function CreateSchemaDialog(
-  { state: { schemas }, getDefaultFileName, schemaLoaded, hasSchemaName },
+  { getDefaultFileName, schemaLoaded, hasSchemaName },
   ref,
 ) {
   const [createSchemaName, setCreateSchemaName] = useState(() => getDefaultFileName("") + ".js");
@@ -187,8 +231,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
     setCreateSchemaName(getDefaultFileName("") + ".js");
     setCreateSchemaSample("");
     setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getDefaultFileName, schemas]);
+  }, [getDefaultFileName]);
   useEffect(resetDialog, [resetDialog]);
 
   const validation = useMemo(() => {
@@ -207,18 +250,17 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   function recursiveFolder(folder: Folder) {
     return Object.entries(folder).map(([name, sample]) => {
       return typeof sample === "string" ? (
-        <li
-          key={name}
-          onClick={() => {
-            const name = normalizeFileName(createSchemaName);
-            if (!name || name === getDefaultFileName(createSchemaSample))
-              setCreateSchemaName(getDefaultFileName(sample) + ".js");
-            setCreateSchemaSample(sample);
-          }}>
-          <div>
+        <li key={name}>
+          <button
+            onClick={() => {
+              const name = normalizeFileName(createSchemaName);
+              if (!name || name === getDefaultFileName(createSchemaSample))
+                setCreateSchemaName(getDefaultFileName(sample) + ".js");
+              setCreateSchemaSample(sample);
+            }}>
             <FontAwesomeIcon icon={faFileCode} fixedWidth />
             <FileName selected={createSchemaSample === sample}>{name}</FileName>
-          </div>
+          </button>
         </li>
       ) : (
         <ExplorerFolder key={name} name={name}>
@@ -228,21 +270,29 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
     });
   }
 
-  const addSchema = useCallback(async () => {
-    setLoading(true);
-    try {
-      schemaLoaded({
-        name: normalizeFileName(createSchemaName) + ".js",
-        input: createSchemaSample
-          ? await fetchFile(tshetUinhExamplesURLPrefix + createSchemaSample + ".js")
-          : newFileTemplate,
-      });
-    } catch {
-      setLoading(false);
-    } finally {
-      (ref as RefObject<HTMLDialogElement>).current?.close();
-    }
-  }, [createSchemaName, createSchemaSample, schemaLoaded, ref]);
+  const closeDialog = useCallback(() => {
+    (ref as RefObject<HTMLDialogElement>).current?.close();
+  }, [ref]);
+
+  const addSchema = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setLoading(true);
+      try {
+        schemaLoaded({
+          name: normalizeFileName(createSchemaName) + ".js",
+          input: createSchemaSample
+            ? await fetchFile(tshetUinhExamplesURLPrefix + createSchemaSample + ".js")
+            : newFileTemplate,
+        });
+      } catch {
+        setLoading(false);
+      } finally {
+        closeDialog();
+      }
+    },
+    [createSchemaName, createSchemaSample, schemaLoaded, closeDialog],
+  );
 
   const inputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     event => setCreateSchemaName(event.target.value),
@@ -250,22 +300,22 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   );
 
   return createPortal(
-    <Container ref={ref}>
+    <Container ref={ref} onClose={resetDialog}>
       <Popup>
         <Title>新增方案</Title>
         <Explorer>
           <ul>
-            <li
-              onClick={() => {
-                const name = normalizeFileName(createSchemaName);
-                if (!name || name === getDefaultFileName(createSchemaSample))
-                  setCreateSchemaName(getDefaultFileName("") + ".js");
-                setCreateSchemaSample("");
-              }}>
-              <div>
+            <li>
+              <button
+                onClick={() => {
+                  const name = normalizeFileName(createSchemaName);
+                  if (!name || name === getDefaultFileName(createSchemaSample))
+                    setCreateSchemaName(getDefaultFileName("") + ".js");
+                  setCreateSchemaSample("");
+                }}>
                 <FontAwesomeIcon icon={faFile} fixedWidth />
                 <FileName selected={!createSchemaSample}>新增空白方案……</FileName>
-              </div>
+              </button>
             </li>
             {recursiveFolder(samples)}
           </ul>
@@ -316,7 +366,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
             </table>
           </Metadata>
         </Preview>
-        <Action method="dialog" className="pure-form">
+        <Action method="dialog" className="pure-form" onSubmit={addSchema}>
           <Rename>
             <label>
               <FontAwesomeIcon icon={faPenToSquare} size="lg" />
@@ -333,10 +383,10 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
               />
             </label>
           </Rename>
-          <button type="submit" className="pure-button" formNoValidate onClick={resetDialog}>
+          <button type="reset" className="pure-button" onClick={closeDialog}>
             取消
           </button>
-          <button type="button" className="pure-button pure-button-primary" onClick={addSchema}>
+          <button type="submit" className="pure-button pure-button-primary">
             新增
           </button>
         </Action>
