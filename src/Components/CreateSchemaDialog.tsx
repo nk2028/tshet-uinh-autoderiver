@@ -73,56 +73,23 @@ const Explorer = styled.div`
   > ul {
     margin-left: 0;
   }
-  button {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    text-align: left;
-    * {
-      transition:
-        color 100ms,
-        background-color 100ms;
-    }
-    &:hover *,
-    &:focus * {
-      color: #0078e7;
-    }
+`;
+const SchemaItem = styled.button`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  * {
+    transition:
+      color 100ms,
+      background-color 100ms;
   }
-  details {
-    summary {
-      display: flex;
-      align-items: center;
-      outline: none;
-      &::-moz-focus-inner {
-        border: none;
-        padding: 0;
-      }
-      &::marker {
-        display: none;
-      }
-      transition: color 100ms;
-      &:hover,
-      &:focus {
-        color: #0078e7;
-      }
-    }
-    .marker-open {
-      display: none;
-    }
-    .marker-close {
-      display: block;
-    }
-    &[open] {
-      .marker-open {
-        display: block;
-      }
-      .marker-close {
-        display: none;
-      }
-    }
+  &:hover *,
+  &:focus * {
+    color: #0078e7;
   }
 `;
-const FileName = styled.div<{ selected: boolean }>`
+const SchemaName = styled.div<{ selected: boolean }>`
   flex: 1;
   color: #333;
   margin-left: 0.125rem;
@@ -251,7 +218,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
     return Object.entries(folder).map(([name, sample]) => {
       return typeof sample === "string" ? (
         <li key={name}>
-          <button
+          <SchemaItem
             onClick={() => {
               const name = normalizeFileName(createSchemaName);
               if (!name || name === getDefaultFileName(createSchemaSample))
@@ -259,8 +226,8 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
               setCreateSchemaSample(sample);
             }}>
             <FontAwesomeIcon icon={faFileCode} fixedWidth />
-            <FileName selected={createSchemaSample === sample}>{name}</FileName>
-          </button>
+            <SchemaName selected={createSchemaSample === sample}>{name}</SchemaName>
+          </SchemaItem>
         </li>
       ) : (
         <ExplorerFolder key={name} name={name}>
@@ -306,7 +273,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         <Explorer>
           <ul>
             <li>
-              <button
+              <SchemaItem
                 onClick={() => {
                   const name = normalizeFileName(createSchemaName);
                   if (!name || name === getDefaultFileName(createSchemaSample))
@@ -314,8 +281,8 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
                   setCreateSchemaSample("");
                 }}>
                 <FontAwesomeIcon icon={faFile} fixedWidth />
-                <FileName selected={!createSchemaSample}>新增空白方案……</FileName>
-              </button>
+                <SchemaName selected={!createSchemaSample}>新增空白方案……</SchemaName>
+              </SchemaItem>
             </li>
             {recursiveFolder(samples)}
           </ul>

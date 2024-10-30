@@ -1,17 +1,48 @@
+import styled from "@emotion/styled";
 import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import type { ReactNode } from "../consts";
 
+const FolderItem = styled.summary`
+  display: flex;
+  align-items: center;
+  outline: none;
+  transition: color 100ms;
+  &::-moz-focus-inner {
+    border: none;
+    padding: 0;
+  }
+  &::marker {
+    display: none;
+  }
+  &:hover,
+  &:focus {
+    color: #0078e7;
+  }
+`;
+const ExpandedIcon = styled(FontAwesomeIcon)`
+  display: none;
+  details[open] & {
+    display: block;
+  }
+`;
+const CollapsedIcon = styled(FontAwesomeIcon)`
+  display: block;
+  details[open] & {
+    display: none;
+  }
+`;
+
 export default function ExplorerFolder({ name, children }: { name: string; children: ReactNode }) {
   return (
     <li>
       <details open>
-        <summary>
-          <FontAwesomeIcon className="marker-open" icon={faAngleDown} fixedWidth />
-          <FontAwesomeIcon className="marker-close" icon={faAngleRight} fixedWidth />
+        <FolderItem>
+          <ExpandedIcon icon={faAngleDown} fixedWidth />
+          <CollapsedIcon icon={faAngleRight} fixedWidth />
           <span>{name}</span>
-        </summary>
+        </FolderItem>
         <ul>{children}</ul>
       </details>
     </li>
