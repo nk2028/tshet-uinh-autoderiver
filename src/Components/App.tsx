@@ -263,7 +263,11 @@ function showAbout() {
         <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-examples">
           樣例推導方案程式碼
         </a>
-        亦可於 Github 瀏覽。
+        及
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/obsolete-romanizations-examples">
+          過時推導方案
+        </a>
+        亦可於 GitHub 瀏覽。
       </p>
       <h2>私隱權政策</h2>
       <p>
@@ -461,18 +465,23 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const Title = styled.h1`
+const Heading = styled.h1`
   font-size: 1.75rem;
   margin: 0;
   line-height: 1;
-  padding: 0.625rem 0.875rem 0.5rem 0.625rem;
+  padding: 0 0.125rem 0.5rem 0.625rem;
   border-bottom: 0.2rem solid #d0d2d4;
+  > * {
+    margin: 0.625rem 0.75rem 0 0;
+  }
+`;
+const Title = styled.span`
+  display: inline-block;
 `;
 const Version = styled.span`
   display: inline-block;
   color: #888;
   font-size: 1rem;
-  margin-left: 0.75rem;
 `;
 const Buttons = styled.span`
   display: inline-block;
@@ -498,7 +507,6 @@ const ShowButton = styled.button`
   }
 `;
 const ApplyButton = styled.button`
-  margin-left: 0.75rem;
   color: #0078e7;
   cursor: pointer;
   transition: color 150ms;
@@ -543,8 +551,8 @@ export default function App() {
       <Content>
         <header>
           <nav>
-            <Title>
-              <span>切韻音系自動推導器</span>
+            <Heading>
+              <Title>切韻音系自動推導器</Title>
               <Version>v{__APP_VERSION__}</Version>
               <LinkToLegacy>
                 <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">
@@ -563,7 +571,7 @@ export default function App() {
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>
-            </Title>
+            </Heading>
           </nav>
         </header>
         <Main evaluateHandlerRef={evaluateHandlerRef} />
