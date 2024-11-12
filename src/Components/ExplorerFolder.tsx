@@ -9,11 +9,13 @@ const FolderItem = styled.summary`
   align-items: center;
   outline: none;
   transition: color 100ms;
+  list-style: none;
   &::-moz-focus-inner {
     border: none;
     padding: 0;
   }
-  &::marker {
+  &::marker,
+  &::-webkit-details-marker {
     display: none;
   }
   &:hover,
