@@ -16,6 +16,7 @@ const FolderItem = styled.summary`
   }
   &::marker,
   &::-webkit-details-marker {
+    content: "";
     display: none;
   }
   &:hover,
