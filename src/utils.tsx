@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import Swal from "./Classes/SwalReact";
 import Spinner from "./Components/Spinner";
 
+import type { SyntheticEvent } from "react";
 import type { SweetAlertOptions } from "sweetalert2";
 
 const LoadModal = styled.div`
@@ -118,4 +119,8 @@ export function displaySchemaLoadingErrors(errors: unknown[], nSchemas: number) 
   } else if (errors.length === 1) {
     notifyError(nSchemas === 1 ? "無法載入方案" : "1 個方案無法載入", errors[0]);
   }
+}
+
+export function stopPropagation(event: Event | SyntheticEvent) {
+  event.stopPropagation();
 }

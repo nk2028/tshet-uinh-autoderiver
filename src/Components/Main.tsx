@@ -14,6 +14,7 @@ import evaluate from "../evaluate";
 import { listenArticle } from "../options";
 import initialState, { stateStorageLocation } from "../state";
 import TooltipLabel from "./TooltipLabel";
+import { stopPropagation } from "../utils";
 
 import type { MainState, Option, ReactNode } from "../consts";
 import type { MutableRefObject } from "react";
@@ -161,6 +162,9 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
   const [operation, increaseOperation] = useReducer((operation: number) => operation + 1, 0);
 
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeDialog = useCallback(() => {
+    dialogRef.current?.close();
+  }, []);
   evaluateHandlerRef.current = useCallback(async () => {
     evaluationResult = [];
     dialogRef.current?.showModal();
@@ -169,11 +173,11 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
       evaluationResult = await evaluate(state);
       increaseOperation();
     } catch {
-      dialogRef.current?.close();
+      closeDialog();
     } finally {
       setLoading(false);
     }
-  }, [state]);
+  }, [state, closeDialog]);
 
   const [loading, setLoading] = useState(false);
 
@@ -292,8 +296,8 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         evaluateHandlerRef={evaluateHandlerRef}
       />
       {createPortal(
-        <OutputContainer ref={dialogRef}>
-          <OutputPopup>
+        <OutputContainer onClick={closeDialog} ref={dialogRef}>
+          <OutputPopup onClick={stopPropagation}>
             <Title>
               <span>推導結果</span>
               {!loading && (

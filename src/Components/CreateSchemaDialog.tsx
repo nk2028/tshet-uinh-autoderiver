@@ -10,7 +10,7 @@ import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
 import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix } from "../consts";
 import samples from "../samples";
-import { fetchFile, normalizeFileName } from "../utils";
+import { fetchFile, normalizeFileName, stopPropagation } from "../utils";
 
 import type { Folder, Sample, SchemaState } from "../consts";
 import type { ChangeEventHandler, FormEvent, RefObject } from "react";
@@ -267,8 +267,8 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   );
 
   return createPortal(
-    <Container ref={ref} onClose={resetDialog}>
-      <Popup>
+    <Container ref={ref} onClick={closeDialog} onClose={resetDialog}>
+      <Popup onClick={stopPropagation}>
         <Title>新增方案</Title>
         <Explorer>
           <ul>

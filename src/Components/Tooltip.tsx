@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 
 import { css as stylesheet } from "@emotion/css";
 
+import { stopPropagation } from "../utils";
+
 import type { ReactElement, SyntheticEvent } from "react";
 
 function getPageWidth() {
@@ -34,6 +36,7 @@ const fixedWidthStyle = stylesheet`
 `;
 
 const div = document.getElementById("tooltip") ?? document.createElement("div");
+div.addEventListener("click", stopPropagation);
 div.id = "tooltip";
 div.style.visibility = "hidden";
 div.className = tooltipStyle;
