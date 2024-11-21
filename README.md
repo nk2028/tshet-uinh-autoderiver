@@ -1,14 +1,20 @@
-# tshet-uinh-autoderiver 切韻音系自動推導器
+# Tshet-uinh Autoderiver 切韻音系自動推導器
 
-An automatic tool to generate the derivatives of the Qieyun phonological system
+Tshet-uinh Autoderiver is an online tool that automatically generates phonological reconstructions of the Tshet-uinh phonological system, as well as extrapolated historical and modern phonological systems derived from it.
 
-[網頁見此](https://nk2028.shn.hk/tshet-uinh-autoderiver/)
+This tool is part of the nk2028 organisation’s suite of computational linguistics projects, which aim to advance research in historical Chinese phonology and beyond.
 
-切韻音系自動推導器是為利用切韻音系資料進行自動推導而設計的線上工具。
+## Try It Online
 
-用户亦可自行編寫程式碼，增加新的推導實例。
+The tool is available as a web-based interface at <https://nk2028.shn.hk/tshet-uinh-autoderiver/>.
 
-切韻音系自動推導器具備以下特性：
+## How It Works
+
+Tshet-uinh Autoderiver uses [TshetUinh.js](https://github.com/nk2028/tshet-uinh-js) as its underlying library, which provides the computational framework for deriving phonological systems. By leveraging this JavaScript-based library, the tool is capable of handling a wide range of reconstructions, extrapolations, and creative phonological experiments.
+
+The interface is user-friendly and allows for instant results without requiring advanced technical knowledge. However, for users with programming experience, the tool can be extended by modifying or adding derivation scripts, with the examples in the [tshet-uinh-examples](https://github.com/nk2028/tshet-uinh-examples) repository serving as a helpful reference.
+
+## Features
 
 1. 簡體字、異體字轉換
 1. 根據釋義手動選擇多音字
