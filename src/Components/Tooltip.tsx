@@ -44,14 +44,20 @@ const root = createRoot(div);
 
 let tooltipTarget: symbol | null = null;
 
+// HACK outputContainerScrollTop & outputContainerScrollLeft are to fix the Tooltip's position
+// when the OutputContainer is scrolled. This is just a TEMPORARY fix!
 function TooltipAnchor({
   relativeToNodeBox,
   children,
   fixedWidth,
+  outputContainerScrollTop = 0,
+  outputContainerScrollLeft = 0,
 }: {
   relativeToNodeBox: DOMRect;
   children: ReactElement;
   fixedWidth: boolean;
+  outputContainerScrollTop?: number;
+  outputContainerScrollLeft?: number;
 }) {
   useEffect(() => {
     const oneRemSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -62,10 +68,12 @@ function TooltipAnchor({
     let targetTop = relativeToNodeBox.top - divInnerBox.height - margin;
     targetTop = targetTop < oneRemSize ? relativeToNodeBox.bottom + margin : targetTop;
     targetTop += window.scrollY;
+    targetTop += outputContainerScrollTop;
 
     let targetLeft = (relativeToNodeBox.left + relativeToNodeBox.right - divInnerBox.width) / 2;
     targetLeft = Math.min(getPageWidth() - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
     targetLeft += window.scrollX;
+    targetLeft += outputContainerScrollLeft;
 
     div.className = tooltipStyle + (fixedWidth ? " " + fixedWidthStyle : "");
     div.style.top = targetTop + "px";
@@ -91,9 +99,20 @@ export default function Tooltip({
   const boxRef = useRef<DOMRect | null>(null);
 
   const renderTooltip = useCallback(() => {
-    (document.querySelector("dialog[open]") ?? document.body).appendChild(div);
+    // HACK Make this <div> show on top of the OutputContainer (which is a <dialog>)
+    // NOTE Attaching this node to a parent node managed by another React instance may have unexpected consequences.
+    const outputContainer = document.querySelector("dialog[open]");
+    const isOutputContainer = outputContainer != null;
+    (outputContainer ?? document.body).appendChild(div);
+    // HACK Compensate for the scroll position of the OutputContainer
+    const outputContainerScrollTop = isOutputContainer ? outputContainer.scrollTop : 0;
+    const outputContainerScrollLeft = isOutputContainer ? outputContainer.scrollLeft : 0;
     root.render(
-      <TooltipAnchor relativeToNodeBox={boxRef.current!} fixedWidth={fixedWidth}>
+      <TooltipAnchor
+        relativeToNodeBox={boxRef.current!}
+        fixedWidth={fixedWidth}
+        outputContainerScrollTop={outputContainerScrollTop}
+        outputContainerScrollLeft={outputContainerScrollLeft}>
         {element}
       </TooltipAnchor>,
     );
