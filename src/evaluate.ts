@@ -3,9 +3,9 @@ import { 推導方案 } from "tshet-uinh-deriver-tools";
 import { Formatter } from "./Classes/CustomElement";
 import { tshetUinhTextLabelURLPrefix } from "./consts";
 import { evaluateOption, getArticle, setArticle } from "./options";
-import { fetchFile, normalizeFileName, notifyError } from "./utils";
+import { fetchFile, isArray, normalizeFileName, notifyError } from "./utils";
 
-import type { CustomNode } from "./Classes/CustomElement";
+import type { CustomNode, NestedCustomNode } from "./Classes/CustomElement";
 import type { MainState, ReactNode } from "./consts";
 import type { 音韻地位 } from "tshet-uinh";
 import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools";
@@ -13,14 +13,16 @@ import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools"
 type Require = (音韻地位: 音韻地位, 字頭?: string | null) => RequireFunction;
 type RequireFunction = (sample: string) => SchemaFromRequire;
 
-type DeriveResult = string | ((formatter: Formatter) => CustomNode);
+type NestedStringNode = string | readonly NestedStringNode[];
+type DeriveResult = NestedStringNode | ((formatter: Formatter) => NestedCustomNode);
 
 export function rawDeriverFrom(input: string): 原始推導函數<DeriveResult, [RequireFunction]> {
   return new Function("選項", "音韻地位", "字頭", "require", input) as 原始推導函數<DeriveResult, [RequireFunction]>;
 }
 
 function formatResult(result: DeriveResult): CustomNode {
-  return typeof result === "function" ? result(Formatter) : result;
+  const node = typeof result === "function" ? result(Formatter) : result;
+  return isArray(node) ? Formatter.f(node) : node;
 }
 
 export default async function evaluate(state: MainState): Promise<ReactNode> {

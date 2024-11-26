@@ -2,6 +2,8 @@ import { createElement, Fragment } from "react";
 
 import styled from "@emotion/styled";
 
+import { isArray, isTemplateStringsArray } from "../utils";
+
 import type { ReactNode } from "../consts";
 import type { Property } from "csstype";
 import type { HTMLAttributes, ReactElement } from "react";
@@ -29,14 +31,16 @@ type AllTags = keyof TagToProp;
 type Tag = {
   [Tag in AllTags]: TagToProp[Tag] extends undefined ? readonly [Tag] : readonly [Tag, TagToProp[Tag]];
 }[AllTags];
-type Args = [strings: TemplateStringsArray | CustomNode, ...nodes: CustomNode[]];
+type Args = [strings: TemplateStringsArray | NestedCustomNode, ...nodes: NestedCustomNode[]];
 
 const TagStyle = { fg: "color", bg: "backgroundColor", size: "fontSize" } as const;
 
 export type CustomNode = CustomElement | string;
+export type NestedCustomNode = CustomNode | readonly NestedCustomNode[];
 
-const isArray = (arg: unknown): arg is readonly unknown[] => Array.isArray(arg);
-const isTagWithProp = (arg: AllTags): arg is keyof typeof TagStyle => arg in TagStyle;
+function isTagWithProp(arg: AllTags): arg is keyof typeof TagStyle {
+  return arg in TagStyle;
+}
 
 export default class CustomElement {
   private tag: Tag;
@@ -46,17 +50,27 @@ export default class CustomElement {
     this.tag = isTagWithProp(tag)
       ? [tag, tag === "size" && typeof prop === "number" ? (prop as never) : String(prop)]
       : [tag];
-    const children: CustomNode[] = [];
-    if (isArray(strings))
+    const children: NestedCustomNode[] = [];
+    if (isTemplateStringsArray(strings))
       strings.forEach((str, index) => {
         children.push(str);
         if (index < nodes.length) children.push(nodes[index]);
       });
     else children.push(strings, ...nodes);
-    this.children = children.filter(child =>
-      child instanceof CustomElement
-        ? child.children.length
-        : String(child) !== "" && typeof (child ?? false) !== "boolean",
+    this.children = CustomElement.flattenCustomNodes(children);
+  }
+
+  private static flattenCustomNodes(nodes: readonly NestedCustomNode[]): CustomNode[] {
+    return nodes.flatMap(child =>
+      isArray(child)
+        ? CustomElement.flattenCustomNodes(child)
+        : (
+              child instanceof CustomElement
+                ? child.children.length
+                : String(child) !== "" && typeof (child ?? false) !== "boolean"
+            )
+          ? [child]
+          : [],
     );
   }
 

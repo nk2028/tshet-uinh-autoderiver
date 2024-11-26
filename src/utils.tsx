@@ -7,6 +7,14 @@ import Spinner from "./Components/Spinner";
 import type { SyntheticEvent } from "react";
 import type { SweetAlertOptions } from "sweetalert2";
 
+export function isArray(arg: unknown): arg is readonly unknown[] {
+  return Array.isArray(arg);
+}
+
+export function isTemplateStringsArray(arg: unknown): arg is TemplateStringsArray {
+  return isArray(arg) && "raw" in arg && isArray(arg.raw);
+}
+
 const LoadModal = styled.div`
   margin-top: 3rem;
   color: #bbb;
