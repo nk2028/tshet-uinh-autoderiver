@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
@@ -139,9 +139,7 @@ const CreateSchemaButton = styled.button`
   }
 `;
 const EditorArea = styled.div`
-  flex: 1;
   position: relative;
-  min-height: calc(6rem + 20vh);
 `;
 const ResetButton = styled.button`
   display: inline-block;
@@ -179,11 +177,31 @@ const ParameterErrorHint = styled.p`
   color: red;
 `;
 const Options = styled.form`
+  flex: 1;
   padding: 0 1rem;
   overflow-y: auto;
-  border-top: 0.2rem solid #c4c6c8;
 `;
-const SeparatorShadow = styled.div`
+const Divider = styled.div<{ isDragging: boolean }>`
+  background-color: #c4c6c8;
+  height: 0.2rem;
+  position: relative;
+  cursor: ns-resize;
+  &::after {
+    content: "";
+    position: absolute;
+    top: -0.1rem;
+    bottom: -0.1rem;
+    left: 0;
+    right: 0;
+    background-color: ${({ isDragging }) => (isDragging ? "#0078e7" : "transparent")};
+    transition: background-color 150ms;
+  }
+  &:hover::after,
+  &:focus::after {
+    background-color: #0078e7;
+  }
+`;
+const DividerShadow = styled.div`
   position: absolute;
   left: 0;
   bottom: 0;
@@ -481,6 +499,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
 
   const tabBarRef = useRef<HTMLDivElement>(null);
   function drag(name: string, { clientX: startX }: { clientX: number }, isMouse?: boolean) {
+    document.body.classList.add("dragging");
     if (activeSchemaName !== name) setState(state => ({ ...state, activeSchemaName: name }));
     const { length } = schemas;
     if (length <= 1 || tabBarRef.current?.childElementCount !== length + 1) return;
@@ -531,6 +550,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       }
       if (i !== index) setState(actions.moveSchema(name, i));
 
+      document.body.classList.remove("dragging");
       if (isMouse) {
         document.removeEventListener("mousemove", move);
         document.removeEventListener("mouseup", end);
@@ -646,6 +666,67 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
     };
   }, [addFilesToSchema]);
 
+  const [isDividerDragging, setIsDividerDragging] = useState(false);
+  function dividerDrag({ target, clientY }: { target: EventTarget; clientY: number }, isMouse?: boolean) {
+    document.body.classList.add("dragging");
+    document.body.style.cursor = "ns-resize";
+    setIsDividerDragging(true);
+    const dividerElement = target as HTMLDivElement;
+    const container = dividerElement.parentElement!;
+    const editorElement = container.children[2];
+
+    const offsetY = clientY - dividerElement.getBoundingClientRect().top;
+
+    function move(event: { clientY: number } | TouchEvent) {
+      clientY = "clientY" in event ? event.clientY : (event.touches?.[0]?.clientY ?? clientY);
+      const editorTop = editorElement.getBoundingClientRect().top;
+      const numerator = clientY - offsetY - editorTop;
+      const denominator =
+        container.getBoundingClientRect().height - dividerElement.getBoundingClientRect().height - editorTop;
+      setState(state => ({ ...state, optionPanelHeight: Math.min(Math.max(1 - numerator / denominator, 0.1), 0.9) }));
+    }
+
+    function end() {
+      document.body.classList.remove("dragging");
+      document.body.style.cursor = "";
+      setIsDividerDragging(false);
+      if (isMouse) {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", end);
+      } else {
+        document.removeEventListener("touchmove", move);
+        document.removeEventListener("touchend", end);
+        document.removeEventListener("touchcancel", end);
+      }
+    }
+
+    if (isMouse) {
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", end);
+    } else {
+      document.addEventListener("touchmove", move);
+      document.addEventListener("touchend", end);
+      document.addEventListener("touchcancel", end);
+    }
+  }
+
+  const [editorArea, setEditorArea] = useState<HTMLDivElement | null>(null);
+  const [optionPanel, setOptionPanel] = useState<HTMLFormElement | null>(null);
+  useLayoutEffect(() => {
+    if (!editorArea || !optionPanel) return;
+    function setOptionPanelHeight() {
+      editorArea!.style.height =
+        (1 - state.optionPanelHeight) *
+          (editorArea!.getBoundingClientRect().height + optionPanel!.getBoundingClientRect().height) +
+        "px";
+    }
+    setOptionPanelHeight();
+    addEventListener("resize", setOptionPanelHeight);
+    return () => {
+      removeEventListener("resize", setOptionPanelHeight);
+    };
+  }, [editorArea, optionPanel, state.optionPanelHeight]);
+
   return (
     <>
       <TabBar ref={tabBarRef}>
@@ -669,7 +750,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
           <FontAwesomeIcon icon={faPlus} fixedWidth />
         </CreateSchemaButton>
       </TabBar>
-      <EditorArea lang="en-x-code">
+      <EditorArea ref={setEditorArea} lang="en-x-code">
         <Editor
           path={activeSchema?.name || ".js"}
           language="javascript"
@@ -742,9 +823,14 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             [activeSchema, activeSchemaName, setState],
           )}
         />
-        <SeparatorShadow />
+        <DividerShadow />
       </EditorArea>
-      <Options className="pure-form">
+      <Divider
+        isDragging={isDividerDragging}
+        onMouseDown={event => dividerDrag(event, true)}
+        onTouchStart={event => dividerDrag(event.touches[0])}
+      />
+      <Options ref={setOptionPanel} className="pure-form">
         <h3>
           <span>選項</span>
           {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (

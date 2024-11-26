@@ -67,6 +67,7 @@ export type MainState = Readonly<{
   convertVariant: boolean;
   syncCharPosition: boolean;
   activeSchemaName: string;
+  optionPanelHeight: number;
 }>;
 
 export type SchemaState = Readonly<{

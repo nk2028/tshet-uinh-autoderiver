@@ -25,6 +25,9 @@ injectGlobal`
     overflow: hidden;
     touch-action: none;
   }
+  body.dragging {
+    user-select: none;
+  }
   :lang(och-Latn-fonipa) {
     font-family: "CharisSILW", serif;
   }

@@ -5,11 +5,24 @@ import type { MainState } from "./consts";
 
 export const stateStorageLocation = "autoderiver/0.2/state";
 
+function defaultState(): MainState {
+  return {
+    schemas: [],
+    article: defaultArticle,
+    option: "convertArticle",
+    convertVariant: false,
+    syncCharPosition: true,
+    activeSchemaName: "",
+    optionPanelHeight: 0.5,
+  };
+}
+
 export default function initialState(): MainState {
   const state = localStorage.getItem(stateStorageLocation);
   if (state) {
     const result: MainState = JSON.parse(state);
     return {
+      ...defaultState(),
       ...result,
       schemas: result.schemas.map(schema => ({
         ...schema,
@@ -19,25 +32,5 @@ export default function initialState(): MainState {
       })),
     };
   }
-
-  /*
-  return {
-    schemas: [],
-    article: defaultArticle,
-    option: "convertArticle",
-    convertVariant: false,
-    autocomplete: true,
-    syncCharPosition: true,
-    activeSchemaName: "",
-  };
-  */
-
-  return {
-    schemas: [],
-    article: defaultArticle,
-    option: "convertArticle",
-    convertVariant: false,
-    syncCharPosition: true,
-    activeSchemaName: "",
-  };
+  return defaultState();
 }
