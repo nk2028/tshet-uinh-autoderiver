@@ -5,7 +5,7 @@ import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetState
 import type { 資料 } from "tshet-uinh";
 
 export const tshetUinhExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/tshet-uinh-examples@main/";
-//export const tshetUinhExamplesURLPrefix = "https://raw.githubusercontent.com/nk2028/tshet-uinh-examples/main/";
+// export const tshetUinhExamplesURLPrefix = "https://raw.githubusercontent.com/nk2028/tshet-uinh-examples/main/";
 export const tshetUinhTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/tshet-uinh-text-label@main/";
 
 export const newFileTemplate = /* js */ `
@@ -14,9 +14,9 @@ export const newFileTemplate = /* js */ `
  * @author your_name
  */
 
-/** @type { 音韻地位["屬於"] } */
+/** @type { 音韻地位['屬於'] } */
 const is = (...x) => 音韻地位.屬於(...x);
-/** @type { 音韻地位["判斷"] } */
+/** @type { 音韻地位['判斷'] } */
 const when = (...x) => 音韻地位.判斷(...x);
 
 if (!音韻地位) return [
