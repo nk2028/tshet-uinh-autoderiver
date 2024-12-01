@@ -50,12 +50,14 @@ function TooltipAnchor({
   relativeToNodeBox,
   children,
   fixedWidth,
-  outputContainerScrollTop = 0,
-  outputContainerScrollLeft = 0,
+  outputContainerWidth = getPageWidth(),
+  outputContainerScrollTop = window.scrollY,
+  outputContainerScrollLeft = window.scrollX,
 }: {
   relativeToNodeBox: DOMRect;
   children: ReactElement;
   fixedWidth: boolean;
+  outputContainerWidth?: number;
   outputContainerScrollTop?: number;
   outputContainerScrollLeft?: number;
 }) {
@@ -67,12 +69,10 @@ function TooltipAnchor({
 
     let targetTop = relativeToNodeBox.top - divInnerBox.height - margin;
     targetTop = targetTop < oneRemSize ? relativeToNodeBox.bottom + margin : targetTop;
-    targetTop += window.scrollY;
     targetTop += outputContainerScrollTop;
 
     let targetLeft = (relativeToNodeBox.left + relativeToNodeBox.right - divInnerBox.width) / 2;
-    targetLeft = Math.min(getPageWidth() - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
-    targetLeft += window.scrollX;
+    targetLeft = Math.min(outputContainerWidth - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
     targetLeft += outputContainerScrollLeft;
 
     div.className = tooltipStyle + (fixedWidth ? " " + fixedWidthStyle : "");
@@ -101,16 +101,18 @@ export default function Tooltip({
   const renderTooltip = useCallback(() => {
     // HACK Make this <div> show on top of the OutputContainer (which is a <dialog>)
     // NOTE Attaching this node to a parent node managed by another React instance may have unexpected consequences.
-    const outputContainer = document.querySelector("dialog[open]");
-    const isOutputContainer = outputContainer != null;
-    (outputContainer ?? document.body).appendChild(div);
-    // HACK Compensate for the scroll position of the OutputContainer
-    const outputContainerScrollTop = isOutputContainer ? outputContainer.scrollTop : 0;
-    const outputContainerScrollLeft = isOutputContainer ? outputContainer.scrollLeft : 0;
+    const outputContainer = document.querySelector("dialog[open]") ?? document.body;
+    outputContainer.appendChild(div);
+    // HACK Compensate for the width and scroll position of the OutputContainer
+    const outputContainerIsDialog = outputContainer instanceof HTMLDialogElement;
+    const outputContainerWidth = outputContainerIsDialog ? outputContainer.clientWidth : getPageWidth();
+    const outputContainerScrollTop = outputContainerIsDialog ? outputContainer.scrollTop : window.scrollY;
+    const outputContainerScrollLeft = outputContainerIsDialog ? outputContainer.scrollLeft : window.scrollX;
     root.render(
       <TooltipAnchor
         relativeToNodeBox={boxRef.current!}
         fixedWidth={fixedWidth}
+        outputContainerWidth={outputContainerWidth}
         outputContainerScrollTop={outputContainerScrollTop}
         outputContainerScrollLeft={outputContainerScrollLeft}>
         {element}
