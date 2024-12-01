@@ -13,13 +13,19 @@ import { noop } from "../consts";
 import type { Entry } from "../consts";
 
 const Wrapper = styled.div`
-  padding-bottom: 3px;
+  padding-top: 10px;
+  margin-top: -10px;
+  padding-bottom: 5px;
+  margin-bottom: -5px;
   overflow-wrap: break-word;
   white-space: pre-wrap;
   white-space: break-spaces;
 `;
 const Item = styled.p<{ textColor: string }>`
   margin: 2px 10px;
+  &:last-child {
+    margin-bottom: 5px;
+  }
   color: ${({ textColor }) => textColor};
   ${({ onClick }) =>
     onClick &&
