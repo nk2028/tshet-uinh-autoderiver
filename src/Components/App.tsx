@@ -138,12 +138,12 @@ injectGlobal`
   .swal2-close {
     font-family: unset;
   }
-  @media (max-width: 720px) {
+  @media (max-width: 640px) {
     .swal2-container {
-      padding: 0;
+      padding: 2rem 0 0;
       .swal2-popup {
         width: 100%;
-        border-radius: 0;
+        border-radius: 0.5rem 0.5rem 0 0;
       }
     }
   }
@@ -156,10 +156,12 @@ const aboutModal = stylesheet`
   }
   .swal2-popup {
     width: min(36vw + 360px, 960px, 100%);
+    padding: 0;
   }
   .swal2-html-container {
     text-align: left;
-    margin: 1.5rem 3rem;
+    margin: 0;
+    padding: 1.5rem 3rem 2rem;
     line-height: 1.6;
     h2,
     b {
@@ -220,8 +222,23 @@ const aboutModal = stylesheet`
   }
   .swal2-close {
     font-size: 3.5rem;
+    padding: 0.5rem 0.5rem 0 0;
     &:focus {
       box-shadow: none;
+    }
+  }
+  @media (max-width: 640px) {
+    grid-template: unset;
+    .swal2-popup {
+      overflow-y: auto;
+      width: 100%;
+      height: 100%;
+    }
+    .swal2-html-container {
+      padding: 0.25rem 2rem 0.75rem;
+    }
+    .swal2-close {
+      font-size: 3rem;
     }
   }
 `;
