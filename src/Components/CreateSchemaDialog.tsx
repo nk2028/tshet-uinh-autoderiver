@@ -129,7 +129,8 @@ const Action = styled.form`
   grid-area: 3 / 1 / 4 / 3;
   display: flex;
   align-items: center;
-  button {
+  // Ensure specificity
+  button[type] {
     margin: 0 0 0 0.5rem;
     padding: 0 1.1rem;
     height: 100%;
@@ -155,6 +156,7 @@ const Rename = styled.div`
       display: block;
       width: 100%;
       height: 2.25rem;
+      margin: 0;
       flex: 1;
       &:invalid {
         color: red;
