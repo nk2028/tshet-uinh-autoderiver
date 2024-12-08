@@ -128,14 +128,18 @@ const CreateSchemaButton = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  min-width: 1.75rem;
   min-height: 1.75rem;
+  padding: 0 0.375rem;
+  gap: 0.125rem;
   font-size: 1rem;
   color: #555;
   transition: background-color 150ms;
   &:hover,
   &:focus {
     background-color: #ccc;
+  }
+  & > .fa-fw {
+    width: 1em;
   }
 `;
 const EditorArea = styled.div`
@@ -748,6 +752,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         ))}
         <CreateSchemaButton title="新增方案" onClick={createSchema.current}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
+          <div>加載更多注音方案</div>
         </CreateSchemaButton>
       </TabBar>
       <EditorArea ref={setEditorArea} lang="en-x-code">
