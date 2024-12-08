@@ -46,6 +46,12 @@ let 聲母 = 聲母規則();
 let 韻母 = 韻母規則();
 let 聲調 = 聲調規則();
 
+//if (is`入聲`) {  //入聲承陽的方言可以用這段
+  //if (韻母.endsWith('m')) 韻母 = 韻母.slice(0, -1) + 'p';
+  //else if (韻母.endsWith('n')) 韻母 = 韻母.slice(0, -1) + 't';
+  //else if (韻母.endsWith('ŋ')) 韻母 = 韻母.slice(0, -1) + 'k';
+//}
+
 return 聲母 + 韻母 + 聲調;
 `.trimStart();
 
