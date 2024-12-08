@@ -19,10 +19,40 @@ const is = (...x) => 音韻地位.屬於(...x);
 /** @type { 音韻地位['判斷'] } */
 const when = (...x) => 音韻地位.判斷(...x);
 
-if (!音韻地位) return [
-  // 在此輸入方案選項……
+if (!音韻地位) return [  // 在此輸入方案選項；以下提供一些範本，方案設定格式：https://github.com/nk2028/tshet-uinh-deriver-tools/wiki/%E6%8E%A8%E5%B0%8E%E6%96%B9%E6%A1%88%E8%A8%AD%E5%AE%9A%E9%A0%85%E5%88%97%E8%A1%A8%E6%A0%BC%E5%BC%8F
+  //['選項代號（非必要）|選項名\n新行描述（非必要）\n可以加入更多行', [2, '選項1', '選項2']],
+  //['是非題，是非皆可作預設選項', false],
 ];
 
+function 聲母規則() {  // 在此輸入聲母推導規則
+  return when([
+    //例：['幫母', '幫母讀音'],
+  ], '無聲母規則');
+}
+
+function 聲母規則() {
+  return when([
+  
+  ], '無韻母規則');
+}
+
+function 聲調規則() {
+  return when([
+  
+  ], '無聲調規則');
+}
+
+let 聲母 = 聲母規則();
+let 韻母 = 韻母規則();
+let 聲調 = 聲調規則();
+
+//if (is`入聲`) {  //入聲承陽的方言可以用這段
+  //if (韻母.endsWith('m')) 韻母 = 韻母.slice(0, -1) + 'p';
+  //else if (韻母.endsWith('n')) 韻母 = 韻母.slice(0, -1) + 't';
+  //else if (韻母.endsWith('ŋ')) 韻母 = 韻母.slice(0, -1) + 'k';
+//}
+
+return 聲母 + 韻母 + 聲調;
 `.trimStart();
 
 export const defaultArticle =
