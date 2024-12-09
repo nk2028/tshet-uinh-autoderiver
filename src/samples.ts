@@ -12,8 +12,9 @@ export default {
     "msoeg 擬音": "msoeg_v8",
   },
   "推導後世音系": {
-    "推導盛中唐擬音": "mid_tang",
-    "推導北宋擬音（聲音唱和圖）": "n_song",
+    "推導盛唐（平水韻）擬音": "high_tang",
+    "推導中唐（韻圖）擬音": "mid_tang",
+    "推導北宋（聲音唱和圖）擬音": "n_song",
     "推導《蒙古字韻》": "mongol",
     "推導《中原音韻》擬音": "zhongyuan",
   },
