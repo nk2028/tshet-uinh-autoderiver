@@ -52,7 +52,7 @@ let 聲調 = 聲調規則();
   //else if (韻母.endsWith('ŋ')) 韻母 = 韻母.slice(0, -1) + 'k';
 //}
 
-return 聲母 + 韻母 + 聲調;
+return 聲母 + 韻母 + 聲調;  //想只要音韻地位的話可以改成「return 音韻地位」
 `.trimStart();
 
 export const defaultArticle =
