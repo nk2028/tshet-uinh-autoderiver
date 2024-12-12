@@ -11,8 +11,9 @@ import Table from "./Components/Table";
 import TooltipChar from "./Components/TooltipChar";
 import { noop } from "./consts";
 
+import i18n from "./i18n";
 import type { CustomNode } from "./Classes/CustomElement";
-import type { Entry, MainState, Option, SchemaState, ReactNode } from "./consts";
+import type { Entry, MainState, Option, ReactNode, SchemaState } from "./consts";
 
 const Title = styled.h3`
   padding: 0 0 1rem 0.25rem;
@@ -204,13 +205,16 @@ export const evaluateOption: Record<Option, Handler> = {
     return result.length ? (
       <>
         <Title>
-          找到 {result.length} 個相異項目。
+          {i18n.t("schemaCompareDifferent", { count: result.length })}
           <span hidden>{"\n\n"}</span>
         </Title>
-        <Table head={["音韻地位", ...title(schemas), "代表字"]} body={finalize(result)} />
+        <Table
+          head={[i18n.t("phonologicalPosition"), ...title(schemas), i18n.t("representativeCharacter")]}
+          body={finalize(result)}
+        />
       </>
     ) : (
-      <h3>方案推導結果相同。</h3>
+      <h3>{i18n.t("schemaCompareSame")}</h3>
     );
   },
 };

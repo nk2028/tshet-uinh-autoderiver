@@ -1,0 +1,10 @@
+{
+  "schemaCompareDifferent": "找到 {{count}} 個相異項目。",
+  "phonologicalPosition": "音韻地位",
+  "representativeCharacter": "代表字",
+  "schemaCompareSame": "方案推導結果相同。",
+  "copyToClipboard": "複製到剪貼簿",
+  "copySuccess": "成功複製到剪貼簿",
+  "copyFailed": "無法複製到剪貼簿",
+  "tshetUinhAutoderiver": "切韻音系自動推導器"
+}

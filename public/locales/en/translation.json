@@ -1,0 +1,10 @@
+{
+  "schemaCompareDifferent": "Found {{count}} different items.",
+  "phonologicalPosition": "Phonological Position",
+  "representativeCharacter": "Representative Character",
+  "schemaCompareSame": "The results of the program derivation are the same.",
+  "copyToClipboard": "Copy to clipboard",
+  "copySuccess": "Successfully copied to clipboard",
+  "copyFailed": "Unable to copy to clipboard",
+  "tshetUinhAutoderiver": "Tshet-uinh Autoderiver"
+}

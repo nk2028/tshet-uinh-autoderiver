@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import "purecss/build/pure.css";
 // NOTE sweetalert2's ESM export does not setup styles properly, manually importing
@@ -12,6 +12,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Main from "./Main";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, noop } from "../consts";
+import { useTranslation } from "react-i18next";
+
+import i18n from "../i18n";
 
 injectGlobal`
   html,
@@ -565,14 +568,25 @@ const FontPreload = styled.span`
 `;
 
 export default function App() {
+  const { t } = useTranslation();
   const evaluateHandlerRef = useRef(noop);
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+    i18n.on("languageChanged", lng => {
+      document.documentElement.lang = lng;
+    });
+
+    document.title = t("tshetUinhAutoderiver");
+  }, []);
+
   return (
     <Container>
       <Content>
         <header>
           <nav>
             <Heading>
-              <Title>切韻音系自動推導器</Title>
+              <Title>{t("tshetUinhAutoderiver")}</Title>
               <Version>v{__APP_VERSION__}</Version>
               <LinkToLegacy>
                 <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">

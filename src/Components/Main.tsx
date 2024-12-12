@@ -5,6 +5,8 @@ import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { useTranslation } from "react-i18next";
+
 import SchemaEditor from "./SchemaEditor";
 import Spinner from "./Spinner";
 import { listenTooltip } from "./TooltipChar";
@@ -142,6 +144,7 @@ const Loading = styled.div`
 let evaluationResult: ReactNode = [];
 
 export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: MutableRefObject<() => void> }) {
+  const { t } = useTranslation();
   const [state, setState] = useState(initialState);
   const { article, option, convertVariant, syncCharPosition } = state;
   useEffect(() => {
@@ -181,19 +184,19 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
 
   const [loading, setLoading] = useState(false);
 
-  const [copyTooltipText, setCopyTooltipText] = useState("複製到剪貼簿");
+  const [copyTooltipText, setCopyTooltipText] = useState(t("copyToClipboard"));
   const copyEvaluationResult = useCallback(async () => {
     const content = ref.current.textContent?.trim();
     if (content) {
       try {
         await navigator.clipboard.writeText(content);
-        setCopyTooltipText("成功複製到剪貼簿");
+        setCopyTooltipText(t("copySuccess"));
       } catch {
-        setCopyTooltipText("無法複製到剪貼簿");
+        setCopyTooltipText(t("copyFailed"));
       }
     }
   }, []);
-  const onHideTooltip = useCallback(() => setCopyTooltipText("複製到剪貼簿"), []);
+  const onHideTooltip = useCallback(() => setCopyTooltipText(t("copyToClipboard")), []);
 
   // XXX Please Rewrite
   useEffect(() => {
