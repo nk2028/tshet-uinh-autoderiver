@@ -116,9 +116,18 @@ const CopyButton = styled.button`
   transition: color 0.2s;
   color: #888;
   cursor: pointer;
+  font-size: 0.8em;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
   &:hover,
   &:focus {
     color: #0078e7;
+  }
+  & > div {
+    font-size: 0.75em;
+    border-bottom: none;
   }
 `;
 const CloseButton = styled.button`
@@ -181,19 +190,19 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
 
   const [loading, setLoading] = useState(false);
 
-  const [copyTooltipText, setCopyTooltipText] = useState("複製到剪貼簿");
+  const [copyTooltipText, setCopyTooltipText] = useState("全部複製");
   const copyEvaluationResult = useCallback(async () => {
     const content = ref.current.textContent?.trim();
     if (content) {
       try {
         await navigator.clipboard.writeText(content);
-        setCopyTooltipText("成功複製到剪貼簿");
+        setCopyTooltipText("已複製");
       } catch {
-        setCopyTooltipText("無法複製到剪貼簿");
+        setCopyTooltipText("複製失敗");
       }
     }
   }, []);
-  const onHideTooltip = useCallback(() => setCopyTooltipText("複製到剪貼簿"), []);
+  const onHideTooltip = useCallback(() => setCopyTooltipText("全部複製"), []);
 
   // XXX Please Rewrite
   useEffect(() => {
@@ -305,6 +314,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   <TooltipLabel description={copyTooltipText} onHideTooltip={onHideTooltip}>
                     <CopyButton onClick={copyEvaluationResult}>
                       <FontAwesomeIcon icon={faCopy} size="sm" />
+                      <div>全部複製</div>
                     </CopyButton>
                   </TooltipLabel>
                   <form method="dialog">

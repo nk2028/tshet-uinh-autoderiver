@@ -62,6 +62,8 @@ function TooltipAnchor({
   outputContainerScrollLeft?: number;
 }) {
   useEffect(() => {
+    div.className = tooltipStyle + (fixedWidth ? " " + fixedWidthStyle : "");
+
     const oneRemSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const margin = oneRemSize / 6;
 
@@ -75,7 +77,6 @@ function TooltipAnchor({
     targetLeft = Math.min(outputContainerWidth - oneRemSize - divInnerBox.width, Math.max(oneRemSize, targetLeft));
     targetLeft += outputContainerScrollLeft;
 
-    div.className = tooltipStyle + (fixedWidth ? " " + fixedWidthStyle : "");
     div.style.top = targetTop + "px";
     div.style.left = targetLeft + "px";
     div.style.visibility = "visible";
