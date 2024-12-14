@@ -23,7 +23,7 @@ const dummyOutput = document.createElement("output");
 
 const ArticleInput = styled.textarea`
   line-height: 1.6;
-  resize: none;
+  resize: block;
   width: 100%;
 `;
 const OutputContainer = styled.dialog`
