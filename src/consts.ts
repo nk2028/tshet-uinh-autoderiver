@@ -26,7 +26,7 @@ if (!音韻地位) return [
     預設值須為勾選（true）或不勾選（false）之一`, false],
 ];
 
-function 聲母規則() {  // 在此輸入聲母推導規則
+function 聲母規則() {
   return when([
     // ['幫母', '幫母讀音'],
   ], '無聲母規則');
