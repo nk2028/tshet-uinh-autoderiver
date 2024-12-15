@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import styled from "@emotion/styled";
@@ -23,8 +23,10 @@ const dummyOutput = document.createElement("output");
 
 const ArticleInput = styled.textarea`
   line-height: 1.6;
-  resize: block;
+  resize: none;
   width: 100%;
+  flex: 1;
+  overflow: hidden;
 `;
 const OutputContainer = styled.dialog`
   transform: translateY(10%);
@@ -216,6 +218,37 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
     });
   }, []);
 
+  const [articleInput, setArticleInput] = useState<HTMLTextAreaElement | null>(null);
+  useLayoutEffect(() => {
+    if (!articleInput) return;
+    const textArea = articleInput;
+    const container = textArea.parentElement!;
+    function resizeTextArea() {
+      const scrollTop = container.scrollTop;
+      // First measure without a scrollbar
+      textArea.style.minHeight = "";
+      textArea.style.flex = "unset";
+      const computedStyle = getComputedStyle(textArea);
+      const borderHeight = parseFloat(computedStyle.borderTopWidth) + parseFloat(computedStyle.borderBottomWidth);
+      textArea.style.minHeight = `max(9em, ${textArea.scrollHeight + borderHeight}px)`;
+      if (textArea.scrollHeight > textArea.getBoundingClientRect().height) {
+        // Remeasure if the input doesn’t actually fit due to the addition of scrollbar
+        textArea.style.minHeight = "";
+        container.style.overflowY = "scroll";
+        textArea.style.minHeight = `max(9em, ${textArea.scrollHeight + borderHeight}px)`;
+        container.style.overflowY = "";
+      }
+      textArea.style.flex = "";
+      container.scrollTop = scrollTop;
+    }
+    resizeTextArea();
+    const resizeObserver = new ResizeObserver(resizeTextArea);
+    resizeObserver.observe(container);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [article, articleInput]);
+
   const resetArticle = useCallback(async () => {
     if (
       !article ||
@@ -245,7 +278,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         setState={setState}
         commonOptions={
           <>
-            <p>
+            <div>
               <label>
                 <select onChange={useHandle("option", event => event.target.value as Option)} value={option}>
                   {allOptions.map(([value, label]) => (
@@ -285,21 +318,19 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                 value="恢復成預設文本"
                 onClick={resetArticle}
               />
-            </p>
-            <p>
-              <ArticleInput
-                disabled={option !== "convertArticle"}
-                placeholder="輸入框"
-                rows={5}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-                required
-                onChange={useHandle("article", event => event.target.value)}
-                value={article}
-              />
-            </p>
+            </div>
+            <ArticleInput
+              ref={setArticleInput}
+              disabled={option !== "convertArticle"}
+              placeholder="輸入框"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+              required
+              onChange={useHandle("article", event => event.target.value)}
+              value={article}
+            />
           </>
         }
         evaluateHandlerRef={evaluateHandlerRef}

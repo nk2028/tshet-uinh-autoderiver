@@ -180,11 +180,6 @@ const ParameterErrorHint = styled.p`
   font-size: 0.875rem;
   color: red;
 `;
-const Options = styled.form`
-  flex: 1;
-  padding: 0 1rem;
-  overflow-y: auto;
-`;
 const Divider = styled.div<{ isDragging: boolean }>`
   background-color: #c4c6c8;
   height: 0.2rem;
@@ -213,8 +208,19 @@ const DividerShadow = styled.div`
   height: 6px;
   box-shadow: #ddd 0 -6px 6px -6px inset;
 `;
+const Options = styled.form`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.17rem;
+  padding: 1.17rem 1rem;
+  overflow-y: auto;
+`;
+const OptionsTitle = styled.h3`
+  margin: 0;
+`;
 const OptionsSeparator = styled.hr`
-  margin: 1rem -1rem;
+  margin: -0.17rem -1rem 0;
 `;
 const DropContainer = styled.div<{ isDragging: boolean }>`
   position: fixed;
@@ -836,14 +842,14 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         onTouchStart={event => dividerDrag(event.touches[0])}
       />
       <Options ref={setOptionPanel} className="pure-form">
-        <h3>
+        <OptionsTitle>
           <span>選項</span>
           {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
             <ResetButton title="恢復成預設值" onClick={resetParameters}>
               <FontAwesomeIcon icon={faRotateLeft} size="sm" />
             </ResetButton>
           ) : null}
-        </h3>
+        </OptionsTitle>
         {activeSchema?.parameters.size ? (
           <Parameters>
             {activeSchema.parameters.render(parameters =>
