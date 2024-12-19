@@ -30,7 +30,7 @@ jobs:
           #coscmd upload -rs --delete -f ./ / --ignore index.html
           #find . -mindepth 1 ! -name index.html -exec rm -rf {} +
           coscmd upload -rs --delete -f ./assets /assets
-          rf -rf assets
+          rm -rf assets
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
