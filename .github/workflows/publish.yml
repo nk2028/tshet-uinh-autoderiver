@@ -27,8 +27,10 @@ jobs:
       - name: Publish static files to COS
         run: |
           cd ./build/
-          coscmd upload -rs --delete -f ./ / --ignore index.html
-          find . -mindepth 1 ! -name index.html -exec rm -rf {} +
+          #coscmd upload -rs --delete -f ./ / --ignore index.html
+          #find . -mindepth 1 ! -name index.html -exec rm -rf {} +
+          coscmd upload -rs --delete -f ./assets /assets
+          rf -rf assets
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
