@@ -37,7 +37,7 @@ function 聲母規則() {
   ], '無聲母規則');
 }
 
-function 聲母規則() {
+function 韻母規則() {
   return when([
   
   ], '無韻母規則');
