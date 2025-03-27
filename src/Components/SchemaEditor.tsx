@@ -146,16 +146,18 @@ const EditorArea = styled.div`
   position: relative;
 `;
 const ResetButton = styled.button`
-  display: inline-block;
-  margin-left: 0.75rem;
+  display: inline-flex;
+  margin-left: 1rem;
   transition: color 0.2s;
   color: #555;
   cursor: pointer;
+  align-items: center;
+  gap: 0.125rem;
   &:hover,
   &:focus {
     color: #0078e7;
   }
-  &.rotate {
+  &.rotate svg {
     animation: rotate 0.3s;
   }
   @keyframes rotate {
@@ -165,6 +167,10 @@ const ResetButton = styled.button`
     100% {
       transform: rotate(0deg);
     }
+  }
+  & div {
+    font-size: initial;
+    font-weight: initial;
   }
 `;
 const Parameters = styled.p`
@@ -845,8 +851,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         <OptionsTitle>
           <span>選項</span>
           {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
-            <ResetButton title="恢復成預設值" onClick={resetParameters}>
+            <ResetButton title="將所有選項恢復成預設值" onClick={resetParameters}>
               <FontAwesomeIcon icon={faRotateLeft} size="sm" />
+              <div>將所有選項恢復成預設值</div>
             </ResetButton>
           ) : null}
         </OptionsTitle>
@@ -857,7 +864,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             )}
           </Parameters>
         ) : (
-          <NoParameters>此推導方案無可用自訂選項。</NoParameters>
+          <NoParameters>此推導方案無需選項。</NoParameters>
         )}
         {activeSchema?.parameters.errors.length ? (
           <ParameterErrorHint>
