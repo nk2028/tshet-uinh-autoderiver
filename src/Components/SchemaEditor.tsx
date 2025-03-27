@@ -272,21 +272,22 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
 
   const getDefaultFileNameWithSchemaNames = useCallback(
     (schemaNames: string[]) =>
-      memoize((sample: string) => {
-        sample ||= "untitled";
+      memoize((name: string) => {
+        name ||= "無標題";
         const indices = schemaNames
-          .map(name => {
-            if (name === sample + ".js") return 0;
-            if (!name.startsWith(sample + "-") || !name.endsWith(".js")) return -1;
-            const start = sample.length + 1;
-            for (let i = start; i < name.length - 3; i++) if (name[i] < +(i === start) + "" || name[i] > "9") return -1;
-            return +name.slice(start, -3);
+          .map(oldName => {
+            if (oldName === name) return 0;
+            if (!oldName.startsWith(name + "-")) return -1;
+            const start = name.length + 1;
+            for (let i = start; i < oldName.length; i++)
+              if (oldName[i] < +(i === start) + "" || oldName[i] > "9") return -1;
+            return +oldName.slice(start);
           })
           .sort((a, b) => a - b);
         indices[-1] = -1;
         let i = 0;
         while (indices[i] - indices[i - 1] <= 1) i++;
-        return sample + (~indices[i - 1] || "");
+        return name + (~indices[i - 1] || "");
       }),
     [],
   );
@@ -310,10 +311,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         for (const [name, content] of fileNamesAndContents) {
           // POSIX allows all characters other than `\0` and `/` in file names,
           // this is necessary to ensure that the file name is valid on all platforms.
-          const formattedName =
-            getDefaultFileNameWithSchemaNames(currSchemaNames)(
-              normalizeFileName(name).replace(invalidCharsRegex, "_"),
-            ) + ".js";
+          const formattedName = getDefaultFileNameWithSchemaNames(currSchemaNames)(
+            normalizeFileName(name).replace(invalidCharsRegex, "_"),
+          );
           currSchemaNames.push(formattedName);
           newState = actions.addSchema({ name: formattedName, input: content })(newState);
         }
@@ -337,14 +337,14 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         try {
           setState(
             actions.addSchema({
-              name: "tupa.js",
+              name: "切韻拼音",
               input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js", signal),
             }),
           );
         } catch {
           setState(
             actions.addSchema({
-              name: "untitled.js",
+              name: "無標題",
               input: newFileTemplate,
             }),
           );
@@ -589,9 +589,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
 
   function validateFileName(name: string) {
     const hasSchemaName = (name: string) => schemas.find(schema => schema.name === name);
-    if (!name) return "檔案名稱為空";
-    if (invalidCharsRegex.test(name)) return "檔案名稱含有特殊字元";
-    if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
+    if (!name) return "方案名稱為空";
+    if (invalidCharsRegex.test(name)) return "方案名稱含有特殊字元";
+    if (hasSchemaName(name)) return "方案名稱與現有方案重複";
     return "";
   }
 
@@ -621,7 +621,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         const newName = normalizeFileName(input.value);
         const validation = validateFileName(newName);
         if (validation) {
-          if (newName + ".js" !== name) {
+          if (newName !== name) {
             const { selectionStart, selectionEnd, selectionDirection } = input;
             Swal.showValidationMessage(validation);
             input.setSelectionRange(selectionStart, selectionEnd, selectionDirection || undefined);
@@ -637,7 +637,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       const { isConfirmed, value } = await promise;
       if (isConfirmed) {
         const newName = normalizeFileName(value);
-        if (!validateFileName(newName)) setState(actions.renameSchema(name, newName + ".js"));
+        if (!validateFileName(newName)) setState(actions.renameSchema(name, newName));
       }
     }
   }
@@ -769,7 +769,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       </TabBar>
       <EditorArea ref={setEditorArea} lang="en-x-code">
         <Editor
-          path={activeSchema?.name || ".js"}
+          path={activeSchema?.name || ""}
           language="javascript"
           value={activeSchema?.input || ""}
           loading={<Spinner />}
@@ -789,7 +789,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             (editor, monaco) => {
               editor.addAction({
                 id: "create-file",
-                label: "新增檔案……",
+                label: "新增方案……",
                 // Ctrl/Cmd + N cannot be overridden in browsers
                 keybindings: [monaco.KeyMod.Alt | monaco.KeyCode.KeyN],
                 run() {
@@ -798,7 +798,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
               });
               editor.addAction({
                 id: "delete-file",
-                label: "刪除檔案……",
+                label: "刪除方案……",
                 // Ctrl/Cmd + W cannot be overridden in browsers
                 keybindings: [monaco.KeyMod.Alt | monaco.KeyCode.KeyW],
                 run() {
@@ -807,7 +807,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
               });
               editor.addAction({
                 id: "open-file-from-disk",
-                label: "從本機開啟檔案……",
+                label: "從本機開啟方案……",
                 keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO],
                 run() {
                   openFileFromDisk.current();
@@ -815,7 +815,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
               });
               editor.addAction({
                 id: "save-file-to-disk",
-                label: "儲存檔案至本機……",
+                label: "儲存方案至本機……",
                 keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
                 run() {
                   saveFileToDisk.current();
@@ -889,7 +889,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       {createPortal(
         <DropContainer ref={dropContainerRef} isDragging={isDragging}>
           <DropArea>
-            <div>將檔案拖曳至此</div>
+            <div>將推導方案檔案拖曳至此</div>
           </DropArea>
         </DropContainer>,
         document.body,

@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { faFile, faFileCode, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { faFile, faFileCode } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ExplorerFolder from "./ExplorerFolder";
@@ -152,6 +152,9 @@ const Rename = styled.div`
       color: #222;
       margin: 0 0.375rem 0 0.125rem;
     }
+    div {
+      margin-right: 0.5em;
+    }
     input[type="text"] {
       display: block;
       width: 100%;
@@ -170,7 +173,7 @@ const Validation = styled.div`
   font-size: 0.75rem;
   font-weight: bold;
   color: red;
-  margin: -0.375rem 2.25rem -0.25rem;
+  margin: -0.375rem 0rem -0.25rem;
   line-height: 1;
 `;
 const Loading = styled.div`
@@ -192,12 +195,12 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   { getDefaultFileName, schemaLoaded, hasSchemaName },
   ref,
 ) {
-  const [createSchemaName, setCreateSchemaName] = useState(() => getDefaultFileName("") + ".js");
+  const [createSchemaName, setCreateSchemaName] = useState(getDefaultFileName(""));
   const [createSchemaSample, setCreateSchemaSample] = useState<Sample | "">("");
   const [loading, setLoading] = useState(false);
 
   const resetDialog = useCallback(() => {
-    setCreateSchemaName(getDefaultFileName("") + ".js");
+    setCreateSchemaName(getDefaultFileName(""));
     setCreateSchemaSample("");
     setLoading(false);
   }, [getDefaultFileName]);
@@ -205,9 +208,9 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
 
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
-    if (!name) return "檔案名稱為空";
-    if (invalidCharsRegex.test(name)) return "檔案名稱含有特殊字元";
-    if (hasSchemaName(name + ".js")) return "檔案名稱與現有檔案重複";
+    if (!name) return "方案名稱為空";
+    if (invalidCharsRegex.test(name)) return "方案名稱含有特殊字元";
+    if (hasSchemaName(name)) return "方案名稱與現有方案重複";
     return "";
   }, [createSchemaName, hasSchemaName]);
 
@@ -222,9 +225,8 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         <li key={name}>
           <SchemaItem
             onClick={() => {
-              const name = normalizeFileName(createSchemaName);
-              if (!name || name === getDefaultFileName(createSchemaSample))
-                setCreateSchemaName(getDefaultFileName(sample) + ".js");
+              const trimmedName = name.replace(/^推導|《|》|（.*）|擬音$|轉寫$/g, "").trim();
+              setCreateSchemaName(getDefaultFileName(trimmedName));
               setCreateSchemaSample(sample);
             }}>
             <FontAwesomeIcon icon={faFileCode} fixedWidth />
@@ -249,7 +251,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
       setLoading(true);
       try {
         schemaLoaded({
-          name: normalizeFileName(createSchemaName) + ".js",
+          name: normalizeFileName(createSchemaName),
           input: createSchemaSample
             ? await fetchFile(tshetUinhExamplesURLPrefix + createSchemaSample + ".js")
             : newFileTemplate,
@@ -277,9 +279,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
             <li>
               <SchemaItem
                 onClick={() => {
-                  const name = normalizeFileName(createSchemaName);
-                  if (!name || name === getDefaultFileName(createSchemaSample))
-                    setCreateSchemaName(getDefaultFileName("") + ".js");
+                  setCreateSchemaName(getDefaultFileName(""));
                   setCreateSchemaSample("");
                 }}>
                 <FontAwesomeIcon icon={faFile} fixedWidth />
@@ -338,7 +338,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         <Action method="dialog" className="pure-form" onSubmit={addSchema}>
           <Rename>
             <label>
-              <FontAwesomeIcon icon={faPenToSquare} size="lg" />
+              <div>方案名稱顯示為</div>
               <input
                 ref={inputRef}
                 type="text"

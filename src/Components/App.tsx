@@ -327,7 +327,7 @@ function showHelp() {
             <kbd>⌥</kbd>
             <kbd>N</kbd>
           </kbd>
-          )：新增檔案
+          )：新增方案
         </li>
         <li>
           <kbd>
@@ -342,7 +342,7 @@ function showHelp() {
             <kbd>⌥</kbd>
             <kbd>S</kbd>
           </kbd>
-          )：刪除檔案
+          )：刪除方案
         </li>
         <li>
           <kbd>
@@ -357,7 +357,7 @@ function showHelp() {
             <kbd>⌘</kbd>
             <kbd>O</kbd>
           </kbd>
-          )：從本機開啟檔案
+          )：從本機開啟方案
         </li>
         <li>
           <kbd>
@@ -372,7 +372,7 @@ function showHelp() {
             <kbd>⌘</kbd>
             <kbd>S</kbd>
           </kbd>
-          )：儲存檔案至本機
+          )：儲存方案至本機
         </li>
         <li hidden>
           <kbd>
@@ -417,7 +417,7 @@ function showHelp() {
           <kbd>Esc</kbd> (<kbd>⎋</kbd>)：關閉「新增方案」或「推導結果」面板
         </li>
       </ul>
-      <p>此外，檔案亦可透過拖曳載入。</p>
+      <p>此外，推導方案檔案亦可透過拖曳載入。</p>
       <h3>指定個別字音</h3>
       <p>
         推導自訂文章時，若某字有多個音，且推導結果不同，則在推導結果介面上，該字會被著色。指標移至其上（或觸控螢幕上點按）會出現選單，可以點選想要的字音。

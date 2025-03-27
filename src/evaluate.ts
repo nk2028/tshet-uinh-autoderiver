@@ -52,7 +52,7 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
     const newReferences = references.concat(current);
     if (references.includes(current)) throw notifyError("Circular reference detected: " + newReferences.join(" -> "));
     return (音韻地位, 字頭) => sample => {
-      const schema = schemas.find(({ name }) => name === normalizeFileName(sample) + ".js");
+      const schema = schemas.find(({ name }) => name === normalizeFileName(sample));
       if (!schema) throw notifyError("Schema not found");
       return new SchemaFromRequire(rawDeriverFrom(schema.input), require(sample, newReferences), 音韻地位, 字頭);
     };
