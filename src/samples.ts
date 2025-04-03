@@ -1,5 +1,6 @@
 // prettier-ignore
 export default {
+  "直接標註音韻地位（及相關屬性）": "position",
   "切韻音系拼音或轉寫": {
     "切韻拼音": "tupa",
     "白一平轉寫": "baxter",
