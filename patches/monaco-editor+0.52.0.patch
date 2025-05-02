@@ -517,3 +517,83 @@ index 4681708..e5f01c4 100644
 -import "./wgsl/wgsl.contribution.js";
 -import "./xml/xml.contribution.js";
 -import "./yaml/yaml.contribution.js";
+diff --git a/node_modules/monaco-editor/esm/vs/editor/contrib/find/browser/findController.js b/node_modules/monaco-editor/esm/vs/editor/contrib/find/browser/findController.js
+index d384172..5d36374 100644
+--- a/node_modules/monaco-editor/esm/vs/editor/contrib/find/browser/findController.js
++++ b/node_modules/monaco-editor/esm/vs/editor/contrib/find/browser/findController.js
+@@ -422,7 +422,7 @@ export const StartFindAction = registerMultiEditorAction(new MultiEditorAction({
+     id: FIND_IDS.StartFindAction,
+     label: nls.localize('startFindAction', "Find"),
+     alias: 'Find',
+-    precondition: ContextKeyExpr.or(EditorContextKeys.focus, ContextKeyExpr.has('editorIsOpen')),
++    precondition: EditorContextKeys.focus,
+     kbOpts: {
+         kbExpr: null,
+         primary: 2048 /* KeyMod.CtrlCmd */ | 36 /* KeyCode.KeyF */,
+@@ -789,7 +789,7 @@ export const StartFindReplaceAction = registerMultiEditorAction(new MultiEditorA
+     id: FIND_IDS.StartFindReplaceAction,
+     label: nls.localize('startReplace', "Replace"),
+     alias: 'Replace',
+-    precondition: ContextKeyExpr.or(EditorContextKeys.focus, ContextKeyExpr.has('editorIsOpen')),
++    precondition: EditorContextKeys.focus,
+     kbOpts: {
+         kbExpr: null,
+         primary: 2048 /* KeyMod.CtrlCmd */ | 38 /* KeyCode.KeyH */,
+diff --git a/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneCodeEditor.js b/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneCodeEditor.js
+index 71c26d6..607ee60 100644
+--- a/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneCodeEditor.js
++++ b/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneCodeEditor.js
+@@ -101,7 +101,7 @@ let StandaloneCodeEditor = class StandaloneCodeEditor extends CodeEditorWidget {
+         // Read descriptor options
+         const id = _descriptor.id;
+         const label = _descriptor.label;
+-        const precondition = ContextKeyExpr.and(ContextKeyExpr.equals('editorId', this.getId()), ContextKeyExpr.deserialize(_descriptor.precondition));
++        const precondition = ContextKeyExpr.deserialize(_descriptor.precondition);
+         const keybindings = _descriptor.keybindings;
+         const keybindingsWhen = ContextKeyExpr.and(precondition, ContextKeyExpr.deserialize(_descriptor.keybindingContext));
+         const contextMenuGroupId = _descriptor.contextMenuGroupId || null;
+diff --git a/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js b/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js
+index 3f0a603..36c7d66 100644
+--- a/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js
++++ b/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js
+@@ -273,39 +273,7 @@ let StandaloneKeybindingService = class StandaloneKeybindingService extends Abst
+             }));
+             this._domNodeListeners.push(new DomNodeListeners(domNode, disposables));
+         };
+-        const removeContainer = (domNode) => {
+-            for (let i = 0; i < this._domNodeListeners.length; i++) {
+-                const domNodeListeners = this._domNodeListeners[i];
+-                if (domNodeListeners.domNode === domNode) {
+-                    this._domNodeListeners.splice(i, 1);
+-                    domNodeListeners.dispose();
+-                }
+-            }
+-        };
+-        const addCodeEditor = (codeEditor) => {
+-            if (codeEditor.getOption(61 /* EditorOption.inDiffEditor */)) {
+-                return;
+-            }
+-            addContainer(codeEditor.getContainerDomNode());
+-        };
+-        const removeCodeEditor = (codeEditor) => {
+-            if (codeEditor.getOption(61 /* EditorOption.inDiffEditor */)) {
+-                return;
+-            }
+-            removeContainer(codeEditor.getContainerDomNode());
+-        };
+-        this._register(codeEditorService.onCodeEditorAdd(addCodeEditor));
+-        this._register(codeEditorService.onCodeEditorRemove(removeCodeEditor));
+-        codeEditorService.listCodeEditors().forEach(addCodeEditor);
+-        const addDiffEditor = (diffEditor) => {
+-            addContainer(diffEditor.getContainerDomNode());
+-        };
+-        const removeDiffEditor = (diffEditor) => {
+-            removeContainer(diffEditor.getContainerDomNode());
+-        };
+-        this._register(codeEditorService.onDiffEditorAdd(addDiffEditor));
+-        this._register(codeEditorService.onDiffEditorRemove(removeDiffEditor));
+-        codeEditorService.listDiffEditors().forEach(addDiffEditor);
++        addContainer(mainWindow);
+     }
+     addDynamicKeybinding(command, keybinding, handler, when) {
+         return combinedDisposable(CommandsRegistry.registerCommand(command, handler), this.addDynamicKeybindings([{
