@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { t } from "i18next";
+import { Trans } from "react-i18next";
+
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { faFileCode } from "@fortawesome/free-regular-svg-icons";
@@ -26,7 +29,6 @@ import {
 
 import type { UseMainState, ReactNode } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
-import { t } from "i18next";
 
 const TabBar = styled.div`
   display: flex;
@@ -590,9 +592,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
 
   function validateFileName(name: string) {
     const hasSchemaName = (name: string) => schemas.find(schema => schema.name === name);
-    if (!name) return "方案名稱為空";
-    if (invalidCharsRegex.test(name)) return "方案名稱含有特殊字元";
-    if (hasSchemaName(name)) return "方案名稱與現有方案重複";
+    if (!name) return t("方案名稱為空");
+    if (invalidCharsRegex.test(name)) return t("方案名稱含有特殊字元");
+    if (hasSchemaName(name)) return t("方案名稱與現有方案重複");
     return "";
   }
 
@@ -852,9 +854,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
         <OptionsTitle>
           <span>{t("選項")}</span>
           {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
-            <ResetButton title="將所有選項恢復成預設值" onClick={resetParameters}>
+            <ResetButton onClick={resetParameters}>
               <FontAwesomeIcon icon={faRotateLeft} size="sm" />
-              <div>將所有選項恢復成預設值</div>
+              <div>{t("將所有選項恢復為預設值")}</div>
             </ResetButton>
           ) : null}
         </OptionsTitle>
@@ -865,7 +867,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             )}
           </Parameters>
         ) : (
-          <NoParameters>{t("此推導方案無需選項。")}</NoParameters>
+          <NoParameters>
+            <Trans t={t}>此推導方案無需選項。</Trans>
+          </NoParameters>
         )}
         {activeSchema?.parameters.errors.length ? (
           <ParameterErrorHint>

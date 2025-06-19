@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { 推導方案 } from "tshet-uinh-deriver-tools";
 
 import { Formatter } from "./Classes/CustomElement";
@@ -30,7 +31,7 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
 
   if (option === "convertPresetArticle" && !getArticle())
     setArticle(await fetchFile(tshetUinhTextLabelURLPrefix + "index.txt"));
-  else if (option === "compareSchemas" && schemas.length < 2) throw notifyError("此選項需要兩個或以上方案");
+  else if (option === "compareSchemas" && schemas.length < 2) throw notifyError(t("此選項需要兩個或以上方案"));
   else await new Promise(resolve => setTimeout(resolve));
 
   try {

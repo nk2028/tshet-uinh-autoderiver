@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
 
+import { t } from "i18next";
 import "purecss/build/pure.css";
+import { useTranslation } from "react-i18next";
 // NOTE sweetalert2's ESM export does not setup styles properly, manually importing
 import "sweetalert2/dist/sweetalert2.css";
 
@@ -12,10 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Main from "./Main";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, noop } from "../consts";
-import { useTranslation } from "react-i18next";
-
 import i18n from "../i18n";
-import { t } from "i18next";
 
 injectGlobal`
   html,
@@ -580,9 +579,12 @@ export default function App() {
   const evaluateHandlerRef = useRef(noop);
 
   useEffect(() => {
-    document.documentElement.lang = i18n.language;
+    const langCode = i18n.language === "en" ? "en-GB" : "zh-HK";
+    document.documentElement.lang = langCode;
+
     i18n.on("languageChanged", lng => {
-      document.documentElement.lang = lng;
+      const langCode = lng === "en" ? "en-GB" : "zh-HK";
+      document.documentElement.lang = langCode;
     });
 
     document.title = t("切韻音系自動推導器");

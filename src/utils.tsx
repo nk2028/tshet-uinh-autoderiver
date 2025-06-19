@@ -1,3 +1,5 @@
+import { t } from "i18next";
+
 import { css as stylesheet } from "@emotion/css";
 import styled from "@emotion/styled";
 
@@ -66,9 +68,9 @@ export function notifyError(msg: string, err?: unknown) {
   }
   const config: SweetAlertOptions = {
     icon: "error",
-    title: "錯誤",
+    title: t("錯誤"),
     text: msg,
-    confirmButtonText: "確定",
+    confirmButtonText: t("確定-OK"),
   };
   if (technical !== null) {
     config.customClass = errorModal;

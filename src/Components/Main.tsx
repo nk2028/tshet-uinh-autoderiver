@@ -349,7 +349,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   <TooltipLabel description={copyTooltipText} onHideTooltip={onHideTooltip}>
                     <CopyButton onClick={copyEvaluationResult}>
                       <FontAwesomeIcon icon={faCopy} size="sm" />
-                      <div>全部複製</div>
+                      <div>{t("全部複製")}</div>
                     </CopyButton>
                   </TooltipLabel>
                   <form method="dialog">

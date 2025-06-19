@@ -1,6 +1,8 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { t } from "i18next";
+
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { faFile, faFileCode } from "@fortawesome/free-regular-svg-icons";
@@ -14,7 +16,6 @@ import { fetchFile, normalizeFileName, stopPropagation } from "../utils";
 
 import type { Folder, Sample, SchemaState } from "../consts";
 import type { ChangeEventHandler, FormEvent, RefObject } from "react";
-import { t } from "i18next";
 
 const Container = styled.dialog`
   transform: scale(0.9);
@@ -209,9 +210,9 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
 
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
-    if (!name) return "方案名稱為空";
-    if (invalidCharsRegex.test(name)) return "方案名稱含有特殊字元";
-    if (hasSchemaName(name)) return "方案名稱與現有方案重複";
+    if (!name) return t("方案名稱為空");
+    if (invalidCharsRegex.test(name)) return t("方案名稱含有特殊字元");
+    if (hasSchemaName(name)) return t("方案名稱與現有方案重複");
     return "";
   }, [createSchemaName, hasSchemaName]);
 
@@ -339,7 +340,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         <Action method="dialog" className="pure-form" onSubmit={addSchema}>
           <Rename>
             <label>
-              <div>方案名稱顯示為</div>
+              <div>{t("方案名稱顯示為")}</div>
               <input
                 ref={inputRef}
                 type="text"
@@ -354,10 +355,10 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
             </label>
           </Rename>
           <button type="reset" className="pure-button" onClick={closeDialog}>
-            取消
+            {t("取消")}
           </button>
           <button type="submit" className="pure-button pure-button-primary">
-            新增
+            {t("新增")}
           </button>
         </Action>
         <Validation>{validation || "\xa0"}</Validation>
