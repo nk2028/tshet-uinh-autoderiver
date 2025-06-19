@@ -14,18 +14,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - run: npm ci
       - run: npm test
       - run: npm run build:cos
       - name: Install coscmd
-        run: sudo pip install coscmd
+        run: pip install coscmd
       - name: Configure coscmd
         run: coscmd config -a ${{ secrets.SecretId }} -s "${{ secrets.SecretKey }}" -b ${{ vars.BUCKET }} -r ${{ vars.REGION }}
       - name: Publish static files to COS
         run: |
           cd ./build/
-          coscmd upload -rs --delete -f ./ / --ignore index.html
-          find . -mindepth 1 ! -name index.html -exec rm -rf {} +
+          #coscmd upload -rs --delete -f ./ / --ignore index.html
+          #find . -mindepth 1 ! -name index.html -exec rm -rf {} +
+          coscmd upload -rs --delete -f ./assets /assets
+          rm -rf assets
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:

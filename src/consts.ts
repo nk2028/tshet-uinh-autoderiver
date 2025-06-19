@@ -10,7 +10,7 @@ export const tshetUinhTextLabelURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/t
 
 export const newFileTemplate = /* js */ `
 /* 在此輸入描述……
- * 
+ *
  * @author your_name
  */
 

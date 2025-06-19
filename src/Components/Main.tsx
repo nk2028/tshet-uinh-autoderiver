@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useTranslation } from "react-i18next";
@@ -27,6 +27,8 @@ const ArticleInput = styled.textarea`
   line-height: 1.6;
   resize: none;
   width: 100%;
+  flex: 1;
+  overflow: hidden;
 `;
 const OutputContainer = styled.dialog`
   transform: translateY(10%);
@@ -118,9 +120,18 @@ const CopyButton = styled.button`
   transition: color 0.2s;
   color: #888;
   cursor: pointer;
+  font-size: 0.8em;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
   &:hover,
   &:focus {
     color: #0078e7;
+  }
+  & > div {
+    font-size: 0.75em;
+    border-bottom: none;
   }
 `;
 const CloseButton = styled.button`
@@ -210,6 +221,37 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
     });
   }, []);
 
+  const [articleInput, setArticleInput] = useState<HTMLTextAreaElement | null>(null);
+  useLayoutEffect(() => {
+    if (!articleInput) return;
+    const textArea = articleInput;
+    const container = textArea.parentElement!;
+    function resizeTextArea() {
+      const scrollTop = container.scrollTop;
+      // First measure without a scrollbar
+      textArea.style.minHeight = "";
+      textArea.style.flex = "unset";
+      const computedStyle = getComputedStyle(textArea);
+      const borderHeight = parseFloat(computedStyle.borderTopWidth) + parseFloat(computedStyle.borderBottomWidth);
+      textArea.style.minHeight = `max(9em, ${textArea.scrollHeight + borderHeight}px)`;
+      if (textArea.scrollHeight > textArea.getBoundingClientRect().height) {
+        // Remeasure if the input doesn’t actually fit due to the addition of scrollbar
+        textArea.style.minHeight = "";
+        container.style.overflowY = "scroll";
+        textArea.style.minHeight = `max(9em, ${textArea.scrollHeight + borderHeight}px)`;
+        container.style.overflowY = "";
+      }
+      textArea.style.flex = "";
+      container.scrollTop = scrollTop;
+    }
+    resizeTextArea();
+    const resizeObserver = new ResizeObserver(resizeTextArea);
+    resizeObserver.observe(container);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [article, articleInput]);
+
   const resetArticle = useCallback(async () => {
     if (
       !article ||
@@ -239,7 +281,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         setState={setState}
         commonOptions={
           <>
-            <p>
+            <div>
               <label>
                 <select onChange={useHandle("option", event => event.target.value as Option)} value={option}>
                   {allOptions.map(([value, label]) => (
@@ -279,22 +321,20 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                 value={t("恢復成預設文本")}
                 onClick={resetArticle}
               />
-            </p>
-            <p>
-              <ArticleInput
-                disabled={option !== "convertArticle"}
-                placeholder="輸入框"
-                lang="zh-HK"
-                rows={5}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-                required
-                onChange={useHandle("article", event => event.target.value)}
-                value={article}
-              />
-            </p>
+            </div>
+            <ArticleInput
+              ref={setArticleInput}
+              disabled={option !== "convertArticle"}
+              placeholder="輸入框"
+              lang="zh-HK"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+              required
+              onChange={useHandle("article", event => event.target.value)}
+              value={article}
+            />
           </>
         }
         evaluateHandlerRef={evaluateHandlerRef}
@@ -309,6 +349,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   <TooltipLabel description={copyTooltipText} onHideTooltip={onHideTooltip}>
                     <CopyButton onClick={copyEvaluationResult}>
                       <FontAwesomeIcon icon={faCopy} size="sm" />
+                      <div>全部複製</div>
                     </CopyButton>
                   </TooltipLabel>
                   <form method="dialog">
