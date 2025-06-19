@@ -32,7 +32,7 @@
   "從輸入框中讀取文章，並注音": "Read article from input box and transcribe",
   "為預置文章注音": "Transcribe preset article",
   "導出所有音韻地位": "Export all phonological positions",
-  "比較多個方案，並導出結果相異的音韻地位": "Compare multiple schemes and export differing phonological positions",
+  "比較多個方案，並導出結果相異的音韻地位": "Compare multiple schemes and report differing phonological positions",
   "導出所有音節": "Export all syllables",
   "導出所有音節，並計數": "Export all syllables with counts",
   "計數": "Count",

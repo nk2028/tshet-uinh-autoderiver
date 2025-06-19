@@ -122,6 +122,7 @@ injectGlobal`
       height: 2rem;
       vertical-align: baseline;
       margin-right: 0.125rem;
+      max-width: 100%;
     }
     input[type="radio"],
     input[type="checkbox"] {
@@ -142,7 +143,7 @@ injectGlobal`
     label {
       display: inline;
       margin-right: 1.125rem;
-      white-space: nowrap;
+      /* white-space: nowrap; */
     }
   }
   .swal2-close {
