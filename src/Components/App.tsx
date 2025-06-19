@@ -15,18 +15,26 @@ import { codeFontFamily, noop } from "../consts";
 import { useTranslation } from "react-i18next";
 
 import i18n from "../i18n";
+import { t } from "i18next";
 
 injectGlobal`
   html,
   body {
     line-height: 1.6;
     font-size: 16px;
-    font-family: "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
-      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
-      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", serif;
     font-language-override: "KOR";
     overflow: hidden;
     touch-action: none;
+  }
+  html:lang(zh-HK), html :lang(zh-HK) {
+    font-family: "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", serif;
+  }
+  html:lang(en-GB), html :lang(en-GB) {
+    font-family: "Noto Sans", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", sans-serif;
   }
   body.dragging {
     user-select: none;
@@ -260,7 +268,7 @@ function showInfoBox(content: JSX.Element) {
 function showAbout() {
   return showInfoBox(
     <>
-      <h2>關於</h2>
+      <h2>{t("關於")}</h2>
       <p>
         切韻音系自動推導器（下稱「本頁面」）由{" "}
         <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/">
@@ -313,7 +321,7 @@ function showAbout() {
 function showHelp() {
   return showInfoBox(
     <>
-      <h2>使用說明</h2>
+      <h2>{t("使用說明")}</h2>
       <h3>快速鍵</h3>
       <p>快速鍵僅在編輯器處於焦點狀態時有效。</p>
       <ul>
@@ -577,7 +585,7 @@ export default function App() {
       document.documentElement.lang = lng;
     });
 
-    document.title = t("tshetUinhAutoderiver");
+    document.title = t("切韻音系自動推導器");
   }, []);
 
   return (
@@ -586,22 +594,22 @@ export default function App() {
         <header>
           <nav>
             <Heading>
-              <Title>{t("tshetUinhAutoderiver")}</Title>
+              <Title>{t("切韻音系自動推導器")}</Title>
               <Version>v{__APP_VERSION__}</Version>
               <LinkToLegacy>
                 <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">
-                  前往舊版
+                  {t("前往舊版")}
                   <FontAwesomeIcon icon={faExternalLink} />
                 </a>
               </LinkToLegacy>
               <Buttons>
-                <ApplyButton title="適用" onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
+                <ApplyButton title={t("適用")} onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
                   <FontAwesomeIcon icon={faCirclePlay} />
                 </ApplyButton>
-                <ShowButton title="關於" onClick={showAbout}>
+                <ShowButton title={t("關於")} onClick={showAbout}>
                   <FontAwesomeIcon icon={faInfo} fixedWidth />
                 </ShowButton>
-                <ShowButton title="使用說明" onClick={showHelp}>
+                <ShowButton title={t("使用說明")} onClick={showHelp}>
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>

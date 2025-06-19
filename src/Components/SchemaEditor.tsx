@@ -26,6 +26,7 @@ import {
 
 import type { UseMainState, ReactNode } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
+import { t } from "i18next";
 
 const TabBar = styled.div`
   display: flex;
@@ -385,16 +386,16 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       if (
         (
           await Swal.fire({
-            title: "要刪除此方案嗎？",
-            text: "此動作無法復原。",
+            title: t("要刪除此方案嗎？"),
+            text: t("此動作無法復原。"),
             icon: "warning",
             showConfirmButton: false,
             focusConfirm: false,
             showDenyButton: true,
             showCancelButton: true,
             focusCancel: true,
-            denyButtonText: "確定",
-            cancelButtonText: "取消",
+            denyButtonText: t("確定"),
+            cancelButtonText: t("取消"),
           })
         ).isDenied
       )
@@ -750,9 +751,9 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             <Separator visible={activeSchemaName !== schemas[index + 1]?.name && activeSchemaName !== name} />
           </Tab>
         ))}
-        <CreateSchemaButton title="新增方案" onClick={createSchema.current}>
+        <CreateSchemaButton title={t("新增方案")} onClick={createSchema.current}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
-          <div>加載更多注音方案</div>
+          <div>{t("載入更多注音方案")}</div>
         </CreateSchemaButton>
       </TabBar>
       <EditorArea ref={setEditorArea} lang="en-x-code">
@@ -837,7 +838,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       />
       <Options ref={setOptionPanel} className="pure-form">
         <h3>
-          <span>選項</span>
+          <span>{t("選項")}</span>
           {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
             <ResetButton title="恢復成預設值" onClick={resetParameters}>
               <FontAwesomeIcon icon={faRotateLeft} size="sm" />
@@ -851,7 +852,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             )}
           </Parameters>
         ) : (
-          <NoParameters>此推導方案無可用自訂選項。</NoParameters>
+          <NoParameters>{t("此推導方案無可用自訂選項。")}</NoParameters>
         )}
         {activeSchema?.parameters.errors.length ? (
           <ParameterErrorHint>

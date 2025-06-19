@@ -184,7 +184,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
 
   const [loading, setLoading] = useState(false);
 
-  const [copyTooltipText, setCopyTooltipText] = useState(t("copyToClipboard"));
+  const [copyTooltipText, setCopyTooltipText] = useState(t("全部複製"));
   const copyEvaluationResult = useCallback(async () => {
     const content = ref.current.textContent?.trim();
     if (content) {
@@ -196,7 +196,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
       }
     }
   }, []);
-  const onHideTooltip = useCallback(() => setCopyTooltipText(t("copyToClipboard")), []);
+  const onHideTooltip = useCallback(() => setCopyTooltipText(t("全部複製")), []);
 
   // XXX Please Rewrite
   useEffect(() => {
@@ -216,16 +216,16 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
       (article !== defaultArticle &&
         (
           await Swal.fire({
-            title: "要恢復成預設文本嗎？",
-            text: "此動作無法復原。",
+            title: t("要恢復成預設文本嗎？"),
+            text: t("此動作無法復原。"),
             icon: "warning",
             showConfirmButton: false,
             focusConfirm: false,
             showDenyButton: true,
             showCancelButton: true,
             focusCancel: true,
-            denyButtonText: "確定",
-            cancelButtonText: "取消",
+            denyButtonText: t("確定"),
+            cancelButtonText: t("取消"),
           })
         ).isDenied)
     )
@@ -244,7 +244,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                 <select onChange={useHandle("option", event => event.target.value as Option)} value={option}>
                   {allOptions.map(([value, label]) => (
                     <option key={value} value={value}>
-                      {label}
+                      {t(label)}
                     </option>
                   ))}
                 </select>
@@ -252,7 +252,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
               <input
                 className="pure-button pure-button-primary"
                 type="button"
-                value="適用"
+                value={t("適用")}
                 onClick={evaluateHandlerRef.current}
               />
               <label hidden={option !== "convertArticle"}>
@@ -261,7 +261,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   checked={convertVariant}
                   onChange={useHandle("convertVariant", event => event.target.checked)}
                 />
-                轉換異體字
+                {t("轉換異體字")}
               </label>
               <label hidden={option !== "convertArticle"}>
                 <input
@@ -269,14 +269,14 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   checked={syncCharPosition}
                   onChange={useHandle("syncCharPosition", event => event.target.checked)}
                 />
-                同步音韻地位選擇至輸入框
+                {t("同步音韻地位選擇至輸入框")}
               </label>
               <input
                 hidden={option !== "convertArticle"}
                 disabled={article === defaultArticle}
                 className="pure-button pure-button-danger"
                 type="button"
-                value="恢復成預設文本"
+                value={t("恢復成預設文本")}
                 onClick={resetArticle}
               />
             </p>
@@ -284,6 +284,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
               <ArticleInput
                 disabled={option !== "convertArticle"}
                 placeholder="輸入框"
+                lang="zh-HK"
                 rows={5}
                 autoComplete="off"
                 autoCorrect="off"
@@ -302,7 +303,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         <OutputContainer onClick={closeDialog} ref={dialogRef}>
           <OutputPopup onClick={stopPropagation}>
             <Title>
-              <span>推導結果</span>
+              <span>{t("推導結果")}</span>
               {!loading && (
                 <>
                   <TooltipLabel description={copyTooltipText} onHideTooltip={onHideTooltip}>
@@ -311,7 +312,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                     </CopyButton>
                   </TooltipLabel>
                   <form method="dialog">
-                    <CloseButton type="submit" className="swal2-close" title="關閉">
+                    <CloseButton type="submit" className="swal2-close" title={t("關閉")}>
                       ×
                     </CloseButton>
                   </form>

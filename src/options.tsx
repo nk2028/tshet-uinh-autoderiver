@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 
+import { t } from "i18next";
 import { 資料, 音韻地位 } from "tshet-uinh";
 import Yitizi from "yitizi";
 
@@ -11,7 +12,6 @@ import Table from "./Components/Table";
 import TooltipChar from "./Components/TooltipChar";
 import { noop } from "./consts";
 
-import i18n from "./i18n";
 import type { CustomNode } from "./Classes/CustomElement";
 import type { Entry, MainState, Option, ReactNode, SchemaState } from "./consts";
 
@@ -205,16 +205,16 @@ export const evaluateOption: Record<Option, Handler> = {
     return result.length ? (
       <>
         <Title>
-          {i18n.t("schemaCompareDifferent", { count: result.length })}
+          {t("schemaCompareDifferent", { count: result.length })}
           <span hidden>{"\n\n"}</span>
         </Title>
         <Table
-          head={[i18n.t("phonologicalPosition"), ...title(schemas), i18n.t("representativeCharacter")]}
+          head={[t("phonologicalPosition"), ...title(schemas), t("代表字")]}
           body={finalize(result)}
         />
       </>
     ) : (
-      <h3>{i18n.t("schemaCompareSame")}</h3>
+      <h3>{t("schemaCompareSame")}</h3>
     );
   },
 };

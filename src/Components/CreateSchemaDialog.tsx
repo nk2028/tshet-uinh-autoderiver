@@ -14,6 +14,7 @@ import { fetchFile, normalizeFileName, stopPropagation } from "../utils";
 
 import type { Folder, Sample, SchemaState } from "../consts";
 import type { ChangeEventHandler, FormEvent, RefObject } from "react";
+import { t } from "i18next";
 
 const Container = styled.dialog`
   transform: scale(0.9);
@@ -271,7 +272,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   return createPortal(
     <Container ref={ref} onClick={closeDialog} onClose={resetDialog}>
       <Popup onClick={stopPropagation}>
-        <Title>新增方案</Title>
+        <Title>{t("新增方案")}</Title>
         <Explorer>
           <ul>
             <li>
@@ -283,7 +284,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
                   setCreateSchemaSample("");
                 }}>
                 <FontAwesomeIcon icon={faFile} fixedWidth />
-                <SchemaName selected={!createSchemaSample}>新增空白方案……</SchemaName>
+                <SchemaName selected={!createSchemaSample}>{t("新增空白方案……")}</SchemaName>
               </SchemaItem>
             </li>
             {recursiveFolder(samples)}
