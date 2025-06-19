@@ -31,7 +31,7 @@ injectGlobal`
       "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", serif;
   }
   html:lang(en-GB), html :lang(en-GB) {
-    font-family: "Noto Sans", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+    font-family: "Roboto", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
       "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
       "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", sans-serif;
   }
@@ -582,13 +582,13 @@ export default function App() {
   useEffect(() => {
     const langCode = i18n.language === "en" ? "en-GB" : "zh-HK";
     document.documentElement.lang = langCode;
+    document.title = t("切韻音系自動推導器");
 
     i18n.on("languageChanged", lng => {
       const langCode = lng === "en" ? "en-GB" : "zh-HK";
       document.documentElement.lang = langCode;
+      document.title = t("切韻音系自動推導器");
     });
-
-    document.title = t("切韻音系自動推導器");
   }, []);
 
   return (
@@ -616,6 +616,12 @@ export default function App() {
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>
+              <label>
+                <select onChange={e => i18n.changeLanguage(e.currentTarget.value)} value={i18n.language}>
+                  <option value="zh">中文</option>
+                  <option value="en">English</option>
+                </select>
+              </label>
             </Heading>
           </nav>
         </header>
