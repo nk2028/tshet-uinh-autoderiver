@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { useTranslation } from "react-i18next";
+
 import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import { useTranslation } from "react-i18next";
 
 import SchemaEditor from "./SchemaEditor";
 import Spinner from "./Spinner";
@@ -190,9 +190,9 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
     if (content) {
       try {
         await navigator.clipboard.writeText(content);
-        setCopyTooltipText(t("copySuccess"));
+        setCopyTooltipText(t("已複製"));
       } catch {
-        setCopyTooltipText(t("copyFailed"));
+        setCopyTooltipText(t("複製失敗"));
       }
     }
   }, []);

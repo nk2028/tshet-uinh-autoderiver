@@ -852,7 +852,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             )}
           </Parameters>
         ) : (
-          <NoParameters>{t("此推導方案無可用自訂選項。")}</NoParameters>
+          <NoParameters>{t("此推導方案無需選項。")}</NoParameters>
         )}
         {activeSchema?.parameters.errors.length ? (
           <ParameterErrorHint>
