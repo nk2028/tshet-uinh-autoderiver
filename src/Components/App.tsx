@@ -580,15 +580,13 @@ export default function App() {
   const evaluateHandlerRef = useRef(noop);
 
   useEffect(() => {
-    const langCode = i18n.language === "en" ? "en-GB" : "zh-HK";
-    document.documentElement.lang = langCode;
-    document.title = t("切韻音系自動推導器");
-
-    i18n.on("languageChanged", lng => {
+    const resetDocumentLang = (lng: string) => {
       const langCode = lng === "en" ? "en-GB" : "zh-HK";
       document.documentElement.lang = langCode;
       document.title = t("切韻音系自動推導器");
-    });
+    };
+    resetDocumentLang(i18n.language);
+    i18n.on("languageChanged", resetDocumentLang);
   }, []);
 
   return (
