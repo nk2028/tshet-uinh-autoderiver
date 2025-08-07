@@ -325,7 +325,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
             <ArticleInput
               ref={setArticleInput}
               disabled={option !== "convertArticle"}
-              placeholder="輸入框"
+              placeholder={t("輸入框")}
               lang="zh-HK"
               autoComplete="off"
               autoCorrect="off"

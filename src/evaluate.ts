@@ -46,7 +46,7 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
       derivers.map(([derive, require]) => formatResult(derive(地位, 字頭, require(地位, 字頭)))),
     );
   } catch (err) {
-    throw notifyError("程式碼錯誤", err);
+    throw notifyError(t("程式碼錯誤"), err);
   }
 
   function require(current: string, references: string[] = []): Require {
