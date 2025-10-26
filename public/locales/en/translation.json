@@ -1,11 +1,13 @@
 {
   "app.title": "Tshet-uinh Autoderiver",
   "app.goToLegacy": "Go to Legacy Version",
+  "app.defaultFileName": "Unnamed",
   "app.info.about.title": "About",
   "app.info.userGuide.title": "User Guide",
 
   "action.createSchema": "Add or Load Derivation Scheme",
   "action.deleteSchema": "Delete Derivation Scheme",
+  "action.loadSchemaByDragAndDrop": "Drop Derivation Scheme Files Here",
   "action.copy.label": "Copy all",
   "action.copy.copied": "Copied",
   "action.copy.failed": "Copy failed",
@@ -59,6 +61,7 @@
   "dialog.error.message.runtime": "Runtime Error",
   "dialog.error.message.circularReferenceDetected": "Circular reference detected: ",
   "dialog.error.message.schemaNameLookup": "Scheme not found",
+  "dialog.error.message.file.fetch": "An error occurred while downloading the file",
   "dialog.error.message.file.open": "An error occurred while opening the file",
   "dialog.error.message.file.save": "An error occurred while saving the file",
   "dialog.error.message.schema.load.single": "Failed to load scheme",

@@ -27,14 +27,14 @@ export function showLoadingModal(abortController: AbortController) {
     html: (
       <LoadModal>
         <Spinner />
-        <h2>正在載入方案……</h2>
+        <h2>{t("dialog.schemaLoading.title")}</h2>
       </LoadModal>
     ),
     allowOutsideClick: false,
     allowEscapeKey: false,
     showConfirmButton: false,
     showCancelButton: true,
-    cancelButtonText: "取消",
+    cancelButtonText: t("dialog.action.cancel"),
   }).then(result => result.dismiss === Swal.DismissReason.cancel && abortController.abort());
 }
 
@@ -68,9 +68,9 @@ export function notifyError(msg: string, err?: unknown) {
   }
   const config: SweetAlertOptions = {
     icon: "error",
-    title: t("錯誤"),
+    title: t("dialog.error.title"),
     text: msg,
-    confirmButtonText: t("確定-OK"),
+    confirmButtonText: t("dialog.action.ok"),
   };
   if (technical !== null) {
     config.customClass = errorModal;
@@ -94,7 +94,7 @@ export async function fetchFile(href: string | URL, signal: AbortSignal | null =
     if (!response.ok) throw new Error(text);
     return text;
   } catch (err) {
-    throw signal?.aborted ? err : notifyError("載入檔案失敗", err);
+    throw signal?.aborted ? err : notifyError(t("dialog.error.message.file.fetch"), err);
   }
 }
 
@@ -125,9 +125,14 @@ export async function settleAndGroupPromise<T>(values: Iterable<T | PromiseLike<
 
 export function displaySchemaLoadingErrors(errors: unknown[], nSchemas: number) {
   if (errors.length > 1) {
-    notifyError(`${errors.length} 個方案無法載入`, new AggregateError(errors));
+    notifyError(t("dialog.error.message.schema.load.multiple", { count: errors.length }), new AggregateError(errors));
   } else if (errors.length === 1) {
-    notifyError(nSchemas === 1 ? "無法載入方案" : "1 個方案無法載入", errors[0]);
+    notifyError(
+      nSchemas === 1
+        ? t("dialog.error.message.schema.load.single")
+        : t("dialog.error.message.schema.load.multiple", { count: 1 }),
+      errors[0],
+    );
   }
 }
 

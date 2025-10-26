@@ -31,7 +31,8 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
 
   if (option === "convertPresetArticle" && !getArticle())
     setArticle(await fetchFile(tshetUinhTextLabelURLPrefix + "index.txt"));
-  else if (option === "compareSchemas" && schemas.length < 2) throw notifyError(t("此選項需要兩個或以上方案"));
+  else if (option === "compareSchemas" && schemas.length < 2)
+    throw notifyError(t("dialog.error.message.multipleSchemasRequired"));
   else await new Promise(resolve => setTimeout(resolve));
 
   try {
@@ -46,15 +47,16 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
       derivers.map(([derive, require]) => formatResult(derive(地位, 字頭, require(地位, 字頭)))),
     );
   } catch (err) {
-    throw notifyError(t("程式碼錯誤"), err);
+    throw notifyError(t("dialog.error.message.runtime"), err);
   }
 
   function require(current: string, references: string[] = []): Require {
     const newReferences = references.concat(current);
-    if (references.includes(current)) throw notifyError("Circular reference detected: " + newReferences.join(" -> "));
+    if (references.includes(current))
+      throw notifyError(t("dialog.error.message.circularReferenceDetected") + newReferences.join(" -> "));
     return (音韻地位, 字頭) => sample => {
       const schema = schemas.find(({ name }) => name === normalizeFileName(sample));
-      if (!schema) throw notifyError("Schema not found");
+      if (!schema) throw notifyError(t("dialog.error.message.schemaNameLookup"));
       return new SchemaFromRequire(rawDeriverFrom(schema.input), require(sample, newReferences), 音韻地位, 字頭);
     };
   }

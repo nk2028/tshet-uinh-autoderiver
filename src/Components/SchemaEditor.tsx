@@ -277,7 +277,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
   const getDefaultFileNameWithSchemaNames = useCallback(
     (schemaNames: string[]) =>
       memoize((name: string) => {
-        name ||= "無標題";
+        name ||= t("app.defaultFileName");
         const indices = schemaNames
           .map(oldName => {
             if (oldName === name) return 0;
@@ -293,7 +293,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
         while (indices[i] - indices[i - 1] <= 1) i++;
         return name + (~indices[i - 1] || "");
       }),
-    [],
+    [t],
   );
   const getDefaultFileName = useMemo(
     () => getDefaultFileNameWithSchemaNames(schemas.map(({ name }) => name)),
@@ -348,7 +348,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
         } catch {
           setState(
             actions.addSchema({
-              name: "無標題",
+              name: t("app.defaultFileName"),
               input: newFileTemplate,
             }),
           );
@@ -394,23 +394,23 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       signal.aborted || displaySchemaLoadingErrors(errors, hrefs.length);
     }
     loadSchemas();
-  }, [schemas, setState, addFilesToSchema]);
+  }, [schemas, setState, addFilesToSchema, t]);
 
   const deleteSchema = useCallback(
     async (name: string) => {
       if (
         (
           await Swal.fire({
-            title: t("要刪除此方案嗎？"),
-            text: t("此動作無法復原。"),
+            title: t("dialog.deleteSchema.title"),
+            text: t("dialog.deleteSchema.message"),
             icon: "warning",
             showConfirmButton: false,
             focusConfirm: false,
             showDenyButton: true,
             showCancelButton: true,
             focusCancel: true,
-            denyButtonText: t("確定"),
-            cancelButtonText: t("取消"),
+            denyButtonText: t("dialog.action.confirm"),
+            cancelButtonText: t("dialog.action.cancel"),
           })
         ).isDenied
       )
@@ -446,7 +446,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
           displaySchemaLoadingErrors(errors, handles.length);
         } catch (error) {
           if ((error as Error | null)?.name !== "AbortError") {
-            notifyError("開啟檔案時發生錯誤", error);
+            notifyError(t("dialog.error.message.file.open"), error);
           }
         }
       })();
@@ -463,7 +463,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       });
       input.showPicker();
     }
-  }, [addFilesToSchema]);
+  }, [addFilesToSchema, t]);
 
   const saveFileToDisk = useRef(noop);
   saveFileToDisk.current = useCallback(() => {
@@ -487,7 +487,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
           await writable.close();
         } catch (error) {
           if ((error as Error | null)?.name !== "AbortError") {
-            notifyError("儲存檔案時發生錯誤", error);
+            notifyError(t("dialog.error.message.file.save"), error);
           }
         }
       })();
@@ -502,7 +502,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       document.body.removeChild(anchor);
       URL.revokeObjectURL(url);
     }
-  }, [activeSchema]);
+  }, [activeSchema, t]);
 
   const resetParameters = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
@@ -593,9 +593,9 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
 
   function validateFileName(name: string) {
     const hasSchemaName = (name: string) => schemas.find(schema => schema.name === name);
-    if (!name) return t("方案名稱為空");
-    if (invalidCharsRegex.test(name)) return t("方案名稱含有特殊字元");
-    if (hasSchemaName(name)) return t("方案名稱與現有方案重複");
+    if (!name) return t("dialog.createSchema.schemaName.validation.empty");
+    if (invalidCharsRegex.test(name)) return t("dialog.createSchema.schemaName.validation.invalidChars");
+    if (hasSchemaName(name)) return t("dialog.createSchema.schemaName.validation.duplicate");
     return "";
   }
 
@@ -603,9 +603,9 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
     if (button === 1) deleteSchema(name);
     else if (button === 2) {
       const promise = Swal.fire({
-        title: "重新命名方案",
+        title: t("dialog.renameSchema.title"),
         input: "text",
-        inputPlaceholder: "輸入方案名稱……",
+        inputPlaceholder: t("dialog.createSchema.schemaName.placeholder"),
         inputValue: name,
         inputAttributes: {
           autocomplete: "off",
@@ -614,8 +614,8 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
           spellcheck: "false",
         },
         showCancelButton: true,
-        confirmButtonText: "確定",
-        cancelButtonText: "取消",
+        confirmButtonText: t("dialog.action.confirm"),
+        cancelButtonText: t("dialog.action.cancel"),
       });
       const confirmButton = Swal.getConfirmButton() as HTMLButtonElement;
       confirmButton.disabled = true;
@@ -760,7 +760,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
             onContextMenu={event => event.preventDefault()}>
             <FontAwesomeIcon icon={faFileCode} fixedWidth />
             <Name checked={activeSchemaName === name}>{name}</Name>
-            <DeleteButton title="刪除方案" onClick={() => deleteSchema(name)}>
+            <DeleteButton title={t("action.deleteSchema")} onClick={() => deleteSchema(name)}>
               <FontAwesomeIcon icon={faXmark} size="sm" fixedWidth />
             </DeleteButton>
             <Separator visible={activeSchemaName !== schemas[index + 1]?.name && activeSchemaName !== name} />
@@ -768,7 +768,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
         ))}
         <CreateSchemaButton onClick={createSchema.current}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
-          <div>{t("載入更多注音方案")}</div>
+          <div>{t("action.createSchema")}</div>
         </CreateSchemaButton>
       </TabBar>
       <EditorArea ref={setEditorArea} lang="en-x-code">
@@ -793,7 +793,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
             (editor, monaco) => {
               editor.addAction({
                 id: "create-file",
-                label: "新增方案……",
+                label: t("action.editor.createFile"),
                 // Ctrl/Cmd + N cannot be overridden in browsers
                 keybindings: [monaco.KeyMod.Alt | monaco.KeyCode.KeyN],
                 run() {
@@ -802,7 +802,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
               });
               editor.addAction({
                 id: "delete-file",
-                label: "刪除方案……",
+                label: t("action.editor.deleteFile"),
                 // Ctrl/Cmd + W cannot be overridden in browsers
                 keybindings: [monaco.KeyMod.Alt | monaco.KeyCode.KeyW],
                 run() {
@@ -811,7 +811,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
               });
               editor.addAction({
                 id: "open-file-from-disk",
-                label: "從本機開啟方案……",
+                label: t("action.editor.openFileFromDisk"),
                 keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO],
                 run() {
                   openFileFromDisk.current();
@@ -819,7 +819,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
               });
               editor.addAction({
                 id: "save-file-to-disk",
-                label: "儲存方案至本機……",
+                label: t("action.editor.saveFileToDisk"),
                 keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
                 run() {
                   saveFileToDisk.current();
@@ -834,7 +834,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
               editor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KeyR, evaluate);
               editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, evaluate);
             },
-            [saveFileToDisk, evaluateHandlerRef],
+            [saveFileToDisk, evaluateHandlerRef, t],
           )}
           onChange={useCallback(
             input => {
@@ -853,11 +853,11 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       />
       <Options ref={setOptionPanel} className="pure-form">
         <OptionsTitle>
-          <span>{t("選項")}</span>
+          <span>{t("options.title")}</span>
           {activeSchema?.parameters.size || activeSchema?.parameters.errors.length ? (
             <ResetButton onClick={resetParameters}>
               <FontAwesomeIcon icon={faRotateLeft} size="sm" />
-              <div>{t("將所有選項恢復為預設值")}</div>
+              <div>{t("options.general.resetAllOptions")}</div>
             </ResetButton>
           ) : null}
         </OptionsTitle>
@@ -868,16 +868,18 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
             )}
           </Parameters>
         ) : (
-          <NoParameters>{t("此推導方案無需選項。")}</NoParameters>
+          <NoParameters>{t("options.parameters.noneRequired")}</NoParameters>
         )}
         {activeSchema?.parameters.errors.length ? (
           <ParameterErrorHint>
-            部分設定項目無法解析{" "}
+            {t("options.parameters.validation.unparsable")}{" "}
             <button
               type="button"
               className="pure-button"
-              onClick={() => notifyError("部分設定項目無法解析", activeSchema.parameters.errors.join("\n"))}>
-              檢視問題詳情
+              onClick={() =>
+                notifyError(t("options.parameters.validation.unparsable"), activeSchema.parameters.errors.join("\n"))
+              }>
+              {t("options.parameters.validation.unparsable.showDetails")}
             </button>
           </ParameterErrorHint>
         ) : null}
@@ -893,7 +895,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       {createPortal(
         <DropContainer ref={dropContainerRef} isDragging={isDragging}>
           <DropArea>
-            <div>將推導方案檔案拖曳至此</div>
+            <div>{t("action.loadSchemaByDragAndDrop")}</div>
           </DropArea>
         </DropContainer>,
         document.body,

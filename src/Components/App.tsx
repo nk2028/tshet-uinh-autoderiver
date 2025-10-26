@@ -269,7 +269,7 @@ function showInfoBox(content: JSX.Element) {
 function showAbout(t: TFunction) {
   return showInfoBox(
     <>
-      <h2>{t("關於")}</h2>
+      <h2>{t("app.info.about.title")}</h2>
       <p>
         切韻音系自動推導器（下稱「本頁面」）由{" "}
         <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/">
@@ -322,7 +322,7 @@ function showAbout(t: TFunction) {
 function showHelp(t: TFunction) {
   return showInfoBox(
     <>
-      <h2>{t("使用說明")}</h2>
+      <h2>{t("app.info.userGuide.title")}</h2>
       <h3>快速鍵</h3>
       <p>快速鍵僅在編輯器處於焦點狀態時有效。</p>
       <ul>
@@ -583,7 +583,7 @@ export default function App() {
   useEffect(() => {
     const langCode = i18n.language === "en" ? "en-GB" : "zh-HK";
     document.documentElement.lang = langCode;
-    document.title = t("切韻音系自動推導器");
+    document.title = t("app.title");
   }, [t, i18n]);
 
   return (
@@ -592,22 +592,24 @@ export default function App() {
         <header>
           <nav>
             <Heading>
-              <Title>{t("切韻音系自動推導器")}</Title>
+              <Title>{t("app.title")}</Title>
               <Version>v{__APP_VERSION__}</Version>
               <LinkToLegacy>
                 <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">
-                  {t("前往舊版")}
+                  {t("app.goToLegacy")}
                   <FontAwesomeIcon icon={faExternalLink} />
                 </a>
               </LinkToLegacy>
               <Buttons>
-                <ApplyButton title={t("適用")} onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
+                <ApplyButton
+                  title={t("options.evaluateDerivation")}
+                  onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
                   <FontAwesomeIcon icon={faCirclePlay} />
                 </ApplyButton>
-                <ShowButton title={t("關於")} onClick={useCallback(() => showAbout(t), [t])}>
+                <ShowButton title={t("app.info.about.title")} onClick={useCallback(() => showAbout(t), [t])}>
                   <FontAwesomeIcon icon={faInfo} fixedWidth />
                 </ShowButton>
-                <ShowButton title={t("使用說明")} onClick={useCallback(() => showHelp(t), [t])}>
+                <ShowButton title={t("app.info.userGuide.title")} onClick={useCallback(() => showHelp(t), [t])}>
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>
@@ -622,7 +624,7 @@ export default function App() {
         </header>
         <Main evaluateHandlerRef={evaluateHandlerRef} />
       </Content>
-      <FontPreload aria-hidden>結果</FontPreload>
+      <FontPreload aria-hidden>{t("output.title")}</FontPreload>
     </Container>
   );
 }

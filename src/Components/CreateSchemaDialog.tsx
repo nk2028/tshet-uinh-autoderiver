@@ -212,9 +212,9 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
 
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
-    if (!name) return t("方案名稱為空");
-    if (invalidCharsRegex.test(name)) return t("方案名稱含有特殊字元");
-    if (hasSchemaName(name)) return t("方案名稱與現有方案重複");
+    if (!name) return t("dialog.createSchema.schemaName.validation.empty");
+    if (invalidCharsRegex.test(name)) return t("dialog.createSchema.schemaName.validation.invalidChars");
+    if (hasSchemaName(name)) return t("dialog.createSchema.schemaName.validation.duplicate");
     return "";
   }, [createSchemaName, hasSchemaName, t]);
 
@@ -277,7 +277,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   return createPortal(
     <Container ref={ref} onClick={closeDialog} onClose={resetDialog}>
       <Popup onClick={stopPropagation}>
-        <Title>{t("新增方案")}</Title>
+        <Title>{t("dialog.createSchema.title")}</Title>
         <Explorer>
           <ul>
             <li>
@@ -287,7 +287,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
                   setCreateSchemaSample("");
                 }}>
                 <FontAwesomeIcon icon={faFile} fixedWidth />
-                <SchemaName selected={!createSchemaSample}>{t("新增空白方案……")}</SchemaName>
+                <SchemaName selected={!createSchemaSample}>{t("dialog.createSchema.addBlank")}</SchemaName>
               </SchemaItem>
             </li>
             {recursiveFolder(samples)}
@@ -342,11 +342,11 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         <Action method="dialog" className="pure-form" onSubmit={addSchema}>
           <Rename>
             <label>
-              <div>{t("方案名稱顯示為")}</div>
+              <div>{t("dialog.createSchema.schemaName.label")}</div>
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="輸入方案名稱……"
+                placeholder={t("dialog.createSchema.schemaName.placeholder")}
                 value={createSchemaName}
                 onChange={inputChange}
                 autoComplete="off"
@@ -357,10 +357,10 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
             </label>
           </Rename>
           <button type="reset" className="pure-button" onClick={closeDialog}>
-            {t("取消")}
+            {t("dialog.action.cancel")}
           </button>
           <button type="submit" className="pure-button pure-button-primary">
-            {t("新增")}
+            {t("dialog.action.create")}
           </button>
         </Action>
         <Validation>{validation || "\xa0"}</Validation>

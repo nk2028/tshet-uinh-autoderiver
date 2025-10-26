@@ -195,19 +195,19 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
 
   const [loading, setLoading] = useState(false);
 
-  const [copyTooltipText, setCopyTooltipText] = useState(t("全部複製"));
+  const [copyTooltipText, setCopyTooltipText] = useState(t("action.copy.label"));
   const copyEvaluationResult = useCallback(async () => {
     const content = ref.current.textContent?.trim();
     if (content) {
       try {
         await navigator.clipboard.writeText(content);
-        setCopyTooltipText(t("已複製"));
+        setCopyTooltipText(t("action.copy.copied"));
       } catch {
-        setCopyTooltipText(t("複製失敗"));
+        setCopyTooltipText(t("action.copy.failed"));
       }
     }
   }, [t]);
-  const onHideTooltip = useCallback(() => setCopyTooltipText(t("全部複製")), [t]);
+  const onHideTooltip = useCallback(() => setCopyTooltipText(t("action.copy.label")), [t]);
 
   // XXX Please Rewrite
   useEffect(() => {
@@ -258,16 +258,16 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
       (article !== defaultArticle &&
         (
           await Swal.fire({
-            title: t("要恢復成預設文本嗎？"),
-            text: t("此動作無法復原。"),
+            title: t("dialog.resetArticle.title"),
+            text: t("dialog.deleteSchema.message"),
             icon: "warning",
             showConfirmButton: false,
             focusConfirm: false,
             showDenyButton: true,
             showCancelButton: true,
             focusCancel: true,
-            denyButtonText: t("確定"),
-            cancelButtonText: t("取消"),
+            denyButtonText: t("dialog.action.confirm"),
+            cancelButtonText: t("dialog.action.cancel"),
           })
         ).isDenied)
     )
@@ -294,7 +294,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
               <input
                 className="pure-button pure-button-primary"
                 type="button"
-                value={t("適用")}
+                value={t("options.evaluateDerivation")}
                 onClick={evaluateHandlerRef.current}
               />
               <label hidden={option !== "convertArticle"}>
@@ -303,7 +303,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   checked={convertVariant}
                   onChange={useHandle("convertVariant", event => event.target.checked)}
                 />
-                {t("轉換異體字")}
+                {t("options.general.convertVariant")}
               </label>
               <label hidden={option !== "convertArticle"}>
                 <input
@@ -311,21 +311,21 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   checked={syncCharPosition}
                   onChange={useHandle("syncCharPosition", event => event.target.checked)}
                 />
-                {t("同步音韻地位選擇至輸入框")}
+                {t("options.general.syncPosition")}
               </label>
               <input
                 hidden={option !== "convertArticle"}
                 disabled={article === defaultArticle}
                 className="pure-button pure-button-danger"
                 type="button"
-                value={t("恢復成預設文本")}
+                value={t("options.general.resetToDefault")}
                 onClick={resetArticle}
               />
             </div>
             <ArticleInput
               ref={setArticleInput}
               disabled={option !== "convertArticle"}
-              placeholder={t("輸入框")}
+              placeholder={t("options.general.articleInput.placeholder")}
               lang="zh-HK"
               autoComplete="off"
               autoCorrect="off"
@@ -343,17 +343,17 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         <OutputContainer onClick={closeDialog} ref={dialogRef}>
           <OutputPopup onClick={stopPropagation}>
             <Title>
-              <span>{t("推導結果")}</span>
+              <span>{t("output.title")}</span>
               {!loading && (
                 <>
                   <TooltipLabel description={copyTooltipText} onHideTooltip={onHideTooltip}>
                     <CopyButton onClick={copyEvaluationResult}>
                       <FontAwesomeIcon icon={faCopy} size="sm" />
-                      <div>{t("全部複製")}</div>
+                      <div>{t("action.copy.label")}</div>
                     </CopyButton>
                   </TooltipLabel>
                   <form method="dialog">
-                    <CloseButton type="submit" className="swal2-close" title={t("關閉")}>
+                    <CloseButton type="submit" className="swal2-close" title={t("dialog.action.close")}>
                       ×
                     </CloseButton>
                   </form>

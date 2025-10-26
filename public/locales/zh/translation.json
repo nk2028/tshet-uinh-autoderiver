@@ -1,11 +1,13 @@
 {
   "app.title": "切韻音系自動推導器",
   "app.goToLegacy": "前往舊版",
+  "app.defaultFileName": "無標題",
   "app.info.about.title": "關於",
   "app.info.userGuide.title": "使用說明",
 
   "action.createSchema": "新增或載入推導方案",
   "action.deleteSchema": "刪除推導方案",
+  "action.loadSchemaByDragAndDrop": "將推導方案檔案拖曳至此",
   "action.copy.label": "全部複製",
   "action.copy.copied": "已複製",
   "action.copy.failed": "複製失敗",
@@ -57,6 +59,7 @@
   "dialog.error.message.runtime": "程式碼錯誤",
   "dialog.error.message.circularReferenceDetected": "偵測到循環參照：",
   "dialog.error.message.schemaNameLookup": "找不到方案",
+  "dialog.error.message.file.fetch": "下載檔案時發生錯誤",
   "dialog.error.message.file.open": "開啟檔案時發生錯誤",
   "dialog.error.message.file.save": "儲存檔案時發生錯誤",
   "dialog.error.message.schema.load.single": "無法載入方案",
