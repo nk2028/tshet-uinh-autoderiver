@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -197,6 +197,8 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   { getDefaultFileName, schemaLoaded, hasSchemaName },
   ref,
 ) {
+  const { t } = useTranslation();
+
   const [createSchemaName, setCreateSchemaName] = useState(getDefaultFileName(""));
   const [createSchemaSample, setCreateSchemaSample] = useState<Sample | "">("");
   const [loading, setLoading] = useState(false);
@@ -214,7 +216,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
     if (invalidCharsRegex.test(name)) return t("方案名稱含有特殊字元");
     if (hasSchemaName(name)) return t("方案名稱與現有方案重複");
     return "";
-  }, [createSchemaName, hasSchemaName]);
+  }, [createSchemaName, hasSchemaName, t]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {

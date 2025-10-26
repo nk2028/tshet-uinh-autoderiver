@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { t } from "i18next";
-import { Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -255,6 +254,8 @@ interface SchemaEditorProps extends UseMainState {
 }
 
 export default function SchemaEditor({ state, setState, commonOptions, evaluateHandlerRef }: SchemaEditorProps) {
+  const { t } = useTranslation();
+
   const { schemas, activeSchemaName } = state;
   const activeSchema = useMemo(
     () => schemas.find(({ name }) => name === activeSchemaName),
@@ -415,7 +416,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
       )
         setState(actions.deleteSchema(name));
     },
-    [setState],
+    [setState, t],
   );
 
   const deleteActiveSchema = useRef(noop);
@@ -867,9 +868,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             )}
           </Parameters>
         ) : (
-          <NoParameters>
-            <Trans t={t}>此推導方案無需選項。</Trans>
-          </NoParameters>
+          <NoParameters>{t("此推導方案無需選項。")}</NoParameters>
         )}
         {activeSchema?.parameters.errors.length ? (
           <ParameterErrorHint>

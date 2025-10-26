@@ -206,8 +206,8 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         setCopyTooltipText(t("複製失敗"));
       }
     }
-  }, []);
-  const onHideTooltip = useCallback(() => setCopyTooltipText(t("全部複製")), []);
+  }, [t]);
+  const onHideTooltip = useCallback(() => setCopyTooltipText(t("全部複製")), [t]);
 
   // XXX Please Rewrite
   useEffect(() => {
@@ -272,7 +272,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         ).isDenied)
     )
       setState({ ...state, article: defaultArticle });
-  }, [article, state]);
+  }, [article, state, t]);
 
   return (
     <>

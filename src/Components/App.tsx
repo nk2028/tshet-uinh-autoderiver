@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
 
-import { t } from "i18next";
 import "purecss/build/pure.css";
 import { useTranslation } from "react-i18next";
 // NOTE sweetalert2's ESM export does not setup styles properly, manually importing
@@ -14,7 +13,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Main from "./Main";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, noop } from "../consts";
-import i18n from "../i18n";
+import "../i18n";
+
+import type { TFunction } from "i18next";
 
 injectGlobal`
   html,
@@ -265,7 +266,7 @@ function showInfoBox(content: JSX.Element) {
   });
 }
 
-function showAbout() {
+function showAbout(t: TFunction) {
   return showInfoBox(
     <>
       <h2>{t("關於")}</h2>
@@ -318,7 +319,7 @@ function showAbout() {
   );
 }
 
-function showHelp() {
+function showHelp(t: TFunction) {
   return showInfoBox(
     <>
       <h2>{t("使用說明")}</h2>
@@ -576,18 +577,14 @@ const FontPreload = styled.span`
 `;
 
 export default function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const evaluateHandlerRef = useRef(noop);
 
   useEffect(() => {
-    const resetDocumentLang = (lng: string) => {
-      const langCode = lng === "en" ? "en-GB" : "zh-HK";
-      document.documentElement.lang = langCode;
-      document.title = t("切韻音系自動推導器");
-    };
-    resetDocumentLang(i18n.language);
-    i18n.on("languageChanged", resetDocumentLang);
-  }, []);
+    const langCode = i18n.language === "en" ? "en-GB" : "zh-HK";
+    document.documentElement.lang = langCode;
+    document.title = t("切韻音系自動推導器");
+  }, [t, i18n]);
 
   return (
     <Container>
@@ -607,15 +604,15 @@ export default function App() {
                 <ApplyButton title={t("適用")} onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
                   <FontAwesomeIcon icon={faCirclePlay} />
                 </ApplyButton>
-                <ShowButton title={t("關於")} onClick={showAbout}>
+                <ShowButton title={t("關於")} onClick={useCallback(() => showAbout(t), [t])}>
                   <FontAwesomeIcon icon={faInfo} fixedWidth />
                 </ShowButton>
-                <ShowButton title={t("使用說明")} onClick={showHelp}>
+                <ShowButton title={t("使用說明")} onClick={useCallback(() => showHelp(t), [t])}>
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>
               <label>
-                <select onChange={e => i18n.changeLanguage(e.currentTarget.value)} value={i18n.language}>
+                <select onChange={event => i18n.changeLanguage(event.currentTarget.value)} value={i18n.language}>
                   <option value="zh">中文</option>
                   <option value="en">English</option>
                 </select>
