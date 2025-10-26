@@ -766,7 +766,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
             <Separator visible={activeSchemaName !== schemas[index + 1]?.name && activeSchemaName !== name} />
           </Tab>
         ))}
-        <CreateSchemaButton title={t("新增方案")} onClick={createSchema.current}>
+        <CreateSchemaButton onClick={createSchema.current}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
           <div>{t("載入更多注音方案")}</div>
         </CreateSchemaButton>
