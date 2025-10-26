@@ -13,7 +13,7 @@ import TooltipChar from "./Components/TooltipChar";
 import { noop } from "./consts";
 
 import type { CustomNode } from "./Classes/CustomElement";
-import type { Entry, MainState, Option, ReactNode, SchemaState } from "./consts";
+import type { Entry, MainState, DeriveAction, ReactNode, SchemaState } from "./consts";
 
 const Title = styled.h3`
   padding: 0 0 1rem 0.25rem;
@@ -71,7 +71,7 @@ export function listenArticle(listener: ArticleListener) {
   articleListener = listener;
 }
 
-export const evaluateOption: Record<Option, Handler> = {
+export const evaluateOption: Record<DeriveAction, Handler> = {
   convertArticle({ article, convertVariant }, callDeriver) {
     const syncedArticle: string[] = [];
     const result: ReactNode[] = [];

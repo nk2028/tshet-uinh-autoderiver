@@ -11,14 +11,14 @@ import SchemaEditor from "./SchemaEditor";
 import Spinner from "./Spinner";
 import { listenTooltip } from "./TooltipChar";
 import Swal from "../Classes/SwalReact";
-import { allOptions, defaultArticle } from "../consts";
+import { defaultArticle, deriveActions } from "../consts";
 import evaluate from "../evaluate";
 import { listenArticle } from "../options";
 import initialState, { stateStorageLocation } from "../state";
 import TooltipLabel from "./TooltipLabel";
 import { stopPropagation } from "../utils";
 
-import type { MainState, Option, ReactNode } from "../consts";
+import type { MainState, DeriveAction, ReactNode } from "../consts";
 import type { MutableRefObject } from "react";
 
 const dummyOutput = document.createElement("output");
@@ -283,10 +283,10 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
           <>
             <div>
               <label>
-                <select onChange={useHandle("option", event => event.target.value as Option)} value={option}>
-                  {allOptions.map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {t(label)}
+                <select onChange={useHandle("option", event => event.target.value as DeriveAction)} value={option}>
+                  {deriveActions.map(action => (
+                    <option key={action} value={action}>
+                      {t(`options.general.deriveAction.${action}`)}
                     </option>
                   ))}
                 </select>

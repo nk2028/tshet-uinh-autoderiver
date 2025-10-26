@@ -41,16 +41,15 @@ export const codeFontFamily = `
   "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
   "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", monospace, monospace`;
 
-export const options = {
-  convertArticle: "從輸入框中讀取文章，並注音",
-  convertPresetArticle: "為預置文章注音",
-  exportAllPositions: "導出所有音韻地位",
-  compareSchemas: "比較多個方案，並導出結果相異的音韻地位",
-  exportAllSyllables: "導出所有音節",
-  exportAllSyllablesWithCount: "導出所有音節，並計數",
-};
-export type Option = keyof typeof options;
-export const allOptions = Object.entries(options) as [Option, string][];
+export const deriveActions = [
+  "convertArticle",
+  "convertPresetArticle",
+  "exportAllPositions",
+  "compareSchemas",
+  "exportAllSyllables",
+  "exportAllSyllablesWithCount",
+] as const;
+export type DeriveAction = (typeof deriveActions)[number];
 
 /** Characters invalid in file names on Windows */
 // eslint-disable-next-line no-control-regex
@@ -63,7 +62,7 @@ export function noop() {
 export type MainState = Readonly<{
   schemas: SchemaState[];
   article: string;
-  option: Option;
+  option: DeriveAction;
   convertVariant: boolean;
   syncCharPosition: boolean;
   activeSchemaName: string;
