@@ -22,12 +22,12 @@ const LoadModal = styled.div`
   color: #bbb;
 `;
 
-export function showLoadingModal(abortController: AbortController) {
+export function showLoadingModal(abortController: AbortController, nSchemas: number) {
   Swal.fire({
     html: (
       <LoadModal>
         <Spinner />
-        <h2>{t("dialog.schemaLoading.title")}</h2>
+        <h2>{t("dialog.schemaLoading.title", { count: nSchemas })}</h2>
       </LoadModal>
     ),
     allowOutsideClick: false,

@@ -339,7 +339,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       if (!hrefs.length && schemas.length) return;
       const abortController = new AbortController();
       const { signal } = abortController;
-      showLoadingModal(abortController);
+      showLoadingModal(abortController, hrefs.length || 1);
       if (!hrefs.length) {
         try {
           setState(
