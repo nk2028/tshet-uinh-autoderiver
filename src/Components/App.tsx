@@ -567,6 +567,13 @@ const LinkToLegacy = styled.span`
     }
   }
 `;
+const LanguageDropdown = styled.label`
+  font-size: 1.25rem;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 0.5rem;
+  margin-bottom: -0.5rem;
+`;
 const FontPreload = styled.span`
   position: absolute;
   top: -9999px;
@@ -613,12 +620,16 @@ export default function App() {
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>
-              <label>
+              <LanguageDropdown className="pure-form">
                 <select onChange={event => i18n.changeLanguage(event.currentTarget.value)} value={i18n.language}>
-                  <option value="zh">中文</option>
-                  <option value="en">English</option>
+                  <option value="zh" lang="zh-HK">
+                    中文
+                  </option>
+                  <option value="en" lang="en-GB">
+                    English
+                  </option>
                 </select>
-              </label>
+              </LanguageDropdown>
             </Heading>
           </nav>
         </header>
