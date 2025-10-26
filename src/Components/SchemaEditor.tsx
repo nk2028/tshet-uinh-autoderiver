@@ -182,6 +182,9 @@ const NoParameters = styled.p`
   margin: -1.25rem 0 -0.5rem;
   font-size: 0.875rem;
   color: #888;
+  &:not(:lang(zh-HK)) {
+    font-style: italic;
+  }
 `;
 const ParameterErrorHint = styled.p`
   margin: 0;
