@@ -353,7 +353,11 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                     </CopyButton>
                   </TooltipLabel>
                   <form method="dialog">
-                    <CloseButton type="submit" className="swal2-close" title={t("dialog.action.close")}>
+                    <CloseButton
+                      type="submit"
+                      className="swal2-close"
+                      title={t("dialog.action.close")}
+                      aria-label={t("dialog.action.close")}>
                       ×
                     </CloseButton>
                   </form>
