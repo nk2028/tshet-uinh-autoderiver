@@ -279,7 +279,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
       <SchemaEditor
         state={state}
         setState={setState}
-        commonOptions={
+        generalOptions={
           <>
             <div>
               <label>

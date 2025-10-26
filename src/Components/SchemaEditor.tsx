@@ -249,11 +249,11 @@ const DropArea = styled.div`
 `;
 
 interface SchemaEditorProps extends UseMainState {
-  commonOptions: ReactNode;
+  generalOptions: ReactNode;
   evaluateHandlerRef: MutableRefObject<() => void>;
 }
 
-export default function SchemaEditor({ state, setState, commonOptions, evaluateHandlerRef }: SchemaEditorProps) {
+export default function SchemaEditor({ state, setState, generalOptions, evaluateHandlerRef }: SchemaEditorProps) {
   const { t } = useTranslation();
 
   const { schemas, activeSchemaName } = state;
@@ -882,7 +882,7 @@ export default function SchemaEditor({ state, setState, commonOptions, evaluateH
           </ParameterErrorHint>
         ) : null}
         <OptionsSeparator />
-        {commonOptions}
+        {generalOptions}
       </Options>
       <CreateSchemaDialog
         ref={dialogRef}
