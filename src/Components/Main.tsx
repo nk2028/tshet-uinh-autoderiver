@@ -23,6 +23,9 @@ import type { MutableRefObject } from "react";
 
 const dummyOutput = document.createElement("output");
 
+const GeneralOptions = styled.p`
+  margin: -0.25rem 0;
+`;
 const ArticleInput = styled.textarea`
   line-height: 1.6;
   resize: none;
@@ -281,7 +284,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         setState={setState}
         generalOptions={
           <>
-            <div>
+            <GeneralOptions>
               <label>
                 <select onChange={useHandle("option", event => event.target.value as DeriveAction)} value={option}>
                   {deriveActions.map(action => (
@@ -321,7 +324,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                 value={t("options.general.resetToDefault")}
                 onClick={resetArticle}
               />
-            </div>
+            </GeneralOptions>
             <ArticleInput
               ref={setArticleInput}
               disabled={option !== "convertArticle"}
