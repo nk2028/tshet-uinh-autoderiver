@@ -38,7 +38,8 @@ import type { MouseEvent, MutableRefObject } from "react";
 
 const TabBar = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
+  flex-wrap: wrap;
   user-select: none;
   color: #333;
   background-color: #eaecee;
@@ -52,7 +53,7 @@ const Tab = styled.div<{ checked: boolean }>`
   align-items: center;
   position: relative;
   box-sizing: border-box;
-  height: 100%;
+  min-height: 2rem;
   padding-left: 0.5rem;
   ${({ checked }) =>
     checked &&
@@ -132,7 +133,7 @@ const Separator = styled.div<{ visible: boolean }>`
 `;
 const CreateSchemaButton = styled.button`
   align-self: center;
-  margin-left: 0.5rem;
+  margin: 0.125rem 0 0.125rem 0.5rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
