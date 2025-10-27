@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 
+import { t } from "i18next";
 import { 資料, 音韻地位 } from "tshet-uinh";
 import Yitizi from "yitizi";
 
@@ -12,7 +13,7 @@ import TooltipChar from "./Components/TooltipChar";
 import { noop } from "./consts";
 
 import type { CustomNode } from "./Classes/CustomElement";
-import type { Entry, MainState, Option, SchemaState, ReactNode } from "./consts";
+import type { Entry, MainState, DeriveAction, ReactNode, SchemaState } from "./consts";
 
 const Title = styled.h3`
   padding: 0 0 1rem 0.25rem;
@@ -70,7 +71,7 @@ export function listenArticle(listener: ArticleListener) {
   articleListener = listener;
 }
 
-export const evaluateOption: Record<Option, Handler> = {
+export const evaluateOption: Record<DeriveAction, Handler> = {
   convertArticle({ article, convertVariant }, callDeriver) {
     const syncedArticle: string[] = [];
     const result: ReactNode[] = [];
@@ -168,7 +169,16 @@ export const evaluateOption: Record<Option, Handler> = {
   },
 
   exportAllPositions({ schemas }, callDeriver) {
-    return <Table head={["音韻地位", ...title(schemas), "代表字"]} body={finalize(iterate(callDeriver))} />;
+    return (
+      <Table
+        head={[
+          t("output.table.head.phonologicalPosition"),
+          ...title(schemas),
+          t("output.table.head.representativeCharacter"),
+        ]}
+        body={finalize(iterate(callDeriver))}
+      />
+    );
   },
 
   exportAllSyllables({ schemas }, callDeriver) {
@@ -191,7 +201,7 @@ export const evaluateOption: Record<Option, Handler> = {
       }, null);
     return (
       <Table
-        head={[...title(schemas), "計數"]}
+        head={[...title(schemas), t("output.table.head.count")]}
         body={result.sort((a, b) => b[2] - a[2]).map(([, 擬音陣列, count]) => [...wrap(擬音陣列), count + ""])}
       />
     );
@@ -204,13 +214,20 @@ export const evaluateOption: Record<Option, Handler> = {
     return result.length ? (
       <>
         <Title>
-          找到 {result.length} 個相異項目。
+          {t("output.compareSchemas.differentItemsFound", { count: result.length })}
           <span hidden>{"\n\n"}</span>
         </Title>
-        <Table head={["音韻地位", ...title(schemas), "代表字"]} body={finalize(result)} />
+        <Table
+          head={[
+            t("output.table.head.phonologicalPosition"),
+            ...title(schemas),
+            t("output.table.head.representativeCharacter"),
+          ]}
+          body={finalize(result)}
+        />
       </>
     ) : (
-      <h3>方案推導結果相同。</h3>
+      <h3>{t("output.compareSchemas.sameResults")}</h3>
     );
   },
 };

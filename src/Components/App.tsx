@@ -1,6 +1,7 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import "purecss/build/pure.css";
+import { useTranslation } from "react-i18next";
 // NOTE sweetalert2's ESM export does not setup styles properly, manually importing
 import "sweetalert2/dist/sweetalert2.css";
 
@@ -12,18 +13,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Main from "./Main";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, noop } from "../consts";
+import "../i18n";
+
+import type { TFunction } from "i18next";
 
 injectGlobal`
   html,
   body {
     line-height: 1.6;
     font-size: 16px;
-    font-family: "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
-      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
-      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", serif;
     font-language-override: "KOR";
     overflow: hidden;
     touch-action: none;
+  }
+  html:lang(zh-HK), html :lang(zh-HK) {
+    font-family: "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", serif;
+  }
+  html:lang(en-GB), html :lang(en-GB) {
+    font-family: "Roboto", "Source Han Serif C", "Source Han Serif K", "Noto Serif CJK KR", "Source Han Serif SC",
+      "Noto Serif CJK SC", "Source Han Serif", "Noto Serif CJK JP", "Source Han Serif TC", "Noto Serif CJK TC",
+      "Noto Serif KR", "Noto Serif SC", "Noto Serif TC", "Jomolhari", "HanaMin", "CharisSILW", sans-serif;
   }
   body.dragging {
     user-select: none;
@@ -112,6 +123,7 @@ injectGlobal`
       height: 2rem;
       vertical-align: baseline;
       margin-right: 0.125rem;
+      max-width: 100%;
     }
     input[type="radio"],
     input[type="checkbox"] {
@@ -132,7 +144,7 @@ injectGlobal`
     label {
       display: inline;
       margin-right: 1.125rem;
-      white-space: nowrap;
+      /* white-space: nowrap; */
     }
   }
   .swal2-close {
@@ -254,10 +266,10 @@ function showInfoBox(content: JSX.Element) {
   });
 }
 
-function showAbout() {
+function showAbout(t: TFunction) {
   return showInfoBox(
     <>
-      <h2>關於</h2>
+      <h2>{t("app.info.about.title")}</h2>
       <p>
         切韻音系自動推導器（下稱「本頁面」）由{" "}
         <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/">
@@ -307,10 +319,10 @@ function showAbout() {
   );
 }
 
-function showHelp() {
+function showHelp(t: TFunction) {
   return showInfoBox(
     <>
-      <h2>使用說明</h2>
+      <h2>{t("app.info.userGuide.title")}</h2>
       <h3>快速鍵</h3>
       <p>快速鍵僅在編輯器處於焦點狀態時有效。</p>
       <ul>
@@ -555,6 +567,13 @@ const LinkToLegacy = styled.span`
     }
   }
 `;
+const LanguageDropdown = styled.label`
+  font-size: 1.25rem;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 0.5rem;
+  margin-bottom: -0.5rem;
+`;
 const FontPreload = styled.span`
   position: absolute;
   top: -9999px;
@@ -565,38 +584,58 @@ const FontPreload = styled.span`
 `;
 
 export default function App() {
+  const { t, i18n } = useTranslation();
   const evaluateHandlerRef = useRef(noop);
+
+  useEffect(() => {
+    const langCode = i18n.language === "en" ? "en-GB" : "zh-HK";
+    document.documentElement.lang = langCode;
+    document.title = t("app.title");
+  }, [t, i18n]);
+
   return (
     <Container>
       <Content>
         <header>
           <nav>
             <Heading>
-              <Title>切韻音系自動推導器</Title>
+              <Title>{t("app.title")}</Title>
               <Version>v{__APP_VERSION__}</Version>
               <LinkToLegacy>
                 <a href="//nk2028.shn.hk/qieyun-autoderiver-legacy/">
-                  前往舊版
+                  {t("app.goToLegacy")}
                   <FontAwesomeIcon icon={faExternalLink} />
                 </a>
               </LinkToLegacy>
               <Buttons>
-                <ApplyButton title="適用" onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
+                <ApplyButton
+                  title={t("options.evaluateDerivation")}
+                  onClick={useCallback(() => evaluateHandlerRef.current(), [])}>
                   <FontAwesomeIcon icon={faCirclePlay} />
                 </ApplyButton>
-                <ShowButton title="關於" onClick={showAbout}>
+                <ShowButton title={t("app.info.about.title")} onClick={useCallback(() => showAbout(t), [t])}>
                   <FontAwesomeIcon icon={faInfo} fixedWidth />
                 </ShowButton>
-                <ShowButton title="使用說明" onClick={showHelp}>
+                <ShowButton title={t("app.info.userGuide.title")} onClick={useCallback(() => showHelp(t), [t])}>
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>
+              <LanguageDropdown className="pure-form">
+                <select onChange={event => i18n.changeLanguage(event.currentTarget.value)} value={i18n.language}>
+                  <option value="zh" lang="zh-HK">
+                    中文
+                  </option>
+                  <option value="en" lang="en-GB">
+                    English
+                  </option>
+                </select>
+              </LanguageDropdown>
             </Heading>
           </nav>
         </header>
         <Main evaluateHandlerRef={evaluateHandlerRef} />
       </Content>
-      <FontPreload aria-hidden>結果</FontPreload>
+      <FontPreload aria-hidden>{t("output.title")}</FontPreload>
     </Container>
   );
 }

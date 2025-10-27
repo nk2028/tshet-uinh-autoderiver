@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { useTranslation } from "react-i18next";
+
 import styled from "@emotion/styled";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,18 +11,21 @@ import SchemaEditor from "./SchemaEditor";
 import Spinner from "./Spinner";
 import { listenTooltip } from "./TooltipChar";
 import Swal from "../Classes/SwalReact";
-import { allOptions, defaultArticle } from "../consts";
+import { defaultArticle, deriveActions } from "../consts";
 import evaluate from "../evaluate";
 import { listenArticle } from "../options";
 import initialState, { stateStorageLocation } from "../state";
 import TooltipLabel from "./TooltipLabel";
 import { stopPropagation } from "../utils";
 
-import type { MainState, Option, ReactNode } from "../consts";
+import type { MainState, DeriveAction, ReactNode } from "../consts";
 import type { MutableRefObject } from "react";
 
 const dummyOutput = document.createElement("output");
 
+const GeneralOptions = styled.p`
+  margin: -0.25rem 0;
+`;
 const ArticleInput = styled.textarea`
   line-height: 1.6;
   resize: none;
@@ -153,6 +158,7 @@ const Loading = styled.div`
 let evaluationResult: ReactNode = [];
 
 export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: MutableRefObject<() => void> }) {
+  const { t } = useTranslation();
   const [state, setState] = useState(initialState);
   const { article, option, convertVariant, syncCharPosition } = state;
   useEffect(() => {
@@ -192,19 +198,19 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
 
   const [loading, setLoading] = useState(false);
 
-  const [copyTooltipText, setCopyTooltipText] = useState("全部複製");
+  const [copyTooltipText, setCopyTooltipText] = useState(t("action.copy.label"));
   const copyEvaluationResult = useCallback(async () => {
     const content = ref.current.textContent?.trim();
     if (content) {
       try {
         await navigator.clipboard.writeText(content);
-        setCopyTooltipText("已複製");
+        setCopyTooltipText(t("action.copy.copied"));
       } catch {
-        setCopyTooltipText("複製失敗");
+        setCopyTooltipText(t("action.copy.failed"));
       }
     }
-  }, []);
-  const onHideTooltip = useCallback(() => setCopyTooltipText("全部複製"), []);
+  }, [t]);
+  const onHideTooltip = useCallback(() => setCopyTooltipText(t("action.copy.label")), [t]);
 
   // XXX Please Rewrite
   useEffect(() => {
@@ -255,35 +261,35 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
       (article !== defaultArticle &&
         (
           await Swal.fire({
-            title: "要恢復成預設文本嗎？",
-            text: "此動作無法復原。",
+            title: t("dialog.resetArticle.title"),
+            text: t("dialog.deleteSchema.message"),
             icon: "warning",
             showConfirmButton: false,
             focusConfirm: false,
             showDenyButton: true,
             showCancelButton: true,
             focusCancel: true,
-            denyButtonText: "確定",
-            cancelButtonText: "取消",
+            denyButtonText: t("dialog.action.confirm"),
+            cancelButtonText: t("dialog.action.cancel"),
           })
         ).isDenied)
     )
       setState({ ...state, article: defaultArticle });
-  }, [article, state]);
+  }, [article, state, t]);
 
   return (
     <>
       <SchemaEditor
         state={state}
         setState={setState}
-        commonOptions={
+        generalOptions={
           <>
-            <div>
+            <GeneralOptions>
               <label>
-                <select onChange={useHandle("option", event => event.target.value as Option)} value={option}>
-                  {allOptions.map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
+                <select onChange={useHandle("option", event => event.target.value as DeriveAction)} value={option}>
+                  {deriveActions.map(action => (
+                    <option key={action} value={action}>
+                      {t(`options.general.deriveAction.${action}`)}
                     </option>
                   ))}
                 </select>
@@ -291,7 +297,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
               <input
                 className="pure-button pure-button-primary"
                 type="button"
-                value="適用"
+                value={t("options.evaluateDerivation")}
                 onClick={evaluateHandlerRef.current}
               />
               <label hidden={option !== "convertArticle"}>
@@ -300,7 +306,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   checked={convertVariant}
                   onChange={useHandle("convertVariant", event => event.target.checked)}
                 />
-                轉換異體字
+                {t("options.general.convertVariant")}
               </label>
               <label hidden={option !== "convertArticle"}>
                 <input
@@ -308,21 +314,22 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
                   checked={syncCharPosition}
                   onChange={useHandle("syncCharPosition", event => event.target.checked)}
                 />
-                同步音韻地位選擇至輸入框
+                {t("options.general.syncPosition")}
               </label>
               <input
                 hidden={option !== "convertArticle"}
                 disabled={article === defaultArticle}
                 className="pure-button pure-button-danger"
                 type="button"
-                value="恢復成預設文本"
+                value={t("options.general.resetToDefault")}
                 onClick={resetArticle}
               />
-            </div>
+            </GeneralOptions>
             <ArticleInput
               ref={setArticleInput}
               disabled={option !== "convertArticle"}
-              placeholder="輸入框"
+              placeholder={t("options.general.articleInput.placeholder")}
+              lang="zh-HK"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
@@ -339,17 +346,21 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
         <OutputContainer onClick={closeDialog} ref={dialogRef}>
           <OutputPopup onClick={stopPropagation}>
             <Title>
-              <span>推導結果</span>
+              <span>{t("output.title")}</span>
               {!loading && (
                 <>
                   <TooltipLabel description={copyTooltipText} onHideTooltip={onHideTooltip}>
                     <CopyButton onClick={copyEvaluationResult}>
                       <FontAwesomeIcon icon={faCopy} size="sm" />
-                      <div>全部複製</div>
+                      <div>{t("action.copy.label")}</div>
                     </CopyButton>
                   </TooltipLabel>
                   <form method="dialog">
-                    <CloseButton type="submit" className="swal2-close" title="關閉">
+                    <CloseButton
+                      type="submit"
+                      className="swal2-close"
+                      title={t("dialog.action.close")}
+                      aria-label={t("dialog.action.close")}>
                       ×
                     </CloseButton>
                   </form>

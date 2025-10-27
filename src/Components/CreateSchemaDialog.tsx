@@ -1,6 +1,8 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { useTranslation } from "react-i18next";
+
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { faFile, faFileCode } from "@fortawesome/free-regular-svg-icons";
@@ -195,6 +197,8 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   { getDefaultFileName, schemaLoaded, hasSchemaName },
   ref,
 ) {
+  const { t } = useTranslation();
+
   const [createSchemaName, setCreateSchemaName] = useState(getDefaultFileName(""));
   const [createSchemaSample, setCreateSchemaSample] = useState<Sample | "">("");
   const [loading, setLoading] = useState(false);
@@ -208,11 +212,11 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
 
   const validation = useMemo(() => {
     const name = normalizeFileName(createSchemaName);
-    if (!name) return "方案名稱為空";
-    if (invalidCharsRegex.test(name)) return "方案名稱含有特殊字元";
-    if (hasSchemaName(name)) return "方案名稱與現有方案重複";
+    if (!name) return t("dialog.createSchema.schemaName.validation.empty");
+    if (invalidCharsRegex.test(name)) return t("dialog.createSchema.schemaName.validation.invalidChars");
+    if (hasSchemaName(name)) return t("dialog.createSchema.schemaName.validation.duplicate");
     return "";
-  }, [createSchemaName, hasSchemaName]);
+  }, [createSchemaName, hasSchemaName, t]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -273,7 +277,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   return createPortal(
     <Container ref={ref} onClick={closeDialog} onClose={resetDialog}>
       <Popup onClick={stopPropagation}>
-        <Title>新增方案</Title>
+        <Title>{t("dialog.createSchema.title")}</Title>
         <Explorer>
           <ul>
             <li>
@@ -283,7 +287,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
                   setCreateSchemaSample("");
                 }}>
                 <FontAwesomeIcon icon={faFile} fixedWidth />
-                <SchemaName selected={!createSchemaSample}>新增空白方案……</SchemaName>
+                <SchemaName selected={!createSchemaSample}>{t("dialog.createSchema.addBlank")}</SchemaName>
               </SchemaItem>
             </li>
             {recursiveFolder(samples)}
@@ -338,11 +342,11 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         <Action method="dialog" className="pure-form" onSubmit={addSchema}>
           <Rename>
             <label>
-              <div>方案名稱顯示為</div>
+              <div>{t("dialog.createSchema.schemaName.label")}</div>
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="輸入方案名稱……"
+                placeholder={t("dialog.createSchema.schemaName.placeholder")}
                 value={createSchemaName}
                 onChange={inputChange}
                 autoComplete="off"
@@ -353,10 +357,10 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
             </label>
           </Rename>
           <button type="reset" className="pure-button" onClick={closeDialog}>
-            取消
+            {t("dialog.action.cancel")}
           </button>
           <button type="submit" className="pure-button pure-button-primary">
-            新增
+            {t("dialog.action.create")}
           </button>
         </Action>
         <Validation>{validation || "\xa0"}</Validation>
