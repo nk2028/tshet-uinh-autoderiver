@@ -155,7 +155,7 @@ const Rename = styled.div`
       margin: 0 0.375rem 0 0.125rem;
     }
     div {
-      margin-right: 0.5em;
+      margin-right: 0.5rem;
     }
     input[type="text"] {
       display: block;
@@ -175,7 +175,7 @@ const Validation = styled.div`
   font-size: 0.75rem;
   font-weight: bold;
   color: red;
-  margin: -0.375rem 0rem -0.25rem;
+  margin: -0.375rem 0 -0.25rem;
   line-height: 1;
 `;
 const Loading = styled.div`
