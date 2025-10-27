@@ -14,7 +14,7 @@ i18n
       escapeValue: false, // not needed for react as it escapes by default
     },
     backend: {
-      loadPath: "/tshet-uinh-autoderiver/locales/{{lng}}/translation.json",
+      loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}/translation.json`,
     },
   });
 
