@@ -64,6 +64,7 @@
   "dialog.error.message.file.fetch": "An error occurred while downloading the file",
   "dialog.error.message.file.open": "An error occurred while opening the file",
   "dialog.error.message.file.save": "An error occurred while saving the file",
+  "dialog.error.message.schema.sample.invalid": "No such sample scheme: ",
   "dialog.error.message.schema.load.single": "Failed to load scheme",
   "dialog.error.message.schema.load.multiple_one": "{{count}} scheme failed to load",
   "dialog.error.message.schema.load.multiple_other": "{{count}} schemes failed to load",

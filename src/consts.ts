@@ -1,6 +1,7 @@
+import samples from "./samples";
+
 import type { CustomNode } from "./Classes/CustomElement";
 import type ParameterSet from "./Classes/ParameterSet";
-import type samples from "./samples";
 import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetStateAction } from "react";
 import type { 資料 } from "tshet-uinh";
 
@@ -24,6 +25,15 @@ if (!音韻地位) return [
 ];
 
 `.trimStart();
+
+export const sampleNamesMap = new Map<Sample, string>();
+function buildSampleNamesMap(folder: Folder) {
+  for (const [name, sample] of Object.entries(folder)) {
+    if (typeof sample === "string") sampleNamesMap.set(sample, name);
+    else buildSampleNamesMap(sample);
+  }
+}
+buildSampleNamesMap(samples);
 
 export const defaultArticle =
   "風(幫三C東平)煙俱淨，天山共(羣三C鍾去)色。從(從三鍾平)流飄(滂三A宵平)蕩(定開一唐上)，任(日開三侵平)意東西。" +

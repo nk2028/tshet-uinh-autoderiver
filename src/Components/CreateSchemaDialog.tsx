@@ -229,8 +229,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
         <li key={name}>
           <SchemaItem
             onClick={() => {
-              const trimmedName = name.replace(/^直接標註|^推導|《|》|（.*）|擬音$|轉寫$/g, "").trim();
-              setCreateSchemaName(getDefaultFileName(trimmedName));
+              setCreateSchemaName(getDefaultFileName(name));
               setCreateSchemaSample(sample);
             }}>
             <FontAwesomeIcon icon={faFileCode} fixedWidth />

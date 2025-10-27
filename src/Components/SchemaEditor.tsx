@@ -14,7 +14,14 @@ import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import { codeFontFamily, invalidCharsRegex, newFileTemplate, noop, tshetUinhExamplesURLPrefix } from "../consts";
+import {
+  codeFontFamily,
+  invalidCharsRegex,
+  newFileTemplate,
+  noop,
+  sampleNamesMap,
+  tshetUinhExamplesURLPrefix,
+} from "../consts";
 import "../editor/setup";
 import {
   displaySchemaLoadingErrors,
@@ -26,7 +33,7 @@ import {
   showLoadingModal,
 } from "../utils";
 
-import type { UseMainState, ReactNode } from "../consts";
+import type { UseMainState, ReactNode, Sample } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
 
 const TabBar = styled.div`
@@ -280,7 +287,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
   const getDefaultFileNameWithSchemaNames = useCallback(
     (schemaNames: string[]) =>
       memoize((name: string) => {
-        name ||= t("app.defaultFileName");
+        name = name ? name.replace(/^直接標註|^推導|《|》|（.*）|擬音$|轉寫$/g, "").trim() : t("app.defaultFileName");
         const indices = schemaNames
           .map(oldName => {
             if (oldName === name) return 0;
@@ -335,16 +342,30 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
     async function loadSchemas() {
       const query = new URLSearchParams(location.search);
       history.replaceState(null, document.title, location.pathname); // Remove query
-      const hrefs = query.getAll("script");
-      if (!hrefs.length && schemas.length) return;
+      const schemasToLoad: { type: "href" | "sample"; value: string }[] = [];
+      for (const [key, value] of query) {
+        switch (key) {
+          case "script": {
+            schemasToLoad.push({ type: "href", value });
+            break;
+          }
+          case "schema": {
+            schemasToLoad.push({ type: "sample", value });
+            break;
+          }
+          default:
+            break;
+        }
+      }
+      if (!schemasToLoad.length && schemas.length) return;
       const abortController = new AbortController();
       const { signal } = abortController;
-      showLoadingModal(abortController, hrefs.length || 1);
-      if (!hrefs.length) {
+      showLoadingModal(abortController, schemasToLoad.length || 1);
+      if (!schemasToLoad.length) {
         try {
           setState(
             actions.addSchema({
-              name: "切韻拼音",
+              name: sampleNamesMap.get("tupa")!,
               input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js", signal),
             }),
           );
@@ -362,21 +383,37 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       const names = query.getAll("name");
       let i = 0;
       const { fulfilled: files, rejected: errors } = await settleAndGroupPromise(
-        hrefs.map(async href => {
-          // Adds a protocol if the input seems to lack one
-          // This also prevents `example.com:` from being treated as a protocol if the input is `example.com:8080`
-          const url = new URL(/^[a-z]+:/i.test(href) ? href : `https://${href}`);
-          const name =
-            i < names.length
-              ? names[i++] // Use user-specified name
-              : url.protocol === "data:"
-                ? "" // Let `getDefaultFileName` name it
-                : /([^/]*)\/*$/.exec(url.pathname)![1]; // Use the last segment of the path as name
-          if (url.hostname === "github.com") {
-            url.searchParams.append("raw", "true"); // Fetch raw file content for GitHub files
-          } else if (url.hostname === "gist.github.com" && !url.pathname.endsWith("/raw")) {
-            url.pathname += "/raw"; // Fetch raw file content for GitHub gists
+        schemasToLoad.map(async ({ type, value }) => {
+          let url: string | URL;
+          let name: string;
+
+          switch (type) {
+            case "href": {
+              // Adds a protocol if the input seems to lack one
+              // This also prevents `example.com:` from being treated as a protocol if the input is `example.com:8080`
+              url = new URL(/^[a-z]+:/i.test(value) ? value : `https://${value}`);
+              name =
+                i < names.length
+                  ? names[i++] // Use user-specified name
+                  : url.protocol === "data:"
+                    ? "" // Let `getDefaultFileName` name it
+                    : /([^/]*)\/*$/.exec(url.pathname)![1]; // Use the last segment of the path as name
+              if (url.hostname === "github.com") {
+                url.searchParams.append("raw", "true"); // Fetch raw file content for GitHub files
+              } else if (url.hostname === "gist.github.com" && !url.pathname.endsWith("/raw")) {
+                url.pathname += "/raw"; // Fetch raw file content for GitHub gists
+              }
+              break;
+            }
+            case "sample": {
+              url = tshetUinhExamplesURLPrefix + value + ".js";
+              const sampleName = sampleNamesMap.get(value as Sample);
+              if (!sampleName) throw new Error(t("dialog.error.message.schema.sample.invalid") + value);
+              name = i < names.length ? names[i++] : sampleName;
+              break;
+            }
           }
+
           const response = await fetch(url, {
             headers: {
               Accept: "text/javascript, text/plain", // githubusercontent.com always responses with `Content-Type: text/plain`
@@ -392,9 +429,9 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       // The file names may be incorrect in strict mode, but are fine in production build
       errors.push(...(await addFilesToSchema(files)));
       // Add `tupa.js` if all fetches failed and no schemas present
-      if (errors.length === hrefs.length && !schemas.length) await loadSchemas();
+      if (errors.length === schemasToLoad.length && !schemas.length) await loadSchemas();
       Swal.close();
-      signal.aborted || displaySchemaLoadingErrors(errors, hrefs.length);
+      signal.aborted || displaySchemaLoadingErrors(errors, schemasToLoad.length);
     }
     loadSchemas();
   }, [schemas, setState, addFilesToSchema, t]);

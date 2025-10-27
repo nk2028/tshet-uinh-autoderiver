@@ -62,6 +62,7 @@
   "dialog.error.message.file.fetch": "下載檔案時發生錯誤",
   "dialog.error.message.file.open": "開啟檔案時發生錯誤",
   "dialog.error.message.file.save": "儲存檔案時發生錯誤",
+  "dialog.error.message.schema.sample.invalid": "查無此範例方案：",
   "dialog.error.message.schema.load.single": "無法載入方案",
   "dialog.error.message.schema.load.multiple": "{{count}} 個方案無法載入",
 
