@@ -18,9 +18,12 @@ i18n
     },
   });
 
-// declare global {
-//   interface Window {
-//     i18n: typeof i18n;
-//   }
-// }
-// window.i18n = i18n; // Expose i18n to the global scope for debugging purposes
+/*
+// Expose i18n to the global scope for debugging purposes
+declare global {
+  interface Window {
+    i18n: typeof i18n;
+  }
+}
+window.i18n = i18n;
+*/
