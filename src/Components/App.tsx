@@ -144,7 +144,7 @@ injectGlobal`
     label {
       display: inline;
       margin-right: 1.125rem;
-      /* white-space: nowrap; */
+      white-space: nowrap;
     }
   }
   .swal2-close {
