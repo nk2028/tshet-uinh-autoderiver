@@ -16,6 +16,10 @@ i18n
     backend: {
       loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}/translation.json`,
     },
+    detection: {
+      lookupQuerystring: "lang",
+      lookupLocalStorage: "i18nextLang",
+    },
   });
 
 /*
