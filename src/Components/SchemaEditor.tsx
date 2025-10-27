@@ -407,6 +407,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
               break;
             }
             case "sample": {
+              value = normalizeFileName(value);
               url = tshetUinhExamplesURLPrefix + value + ".js";
               const sampleName = sampleNamesMap.get(value as Sample);
               if (!sampleName) throw new Error(t("dialog.error.message.schema.sample.invalid") + value);
