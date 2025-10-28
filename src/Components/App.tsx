@@ -7,7 +7,7 @@ import "sweetalert2/dist/sweetalert2.css";
 
 import { injectGlobal, css as stylesheet } from "@emotion/css";
 import styled from "@emotion/styled";
-import { faCirclePlay, faExternalLink, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlay, faExternalLink, faGlobe, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Main from "./Main";
@@ -522,7 +522,10 @@ const Version = styled.span`
   font-size: 1rem;
 `;
 const Buttons = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1.5rem;
+  vertical-align: bottom;
 `;
 const ShowButton = styled.button`
   display: inline-flex;
@@ -545,6 +548,8 @@ const ShowButton = styled.button`
   }
 `;
 const ApplyButton = styled.button`
+  display: inline-flex;
+  align-items: center;
   color: #0078e7;
   cursor: pointer;
   transition: color 150ms;
@@ -573,12 +578,23 @@ const LinkToLegacy = styled.span`
     }
   }
 `;
-const LanguageDropdown = styled.label`
+const LanguageDropdownWrapper = styled.label`
   font-size: 1.25rem;
-  display: inline-block;
-  vertical-align: top;
-  margin-top: 0.5rem;
-  margin-bottom: -0.5rem;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: bottom;
+  gap: 0.5rem;
+`;
+const LanguageIcon = styled(FontAwesomeIcon)`
+  border-radius: 9999px;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #666;
+  border: 0.125rem solid #666;
+  padding: 0.125rem;
+`;
+const LanguageDropdown = styled.select`
+  margin: -0.125rem 0;
 `;
 const FontPreload = styled.span`
   position: absolute;
@@ -626,16 +642,19 @@ export default function App() {
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
               </Buttons>
-              <LanguageDropdown className="pure-form">
-                <select onChange={event => i18n.changeLanguage(event.currentTarget.value)} value={i18n.language}>
+              <LanguageDropdownWrapper className="pure-form">
+                <LanguageIcon icon={faGlobe} />
+                <LanguageDropdown
+                  onChange={event => i18n.changeLanguage(event.currentTarget.value)}
+                  value={i18n.language}>
                   <option value="zh" lang="zh-HK">
                     中文
                   </option>
                   <option value="en" lang="en-GB">
                     English
                   </option>
-                </select>
-              </LanguageDropdown>
+                </LanguageDropdown>
+              </LanguageDropdownWrapper>
             </Heading>
           </nav>
         </header>
