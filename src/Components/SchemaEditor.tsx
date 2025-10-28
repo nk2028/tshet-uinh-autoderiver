@@ -184,10 +184,10 @@ const ResetButton = styled.button`
   }
 `;
 const Parameters = styled.p`
-  margin: -0.75rem 0 0;
+  margin: 0.35rem 0 1rem;
 `;
 const NoParameters = styled.p`
-  margin: -1.25rem 0 -0.5rem;
+  margin: 0.35rem 0 0.875rem;
   font-size: 0.875rem;
   color: #888;
   &:not(:lang(zh-HK)) {
@@ -195,9 +195,10 @@ const NoParameters = styled.p`
   }
 `;
 const ParameterErrorHint = styled.p`
-  margin: 0;
+  margin: -0.5rem 0 0.875rem;
   font-size: 0.875rem;
   color: red;
+  gap: 0.5rem;
 `;
 const Divider = styled.div<{ isDragging: boolean }>`
   background-color: #c4c6c8;
@@ -231,7 +232,6 @@ const Options = styled.form`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.17rem;
   padding: 1.17rem 1rem;
   overflow-y: auto;
 `;
@@ -239,7 +239,7 @@ const OptionsTitle = styled.h3`
   margin: 0;
 `;
 const OptionsSeparator = styled.hr`
-  margin: -0.17rem -1rem 0;
+  margin: 0 -1rem;
 `;
 const DropContainer = styled.div<{ isDragging: boolean }>`
   position: fixed;

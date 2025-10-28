@@ -24,7 +24,7 @@ import type { MutableRefObject } from "react";
 const dummyOutput = document.createElement("output");
 
 const GeneralOptions = styled.p`
-  margin: -0.25rem 0;
+  margin: 0.7rem 0 1rem;
 `;
 const ArticleInput = styled.textarea`
   line-height: 1.6;

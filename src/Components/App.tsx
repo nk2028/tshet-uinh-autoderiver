@@ -105,25 +105,30 @@ injectGlobal`
     border-top: 1px solid #d4d6d8;
   }
   body .pure-button {
-    padding-top: 0.2em;
-    padding-bottom: 0.2em;
+    padding-top: 0;
+    padding-bottom: 0;
     margin-right: 0.3em;
     vertical-align: baseline;
+    line-height: 2;
     &.pure-button-danger {
       background-color: #dc3741;
       color: white;
     }
   }
-  .pure-form p {
-    line-height: 2.5;
-  }
   body .pure-form {
+    p {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      * {
+        max-width: 100%;
+      }
+    }
     select {
       padding: 0 0.8rem 0 0.4rem;
       height: 2rem;
       vertical-align: baseline;
       margin-right: 0.125rem;
-      max-width: 100%;
     }
     input[type="radio"],
     input[type="checkbox"] {
@@ -138,13 +143,10 @@ injectGlobal`
       margin-right: 0.125rem;
       padding: 0 0.6rem;
     }
-    input[type="button"] {
-      margin-right: 1.125rem;
-    }
+    input[type="button"],
     label {
-      display: inline;
-      margin-right: 1.125rem;
-      white-space: nowrap;
+      line-height: 1.8;
+      margin: 0.45rem 1.125rem 0.15rem 0;
     }
   }
   .swal2-close {

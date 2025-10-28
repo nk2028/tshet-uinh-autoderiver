@@ -15,6 +15,10 @@ function isGroupLabel(item: 設定項): item is GroupLabel {
   return item.type === "groupLabel";
 }
 
+const LineBreak = styled.div`
+  flex: 100%;
+`;
+
 const Title = styled.b`
   &:before {
     content: "〔";
@@ -105,16 +109,14 @@ export default class ParameterSet {
       if (isNewline(item)) {
         return (
           <>
-            <br />
-            {"\n"}
+            <LineBreak>{"\n"}</LineBreak>
           </>
         );
       } else if (isGroupLabel(item)) {
         const { text, description } = item;
         return (
           <>
-            <br />
-            {"\n"}
+            <LineBreak>{"\n"}</LineBreak>
             <Title>{text}</Title>
             {typeof description === "string" && description ? (
               <Description>
