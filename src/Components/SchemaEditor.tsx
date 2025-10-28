@@ -914,10 +914,10 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
         )}
         {activeSchema?.parameters.errors.length ? (
           <ParameterErrorHint>
-            {t("options.parameters.validation.unparsable")}{" "}
+            {t("options.parameters.validation.unparsable")}
             <button
               type="button"
-              className="pure-button"
+              className="pure-button pure-button-danger-secondary"
               onClick={() =>
                 notifyError(t("options.parameters.validation.unparsable"), activeSchema.parameters.errors.join("\n"))
               }>

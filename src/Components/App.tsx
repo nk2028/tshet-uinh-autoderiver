@@ -114,6 +114,10 @@ injectGlobal`
       background-color: #dc3741;
       color: white;
     }
+    &.pure-button-danger-secondary {
+      background-color: #f7dddd;
+      color: #6f1e23;
+    }
   }
   body .pure-form {
     p {
