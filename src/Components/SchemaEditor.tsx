@@ -156,13 +156,12 @@ const EditorArea = styled.div`
   position: relative;
 `;
 const ResetButton = styled.button`
-  display: inline-flex;
-  margin-left: 1rem;
   transition: color 0.2s;
   color: #555;
   cursor: pointer;
+  display: flex;
   align-items: center;
-  gap: 0.125rem;
+  gap: 0.25rem;
   &:hover,
   &:focus {
     color: #0078e7;
@@ -236,7 +235,10 @@ const Options = styled.form`
   overflow-y: auto;
 `;
 const OptionsTitle = styled.h3`
+  display: flex;
+  align-items: center;
   margin: 0;
+  gap: 1rem;
 `;
 const OptionsSeparator = styled.hr`
   margin: 0 -1rem;

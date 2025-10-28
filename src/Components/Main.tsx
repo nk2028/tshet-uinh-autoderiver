@@ -117,11 +117,12 @@ const Title = styled.h1`
   align-items: center;
   margin: 0 0.25rem;
   font-size: 1.75rem;
+  gap: 1.25rem;
 `;
 const CopyButton = styled.button`
-  margin-left: 1rem;
+  margin-top: 0.25rem;
   transition: color 0.2s;
-  color: #888;
+  color: #555;
   cursor: pointer;
   font-size: 0.8em;
   font-weight: 400;
