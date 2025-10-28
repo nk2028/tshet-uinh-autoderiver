@@ -212,6 +212,7 @@ export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: Mutab
     }
   }, [t]);
   const onHideTooltip = useCallback(() => setCopyTooltipText(t("action.copy.label")), [t]);
+  useEffect(onHideTooltip, [onHideTooltip]); // Update text to the label in the new language on language change
 
   // XXX Please Rewrite
   useEffect(() => {
