@@ -139,8 +139,8 @@ const CreateSchemaButton = styled.button`
   justify-content: center;
   border-radius: 9999px;
   min-height: 1.75rem;
-  padding: 0 0.375rem;
-  gap: 0.125rem;
+  padding: 0 0.5rem 0 0.375rem;
+  gap: 0.25rem;
   font-size: 1rem;
   color: #555;
   transition: background-color 150ms;
