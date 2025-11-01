@@ -73,5 +73,31 @@
   "dialog.action.confirm": "Confirm",
   "dialog.action.ok": "OK",
   "dialog.action.cancel": "Cancel",
-  "dialog.action.close": "Close"
+  "dialog.action.close": "Close",
+
+  "samples.name.position": "Phonological position and properties",
+  "samples.name.tupa": "Tshet-uinh Phonetic Alphabet (TUPA)",
+  "samples.name.baxter": "Baxter’s Transcription",
+  "samples.name.karlgren": "Karlgren’s Reconstruction",
+  "samples.name.wangli": "Wang Li’s Reconstruction",
+  "samples.name.panwuyun": "Pan Wuyun’s Reconstruction",
+  "samples.name.unt": "unt’s Reconstruction",
+  "samples.name.unt_legacy": "unt’s Legacy Reconstructions",
+  "samples.name.msoeg_v8": "msoeg’s Reconstruction V8",
+  "samples.name.high_tang": "High Tang Chinese (Pingshui Yun 平水韻)",
+  "samples.name.mid_tang": "Mid-Tang Chinese (Yuntu 韻圖)",
+  "samples.name.n_song": "Northern Song Chinese (Shengyin Changhe Tu 聲音唱和圖)",
+  "samples.name.mongol": "Menggu Ziyun 蒙古字韻",
+  "samples.name.zhongyuan": "Zhongyuan Yinyun 中原音韻",
+  "samples.name.putonghua": "Putonghua",
+  "samples.name.gwongzau": "Cantonese",
+  "samples.name.zaonhe": "Shanghainese",
+  "samples.name.ayaka_v8": "Ayaka’s Phonological System for Thinking",
+  "samples.name.yec_en_hua": "Yec-en-ʻua",
+
+  "samples.category.romanizationOrTranscription": "Romanization/transcription of the Qieyun system",
+  "samples.category.reconstruction": "Reconstruction of the Qieyun system",
+  "samples.category.extrapolationOfLaterPeriods": "Extrapolated phonological system of later periods",
+  "samples.category.extrapolationOfModernDialects": "Extrapolated pronunciations of modern dialects",
+  "samples.category.artificial": "Artificial phonological system"
 }

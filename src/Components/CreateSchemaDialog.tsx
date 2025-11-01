@@ -11,10 +11,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
 import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix } from "../consts";
-import samples from "../samples";
+import {
+  localizedSampleCategoryName,
+  localizedSampleName,
+  samples,
+  type SampleDirTree,
+  type SampleId,
+} from "../samples";
 import { fetchFile, normalizeFileName, stopPropagation } from "../utils";
 
-import type { Folder, Sample, SchemaState } from "../consts";
+import type { SchemaState } from "../consts";
 import type { ChangeEventHandler, FormEvent, RefObject } from "react";
 
 const Container = styled.dialog`
@@ -200,7 +206,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
   const { t } = useTranslation();
 
   const [createSchemaName, setCreateSchemaName] = useState(getDefaultFileName(""));
-  const [createSchemaSample, setCreateSchemaSample] = useState<Sample | "">("");
+  const [createSchemaSample, setCreateSchemaSample] = useState<SampleId | "">("");
   const [loading, setLoading] = useState(false);
 
   const resetDialog = useCallback(() => {
@@ -223,24 +229,30 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
     inputRef.current?.setCustomValidity(validation);
   }, [validation]);
 
-  function recursiveFolder(folder: Folder) {
-    return Object.entries(folder).map(([name, sample]) => {
-      return typeof sample === "string" ? (
-        <li key={name}>
-          <SchemaItem
-            onClick={() => {
-              setCreateSchemaName(getDefaultFileName(name));
-              setCreateSchemaSample(sample);
-            }}>
-            <FontAwesomeIcon icon={faFileCode} fixedWidth />
-            <SchemaName selected={createSchemaSample === sample}>{name}</SchemaName>
-          </SchemaItem>
-        </li>
-      ) : (
-        <ExplorerFolder key={name} name={name}>
-          {recursiveFolder(sample)}
-        </ExplorerFolder>
-      );
+  function sampleDirTree(tree: SampleDirTree) {
+    return tree.map(entry => {
+      if (typeof entry === "string") {
+        const name = localizedSampleName(entry);
+        return (
+          <li key={entry}>
+            <SchemaItem
+              onClick={() => {
+                setCreateSchemaName(getDefaultFileName(name));
+                setCreateSchemaSample(entry);
+              }}>
+              <FontAwesomeIcon icon={faFileCode} fixedWidth />
+              <SchemaName selected={createSchemaSample === entry}>{name}</SchemaName>
+            </SchemaItem>
+          </li>
+        );
+      } else {
+        const [name, ...entries] = entry;
+        return (
+          <ExplorerFolder key={name} name={localizedSampleCategoryName(name)}>
+            {sampleDirTree(entries)}
+          </ExplorerFolder>
+        );
+      }
     });
   }
 
@@ -289,7 +301,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
                 <SchemaName selected={!createSchemaSample}>{t("dialog.createSchema.addBlank")}</SchemaName>
               </SchemaItem>
             </li>
-            {recursiveFolder(samples)}
+            {sampleDirTree(samples)}
           </ul>
         </Explorer>
         {/* TODO preview disabled for now */}

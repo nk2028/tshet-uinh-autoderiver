@@ -1,5 +1,3 @@
-import samples from "./samples";
-
 import type { CustomNode } from "./Classes/CustomElement";
 import type ParameterSet from "./Classes/ParameterSet";
 import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetStateAction } from "react";
@@ -25,15 +23,6 @@ if (!音韻地位) return [
 ];
 
 `.trimStart();
-
-export const sampleNamesMap = new Map<Sample, string>();
-function buildSampleNamesMap(folder: Folder) {
-  for (const [name, sample] of Object.entries(folder)) {
-    if (typeof sample === "string") sampleNamesMap.set(sample, name);
-    else buildSampleNamesMap(sample);
-  }
-}
-buildSampleNamesMap(samples);
 
 export const defaultArticle =
   "風(幫三C東平)煙俱淨，天山共(羣三C鍾去)色。從(從三鍾平)流飄(滂三A宵平)蕩(定開一唐上)，任(日開三侵平)意東西。" +
@@ -91,10 +80,6 @@ export type Entry = Readonly<{
 }>;
 
 export type Query = Readonly<Pick<資料.檢索結果, "字頭" | "音韻地位"> & Partial<資料.檢索結果>>;
-
-type Values<T> = T extends Record<PropertyKey, infer T> ? Values<T> : T;
-export type Sample = Values<typeof samples>;
-export type Folder = { [name: string]: Folder | Sample };
 
 type UseGet<K extends string, T> = { [P in K]: T };
 type UseSet<K extends string, T> = { [P in `set${Capitalize<K>}`]: Dispatch<SetStateAction<T>> };
