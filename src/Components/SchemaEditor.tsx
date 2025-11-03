@@ -261,13 +261,21 @@ interface SchemaEditorProps extends UseMainState {
 }
 
 export default function SchemaEditor({ state, setState, generalOptions, evaluateHandlerRef }: SchemaEditorProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { schemas, activeSchemaName } = state;
   const activeSchema = useMemo(
     () => schemas.find(({ name }) => name === activeSchemaName),
     [schemas, activeSchemaName],
   );
+
+  const [prevLanguage, setPrevLanguage] = useState("");
+  useEffect(() => {
+    if (prevLanguage !== i18n.language && schemas.length) {
+      setState(actions.recomputeSchemaParameters(activeSchemaName));
+    }
+    setPrevLanguage(i18n.language);
+  }, [schemas, i18n.language, prevLanguage, setState, activeSchemaName]);
 
   const monaco = useMonaco();
   useEffect(() => {

@@ -2,6 +2,18 @@ import ParameterSet from "./Classes/ParameterSet";
 
 import type { MainState, SchemaState } from "./consts";
 
+function schemaAction(
+  schemaName: string,
+  computeNewSchemaState: (state: SchemaState) => SchemaState,
+): (state: MainState) => MainState {
+  return state => {
+    const schemas = [...state.schemas];
+    const index = schemas.findIndex(schema => schema.name === schemaName);
+    schemas[index] = computeNewSchemaState(schemas[index]);
+    return { ...state, schemas };
+  };
+}
+
 export default {
   addSchema: (schema: Omit<SchemaState, "parameters">) => (state: MainState) => {
     if (state.schemas.some(({ name }) => name === schema.name)) {
@@ -54,30 +66,28 @@ export default {
     return { ...state, schemas, activeSchemaName: newName };
   },
 
-  setSchemaInput: (name: string, input: string) => (state: MainState) => {
-    const schemas = [...state.schemas];
-    const index = schemas.findIndex(schema => schema.name === name);
-    const newState = { ...schemas[index], input };
-    newState.parameters = newState.parameters?.refresh(input) || ParameterSet.from(input);
-    schemas[index] = newState;
-    return { ...state, schemas };
-  },
+  setSchemaInput: (name: string, input: string) =>
+    schemaAction(name, schemaState => ({
+      ...schemaState,
+      input,
+      parameters: schemaState.parameters?.refresh(input) ?? ParameterSet.from(input),
+    })),
 
-  setSchemaParameters: (name: string, parameters: ParameterSet) => (state: MainState) => {
-    const schemas = [...state.schemas];
-    const index = schemas.findIndex(schema => schema.name === name);
-    const newState = { ...schemas[index] };
-    newState.parameters = parameters.refresh(newState.input);
-    schemas[index] = newState;
-    return { ...state, schemas };
-  },
+  setSchemaParameters: (name: string, parameters: ParameterSet) =>
+    schemaAction(name, schemaState => ({
+      ...schemaState,
+      parameters: parameters.refresh(schemaState.input),
+    })),
 
-  resetSchemaParameters: (name: string) => (state: MainState) => {
-    const schemas = [...state.schemas];
-    const index = schemas.findIndex(schema => schema.name === name);
-    const newState = { ...schemas[index] };
-    newState.parameters = ParameterSet.from(newState.input);
-    schemas[index] = newState;
-    return { ...state, schemas };
-  },
+  recomputeSchemaParameters: (name: string) =>
+    schemaAction(name, schemaState => ({
+      ...schemaState,
+      parameters: schemaState.parameters?.refresh(schemaState.input) ?? ParameterSet.from(schemaState.input),
+    })),
+
+  resetSchemaParameters: (name: string) =>
+    schemaAction(name, schemaState => ({
+      ...schemaState,
+      parameters: ParameterSet.from(schemaState.input),
+    })),
 };
