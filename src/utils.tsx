@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import { t } from "i18next";
 
 import { css as stylesheet } from "@emotion/css";
@@ -138,4 +139,14 @@ export function displaySchemaLoadingErrors(errors: unknown[], nSchemas: number) 
 
 export function stopPropagation(event: Event | SyntheticEvent) {
   event.stopPropagation();
+}
+
+export function renderDescriptionHTML(description: string) {
+  return description.split(/[\n-\r\x85\u2028\u2029]+/u).map((line, i) => (
+    <p
+      dangerouslySetInnerHTML={{
+        __html: DOMPurify.sanitize(line, { ALLOWED_TAGS: ["i", "b", "em", "strong"], ALLOWED_ATTR: [] }),
+      }}
+      key={i}></p>
+  ));
 }

@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 
 import TooltipLabel from "../Components/TooltipLabel";
 import { rawDeriverFrom } from "../evaluate";
+import { renderDescriptionHTML } from "../utils";
 
 import type { GroupLabel, Newline, 設定項 } from "tshet-uinh-deriver-tools";
 
@@ -119,11 +120,7 @@ export default class ParameterSet {
             <LineBreak>{"\n"}</LineBreak>
             <Title>{text}</Title>
             {typeof description === "string" && description ? (
-              <Description>
-                {description.split(/[\n-\r\x85\u2028\u2029]+/u).map((line, i) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </Description>
+              <Description>{renderDescriptionHTML(description)}</Description>
             ) : null}
           </>
         );
