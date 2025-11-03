@@ -1,31 +1,39 @@
-// prettier-ignore
-export default {
-  "直接標註音韻地位（及相關屬性）": "position",
-  "切韻音系拼音或轉寫": {
-    "切韻拼音": "tupa",
-    "白一平轉寫": "baxter",
-  },
-  "切韻音系擬音": {
-    "高本漢擬音": "karlgren",
-    "王力擬音": "wangli",
-    "潘悟雲擬音": "panwuyun",
-    "unt 擬音": "unt",
-    "msoeg 擬音": "msoeg_v8",
-  },
-  "推導後世音系": {
-    "推導盛唐（平水韻）擬音": "high_tang",
-    "推導中唐（韻圖）擬音": "mid_tang",
-    "推導北宋（聲音唱和圖）擬音": "n_song",
-    "推導《蒙古字韻》": "mongol",
-    "推導《中原音韻》擬音": "zhongyuan",
-  },
-  "現代方言推導音": {
-    "推導普通話": "putonghua",
-    "推導廣州話": "gwongzau",
-    "推導上海話": "zaonhe",
-  },
-  "人造音系": {
-    "綾香思考音系": "ayaka_v8",
-    "不通話": "yec_en_hua",
-  },
-} as const;
+import { t } from "i18next";
+
+export const samples = [
+  "position",
+  ["romanizationOrTranscription", "tupa", "baxter"],
+  ["reconstruction", "karlgren", "wangli", "panwuyun", "unt", "unt_legacy", "msoeg_v8"],
+  ["extrapolationOfLaterPeriods", "high_tang", "mid_tang", "n_song", "mongol", "zhongyuan"],
+  ["extrapolationOfModernDialects", "putonghua", "gwongzau", "zaonhe"],
+  ["artificial", "ayaka_v8", "yec_en_hua"],
+] as const satisfies SampleDirTreeInternal;
+
+export function localizedSampleName(id: SampleId): string {
+  return t(`samples.name.${id}`, id);
+}
+export function localizedSampleCategoryName(id: string): string {
+  return t(`samples.category.${id}`, id);
+}
+
+export type SampleDirTree = Entry[];
+export type Entry = SampleId | SubDir;
+export type SubDir = [string, ...Entry[]];
+// NOTE same as above, but does not require an `Entry` string to be a `SampleId`.
+// This is used for breaking the circular dependency of computing `SampleIds` and verifying that `samples` satisfies
+// the `SampleDirTree` structure.
+type SampleDirTreeInternal = EntryInternal[];
+type EntryInternal = string | SubDirInternal;
+type SubDirInternal = [string, ...EntryInternal[]];
+
+export type SampleId = SampleIds<typeof samples>;
+
+type SampleIds<T extends SampleDirTreeInternal> = {
+  [K in keyof T]: T[K] extends SubDirInternal ? SampleIds<SubDirEntries<T[K]>> : T[K];
+}[number];
+
+type SubDirEntries<T extends SubDirInternal> = T extends readonly [string, ...infer Tail]
+  ? Tail extends EntryInternal[]
+    ? Tail
+    : never
+  : never;

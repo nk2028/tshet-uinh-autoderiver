@@ -14,15 +14,9 @@ import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
 import actions from "../actions";
 import Swal from "../Classes/SwalReact";
-import {
-  codeFontFamily,
-  invalidCharsRegex,
-  newFileTemplate,
-  noop,
-  sampleNamesMap,
-  tshetUinhExamplesURLPrefix,
-} from "../consts";
+import { codeFontFamily, invalidCharsRegex, newFileTemplate, noop, tshetUinhExamplesURLPrefix } from "../consts";
 import "../editor/setup";
+import { localizedSampleName, type SampleId } from "../samples";
 import {
   displaySchemaLoadingErrors,
   fetchFile,
@@ -33,7 +27,7 @@ import {
   showLoadingModal,
 } from "../utils";
 
-import type { UseMainState, ReactNode, Sample } from "../consts";
+import type { UseMainState, ReactNode } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
 
 const TabBar = styled.div`
@@ -368,7 +362,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
         try {
           setState(
             actions.addSchema({
-              name: sampleNamesMap.get("tupa")!,
+              name: localizedSampleName("tupa")!,
               input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js", signal),
             }),
           );
@@ -411,7 +405,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
             case "sample": {
               value = normalizeFileName(value);
               url = tshetUinhExamplesURLPrefix + value + ".js";
-              const sampleName = sampleNamesMap.get(value as Sample);
+              const sampleName = localizedSampleName(value as SampleId);
               if (!sampleName) throw new Error(t("dialog.error.message.schema.sample.invalid") + value);
               name = i < names.length ? names[i++] : sampleName;
               break;
