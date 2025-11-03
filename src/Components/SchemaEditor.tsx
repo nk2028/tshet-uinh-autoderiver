@@ -284,7 +284,9 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
   const getDefaultFileNameWithSchemaNames = useCallback(
     (schemaNames: string[]) =>
       memoize((name: string) => {
-        name = name ? name.replace(/^直接標註|^推導|《|》|（.*）|擬音$|轉寫$/g, "").trim() : t("app.defaultFileName");
+        name = name
+          ? name.replace(/^直接標註|^推導|《|》|（.*）|擬音$|轉寫$|’s (?:Reconstruction|Transcription)$/g, "").trim()
+          : t("app.defaultFileName");
         const indices = schemaNames
           .map(oldName => {
             if (oldName === name) return 0;
