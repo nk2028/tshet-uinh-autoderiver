@@ -125,12 +125,15 @@ export async function settleAndGroupPromise<T>(values: Iterable<T | PromiseLike<
 
 export function displaySchemaLoadingErrors(errors: unknown[], nSchemas: number) {
   if (errors.length > 1) {
-    notifyError(t("dialog.error.message.schema.load.multiple", { count: errors.length }), new AggregateError(errors));
+    notifyError(
+      t("dialog.error.message.schema.load.multiple", { count: errors.length }), // There are multiple schemas to load, and some or all of them failed
+      new AggregateError(errors),
+    );
   } else if (errors.length === 1) {
     notifyError(
       nSchemas === 1
-        ? t("dialog.error.message.schema.load.single")
-        : t("dialog.error.message.schema.load.multiple", { count: 1 }),
+        ? t("dialog.error.message.schema.load.single") // There is only a single schema to load and it failed
+        : t("dialog.error.message.schema.load.multiple", { count: 1 }), // There are multiple schemas to load, and one of them failed
       errors[0],
     );
   }
