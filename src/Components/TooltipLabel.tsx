@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 
 import Tooltip from "./Tooltip";
+import { renderDescriptionHTML } from "../utils";
 
 import type { ReactNode } from "../consts";
 
@@ -31,13 +32,7 @@ export default function TooltipLabel({
   return typeof description === "string" && description ? (
     <Tooltip
       fixedWidth={false}
-      element={
-        <Wrapper>
-          {description.split(/[\n-\r\x85\u2028\u2029]+/).map((line, i) => (
-            <p key={i}>{line}</p>
-          ))}
-        </Wrapper>
-      }
+      element={<Wrapper>{renderDescriptionHTML(description)}</Wrapper>}
       onHideTooltip={onHideTooltip}>
       <Option>{children}</Option>
     </Tooltip>
