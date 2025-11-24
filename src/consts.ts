@@ -1,6 +1,6 @@
 import type { CustomNode } from "./Classes/CustomElement";
 import type ParameterSet from "./Classes/ParameterSet";
-import type { Dispatch, DispatchWithoutAction, ReactChild, ReactPortal, SetStateAction } from "react";
+import type { Dispatch, DispatchWithoutAction, SetStateAction } from "react";
 import type { 資料 } from "tshet-uinh";
 
 export const tshetUinhExamplesURLPrefix = "https://cdn.jsdelivr.net/gh/nk2028/tshet-uinh-examples@main/";
@@ -89,6 +89,3 @@ export type UseMainState = Use<"state", MainState>;
 export type UseLoading = Use<"loading", boolean>;
 export type UseOperation = UseGet<"operation", number> & { increaseOperation: DispatchWithoutAction };
 export type UseSetSyncedArticle = UseSet<"syncedArticle", string[]>;
-
-type ReactFragment = Iterable<ReactNode>; // No {} !!!
-export type ReactNode = ReactChild | ReactFragment | ReactPortal | boolean | null | undefined;

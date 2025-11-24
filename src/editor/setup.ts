@@ -28,4 +28,5 @@ defaults.setCompilerOptions({
 });
 defaults.setExtraLibs(Object.entries(libs).map(([filePath, content]) => ({ filePath, content })));
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO: reject branch?
 document.fonts.ready.then(() => monaco.editor.remeasureFonts());

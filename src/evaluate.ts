@@ -7,7 +7,8 @@ import { evaluateOption, getArticle, setArticle } from "./options";
 import { fetchFile, isArray, normalizeFileName, notifyError } from "./utils";
 
 import type { CustomNode, NestedCustomNode } from "./Classes/CustomElement";
-import type { MainState, ReactNode } from "./consts";
+import type { MainState } from "./consts";
+import type { ReactNode } from "react";
 import type { 音韻地位 } from "tshet-uinh";
 import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools";
 
@@ -18,6 +19,7 @@ type NestedStringNode = string | readonly NestedStringNode[];
 type DeriveResult = NestedStringNode | ((formatter: Formatter) => NestedCustomNode);
 
 export function rawDeriverFrom(input: string): 原始推導函數<DeriveResult, [RequireFunction]> {
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval -- intended
   return new Function("選項", "音韻地位", "字頭", "require", input) as 原始推導函數<DeriveResult, [RequireFunction]>;
 }
 
@@ -53,7 +55,7 @@ export default async function evaluate(state: MainState): Promise<ReactNode> {
   function require(current: string, references: string[] = []): Require {
     const newReferences = references.concat(current);
     if (references.includes(current))
-      throw notifyError(t("dialog.error.message.circularReferenceDetected") + newReferences.join(" -> "));
+      throw notifyError(`${t("dialog.error.message.circularReferenceDetected")} ${newReferences.join(" -> ")}`);
     return (音韻地位, 字頭) => sample => {
       const schema = schemas.find(({ name }) => name === normalizeFileName(sample));
       if (!schema) throw notifyError(t("dialog.error.message.schemaNameLookup"));

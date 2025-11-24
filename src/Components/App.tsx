@@ -16,6 +16,7 @@ import { codeFontFamily, noop } from "../consts";
 import "../i18n";
 
 import type { TFunction } from "i18next";
+import type { JSX } from "react";
 
 injectGlobal`
   html,
@@ -636,10 +637,10 @@ export default function App() {
                   <FontAwesomeIcon icon={faCirclePlay} />
                 </ApplyButton>
                 <ShowButton title={t("app.info.about.title")} onClick={useCallback(() => showAbout(t), [t])}>
-                  <FontAwesomeIcon icon={faInfo} fixedWidth />
+                  <FontAwesomeIcon icon={faInfo} />
                 </ShowButton>
                 <ShowButton title={t("app.info.userGuide.title")} onClick={useCallback(() => showHelp(t), [t])}>
-                  <FontAwesomeIcon icon={faQuestion} fixedWidth />
+                  <FontAwesomeIcon icon={faQuestion} />
                 </ShowButton>
               </Buttons>
               <LanguageDropdownWrapper className="pure-form">

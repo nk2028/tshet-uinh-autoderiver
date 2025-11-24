@@ -18,8 +18,8 @@ import initialState, { stateStorageLocation } from "../state";
 import TooltipLabel from "./TooltipLabel";
 import { stopPropagation } from "../utils";
 
-import type { MainState, DeriveAction, ReactNode } from "../consts";
-import type { MutableRefObject } from "react";
+import type { MainState, DeriveAction } from "../consts";
+import type { ReactNode, RefObject } from "react";
 
 const dummyOutput = document.createElement("output");
 
@@ -158,7 +158,7 @@ const Loading = styled.div`
 
 let evaluationResult: ReactNode = [];
 
-export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: MutableRefObject<() => void> }) {
+export default function Main({ evaluateHandlerRef }: { evaluateHandlerRef: RefObject<() => void> }) {
   const { t } = useTranslation();
   const [state, setState] = useState(initialState);
   const { article, option, convertVariant, syncCharPosition } = state;

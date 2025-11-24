@@ -20,7 +20,7 @@ function defaultState(): MainState {
 export default function initialState(): MainState {
   const state = localStorage.getItem(stateStorageLocation);
   if (state) {
-    const result: MainState = JSON.parse(state);
+    const result = JSON.parse(state) as MainState;
     return {
       ...defaultState(),
       ...result,

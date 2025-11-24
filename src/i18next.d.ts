@@ -10,6 +10,7 @@ declare module "i18next" {
   interface CustomTypeOptions {
     resources: {
       // Using intersection to ensure that any string is translated in all locales before it can be referenced
+      // eslint-disable-next-line @typescript-eslint/no-duplicate-type-constituents -- TODO: is this still necessary?
       translation: Record<RemovePluralSuffix<keyof typeof zh> & RemovePluralSuffix<keyof typeof en>, string>;
     };
   }

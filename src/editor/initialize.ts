@@ -48,6 +48,7 @@ const sortOrder: Partial<Record<languages.CompletionItemKind, string>> = {
   [languages.CompletionItemKind.Module]: "*7",
 };
 
+// eslint-disable-next-line @typescript-eslint/unbound-method -- intended for use with .apply
 const originalProvideCompletionItems = SuggestAdapter.prototype.provideCompletionItems;
 
 SuggestAdapter.prototype.provideCompletionItems = async function (...args) {

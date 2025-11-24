@@ -4,9 +4,8 @@ import styled from "@emotion/styled";
 
 import { isArray, isTemplateStringsArray } from "../utils";
 
-import type { ReactNode } from "../consts";
 import type { Property } from "csstype";
-import type { HTMLAttributes, ReactElement } from "react";
+import type { HTMLAttributes, ReactElement, ReactNode } from "react";
 
 const Missing = styled.span`
   &:after {
@@ -145,7 +144,7 @@ function FormatterFactory(tags: Tag[]) {
     return element;
   }) as FormatterWithTags;
   instance[TAGS] = tags;
-  Object.setPrototypeOf(instance, FormatterFactory.prototype);
+  Object.setPrototypeOf(instance, FormatterFactory.prototype as object);
   return instance as Formatter;
 }
 
@@ -153,15 +152,15 @@ Object.setPrototypeOf(FormatterFactory.prototype, Function.prototype);
 
 for (const tag of ["f", "b", "i", "u", "s", "sup", "sub"] as const)
   Object.defineProperty(FormatterFactory.prototype, tag, {
-    get() {
+    get(this: FormatterWithTags) {
       return FormatterFactory([...this[TAGS], [tag]]);
     },
   });
 
 for (const tag of ["fg", "bg", "size"] as const)
   Object.defineProperty(FormatterFactory.prototype, tag, {
-    get() {
-      return <T extends typeof tag>(prop: TagToProp[T]) => FormatterFactory([...this[TAGS], [tag, prop]]);
+    get(this: FormatterWithTags) {
+      return <T extends typeof tag>(prop: TagToProp[T]) => FormatterFactory([...this[TAGS], [tag, prop] as Tag]);
     },
   });
 

@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import type { ReactNode } from "../consts";
+import type { ReactNode } from "react";
 
 export default function Ruby({ rb, rt }: { rb: ReactNode; rt: ReactNode }) {
   return (

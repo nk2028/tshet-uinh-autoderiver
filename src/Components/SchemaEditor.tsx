@@ -8,7 +8,7 @@ import styled from "@emotion/styled";
 import { faFileCode } from "@fortawesome/free-regular-svg-icons";
 import { faPlus, faRotateLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Editor, { useMonaco } from "@monaco-editor/react";
+import { Editor, useMonaco } from "@monaco-editor/react";
 
 import CreateSchemaDialog from "./CreateSchemaDialog";
 import Spinner from "./Spinner";
@@ -27,8 +27,8 @@ import {
   showLoadingModal,
 } from "../utils";
 
-import type { UseMainState, ReactNode } from "../consts";
-import type { MouseEvent, MutableRefObject } from "react";
+import type { UseMainState } from "../consts";
+import type { MouseEvent, ReactNode, RefObject } from "react";
 
 const TabBar = styled.div`
   display: flex;
@@ -257,7 +257,7 @@ const DropArea = styled.div`
 
 interface SchemaEditorProps extends UseMainState {
   generalOptions: ReactNode;
-  evaluateHandlerRef: MutableRefObject<() => void>;
+  evaluateHandlerRef: RefObject<() => void>;
 }
 
 export default function SchemaEditor({ state, setState, generalOptions, evaluateHandlerRef }: SchemaEditorProps) {
@@ -372,7 +372,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
         try {
           setState(
             actions.addSchema({
-              name: localizedSampleName("tupa")!,
+              name: localizedSampleName("tupa"),
               input: await fetchFile(tshetUinhExamplesURLPrefix + "tupa.js", signal),
             }),
           );
@@ -416,7 +416,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
               value = normalizeFileName(value);
               url = tshetUinhExamplesURLPrefix + value + ".js";
               const sampleName = localizedSampleName(value as SampleId);
-              if (!sampleName) throw new Error(t("dialog.error.message.schema.sample.invalid") + value);
+              if (!sampleName) throw new Error(`${t("dialog.error.message.schema.sample.invalid")} ${value}`);
               name = i < names.length ? names[i++] : sampleName;
               break;
             }
@@ -441,7 +441,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       Swal.close();
       signal.aborted || displaySchemaLoadingErrors(errors, schemasToLoad.length);
     }
-    loadSchemas();
+    void loadSchemas();
   }, [schemas, setState, addFilesToSchema, t]);
 
   const deleteSchema = useCallback(
@@ -469,13 +469,13 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
 
   const deleteActiveSchema = useRef(noop);
   deleteActiveSchema.current = useCallback(() => {
-    deleteSchema(activeSchemaName);
+    void deleteSchema(activeSchemaName);
   }, [deleteSchema, activeSchemaName]);
 
   const openFileFromDisk = useRef(noop);
   openFileFromDisk.current = useCallback(() => {
     if ("showOpenFilePicker" in window) {
-      (async () => {
+      void (async () => {
         try {
           const handles = await showOpenFilePicker({
             id: "autoderiver-open-file",
@@ -518,7 +518,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
     if (!activeSchema?.input) return;
     const file = new Blob([activeSchema.input], { type: "text/javascript" });
     if ("showSaveFilePicker" in window) {
-      (async () => {
+      void (async () => {
         try {
           const handle = await showSaveFilePicker({
             id: "autoderiver-save-file",
@@ -648,9 +648,9 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
   }
 
   async function mouseUp(name: string, { button }: { button: number }) {
-    if (button === 1) deleteSchema(name);
+    if (button === 1) void deleteSchema(name);
     else if (button === 2) {
-      const promise = Swal.fire({
+      const promise = Swal.fire<string>({
         title: t("dialog.renameSchema.title"),
         input: "text",
         inputPlaceholder: t("dialog.createSchema.schemaName.placeholder"),
@@ -688,7 +688,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       });
       const { isConfirmed, value } = await promise;
       if (isConfirmed) {
-        const newName = normalizeFileName(value);
+        const newName = normalizeFileName(value!);
         if (!validateFileName(newName)) setState(actions.renameSchema(name, newName));
       }
     }
@@ -806,16 +806,16 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
             onMouseUp={event => mouseUp(name, event)}
             onTouchStart={event => drag(name, event.touches[0])}
             onContextMenu={event => event.preventDefault()}>
-            <FontAwesomeIcon icon={faFileCode} fixedWidth />
+            <FontAwesomeIcon icon={faFileCode} />
             <Name checked={activeSchemaName === name}>{name}</Name>
             <DeleteButton title={t("action.deleteSchema")} onClick={() => deleteSchema(name)}>
-              <FontAwesomeIcon icon={faXmark} size="sm" fixedWidth />
+              <FontAwesomeIcon icon={faXmark} size="sm" />
             </DeleteButton>
             <Separator visible={activeSchemaName !== schemas[index + 1]?.name && activeSchemaName !== name} />
           </Tab>
         ))}
         <CreateSchemaButton onClick={createSchema.current}>
-          <FontAwesomeIcon icon={faPlus} fixedWidth />
+          <FontAwesomeIcon icon={faPlus} />
           <div>{t("action.createSchema")}</div>
         </CreateSchemaButton>
       </TabBar>

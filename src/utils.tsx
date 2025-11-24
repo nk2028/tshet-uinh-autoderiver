@@ -23,6 +23,7 @@ const LoadModal = styled.div`
 `;
 
 export function showLoadingModal(abortController: AbortController, nSchemas: number) {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO: reject branch?
   Swal.fire({
     html: (
       <LoadModal>
@@ -83,7 +84,7 @@ export function notifyError(msg: string, err?: unknown) {
   } else {
     config.text = msg;
   }
-  Swal.fire(config);
+  void Swal.fire(config);
   return new Error(msg, err instanceof Error ? { cause: err } : {});
 }
 

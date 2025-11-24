@@ -5,7 +5,7 @@ import { css as stylesheet } from "@emotion/css";
 
 import { stopPropagation } from "../utils";
 
-import type { ReactElement, SyntheticEvent } from "react";
+import type { HTMLAttributes, ReactElement, SyntheticEvent } from "react";
 
 function getPageWidth() {
   return Math.max(
@@ -92,7 +92,7 @@ export default function Tooltip({
   onHideTooltip,
 }: {
   element: ReactElement;
-  children: ReactElement;
+  children: ReactElement<HTMLAttributes<HTMLElement>>;
   fixedWidth?: boolean;
   onHideTooltip?: (() => void) | undefined;
 }) {

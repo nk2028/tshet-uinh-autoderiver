@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 import Tooltip from "./Tooltip";
 
-import type { ReactNode } from "../consts";
+import type { ReactNode } from "react";
 
 const Wrapper = styled.div`
   p {

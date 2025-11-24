@@ -194,9 +194,9 @@ const Loading = styled.div`
 `;
 
 interface CreateSchemaDialogProps {
-  getDefaultFileName(sample: string): string;
-  schemaLoaded(schema: Omit<SchemaState, "parameters">): void;
-  hasSchemaName(name: string): boolean;
+  getDefaultFileName(this: void, sample: string): string;
+  schemaLoaded(this: void, schema: Omit<SchemaState, "parameters">): void;
+  hasSchemaName(this: void, name: string): boolean;
 }
 
 const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps>(function CreateSchemaDialog(
@@ -240,7 +240,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
                 setCreateSchemaName(getDefaultFileName(name));
                 setCreateSchemaSample(entry);
               }}>
-              <FontAwesomeIcon icon={faFileCode} fixedWidth />
+              <FontAwesomeIcon icon={faFileCode} />
               <SchemaName selected={createSchemaSample === entry}>{name}</SchemaName>
             </SchemaItem>
           </li>
@@ -297,7 +297,7 @@ const CreateSchemaDialog = forwardRef<HTMLDialogElement, CreateSchemaDialogProps
                   setCreateSchemaName(getDefaultFileName(""));
                   setCreateSchemaSample("");
                 }}>
-                <FontAwesomeIcon icon={faFile} fixedWidth />
+                <FontAwesomeIcon icon={faFile} />
                 <SchemaName selected={!createSchemaSample}>{t("dialog.createSchema.addBlank")}</SchemaName>
               </SchemaItem>
             </li>

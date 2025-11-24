@@ -13,7 +13,8 @@ import TooltipChar from "./Components/TooltipChar";
 import { noop } from "./consts";
 
 import type { CustomNode } from "./Classes/CustomElement";
-import type { Entry, MainState, DeriveAction, ReactNode, SchemaState } from "./consts";
+import type { Entry, MainState, DeriveAction, SchemaState } from "./consts";
+import type { ReactNode } from "react";
 
 const Title = styled.h3`
   padding: 0 0 1rem 0.25rem;
@@ -189,7 +190,7 @@ export const evaluateOption: Record<DeriveAction, Handler> = {
     type Data = [serialized: string, 擬音陣列: CustomNode[], count: number];
     const result: Data[] = [];
     serialize(callDeriver)
-      .sort(([a], [b]) => +(a > b) || -(a < b))
+      .sort(([a], [b]) => (a < b ? -1 : +(a > b)))
       .reduce<Data | null>((previous, [serialized, 擬音陣列]) => {
         if (previous && previous[0] === serialized) {
           previous[2]++;

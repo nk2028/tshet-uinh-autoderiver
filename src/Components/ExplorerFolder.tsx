@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import type { ReactNode } from "../consts";
+import type { ReactNode } from "react";
 
 const FolderItem = styled.summary`
   display: flex;
@@ -42,8 +42,8 @@ export default function ExplorerFolder({ name, children }: { name: string; child
     <li>
       <details open>
         <FolderItem>
-          <ExpandedIcon icon={faAngleDown} fixedWidth />
-          <CollapsedIcon icon={faAngleRight} fixedWidth />
+          <ExpandedIcon icon={faAngleDown} />
+          <CollapsedIcon icon={faAngleRight} />
           <span>{name}</span>
         </FolderItem>
         <ul>{children}</ul>

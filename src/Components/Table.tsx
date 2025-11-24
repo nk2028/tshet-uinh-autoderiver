@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import type { ReactNode } from "../consts";
+import type { ReactNode } from "react";
 
 export default function Table({ head, body }: { head: ReactNode[]; body: ReactNode[][] }) {
   return (
