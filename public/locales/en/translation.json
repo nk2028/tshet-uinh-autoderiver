@@ -89,6 +89,7 @@
   "samples.name.n_song": "Northern Song Chinese (Shengyin Changhe Tu 聲音唱和圖)",
   "samples.name.mongol": "Menggu Ziyun 蒙古字韻",
   "samples.name.zhongyuan": "Zhongyuan Yinyun 中原音韻",
+  "samples.name.onp": "Old National Pronunciation",
   "samples.name.putonghua": "Putonghua",
   "samples.name.gwongzau": "Cantonese",
   "samples.name.zaonhe": "Shanghainese",
@@ -98,6 +99,7 @@
   "samples.category.romanizationOrTranscription": "Romanization/transcription of the Qieyun system",
   "samples.category.reconstruction": "Reconstruction of the Qieyun system",
   "samples.category.extrapolationOfLaterPeriods": "Extrapolated phonological system of later periods",
+  "samples.category.extrapolationOfEarlyModernDialects": "Extrapolated pronunciations of early modern dialects",
   "samples.category.extrapolationOfModernDialects": "Extrapolated pronunciations of modern dialects",
   "samples.category.artificial": "Artificial phonological system"
 }

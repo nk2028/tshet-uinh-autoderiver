@@ -5,6 +5,7 @@ export const samples = [
   ["romanizationOrTranscription", "tupa", "baxter"],
   ["reconstruction", "karlgren", "wangli", "panwuyun", "unt", "unt_legacy", "msoeg_v8"],
   ["extrapolationOfLaterPeriods", "high_tang", "mid_tang", "n_song", "mongol", "zhongyuan"],
+  ["extrapolationOfEarlyModernDialects", "onp"],
   ["extrapolationOfModernDialects", "putonghua", "gwongzau", "zaonhe"],
   ["artificial", "ayaka_v8", "yec_en_hua"],
 ] as const satisfies SampleDirTreeInternal;

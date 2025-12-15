@@ -86,6 +86,7 @@
   "samples.name.n_song": "推導北宋（聲音唱和圖）擬音",
   "samples.name.mongol": "推導《蒙古字韻》",
   "samples.name.zhongyuan": "推導《中原音韻》擬音",
+  "samples.name.onp": "推導老國音",
   "samples.name.putonghua": "推導普通話",
   "samples.name.gwongzau": "推導廣州話",
   "samples.name.zaonhe": "推導上海話",
@@ -95,6 +96,7 @@
   "samples.category.romanizationOrTranscription": "切韻音系拼音或轉寫",
   "samples.category.reconstruction": "切韻音系擬音",
   "samples.category.extrapolationOfLaterPeriods": "推導後世音系",
+  "samples.category.extrapolationOfEarlyModernDialects": "近代方言推導音",
   "samples.category.extrapolationOfModernDialects": "現代方言推導音",
   "samples.category.artificial": "人造音系"
 }
