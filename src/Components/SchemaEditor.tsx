@@ -16,7 +16,7 @@ import actions from "../actions";
 import Swal from "../Classes/SwalReact";
 import { codeFontFamily, invalidCharsRegex, newFileTemplate, noop, tshetUinhExamplesURLPrefix } from "../consts";
 import "../editor/setup";
-import { localizedSampleName, type SampleId } from "../samples";
+import { localizedSampleName } from "../samples";
 import {
   displaySchemaLoadingErrors,
   fetchFile,
@@ -27,8 +27,10 @@ import {
   showLoadingModal,
 } from "../utils";
 
-import type { UseMainState, ReactNode } from "../consts";
 import type { MouseEvent, MutableRefObject } from "react";
+
+import type { ReactNode, UseMainState } from "../consts";
+import type { SampleId } from "../samples";
 
 const TabBar = styled.div`
   display: flex;

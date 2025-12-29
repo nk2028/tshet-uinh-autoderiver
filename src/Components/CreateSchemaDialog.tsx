@@ -11,17 +11,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ExplorerFolder from "./ExplorerFolder";
 import Spinner from "./Spinner";
 import { invalidCharsRegex, newFileTemplate, tshetUinhExamplesURLPrefix } from "../consts";
-import {
-  localizedSampleCategoryName,
-  localizedSampleName,
-  samples,
-  type SampleDirTree,
-  type SampleId,
-} from "../samples";
+import { localizedSampleCategoryName, localizedSampleName, samples } from "../samples";
 import { fetchFile, normalizeFileName, stopPropagation } from "../utils";
 
-import type { SchemaState } from "../consts";
 import type { ChangeEventHandler, FormEvent, RefObject } from "react";
+
+import type { SchemaState } from "../consts";
+import type { SampleDirTree, SampleId } from "../samples";
 
 const Container = styled.dialog`
   transform: scale(0.9);

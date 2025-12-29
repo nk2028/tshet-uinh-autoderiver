@@ -13,7 +13,7 @@ import TooltipChar from "./Components/TooltipChar";
 import { noop } from "./consts";
 
 import type { CustomNode } from "./Classes/CustomElement";
-import type { Entry, MainState, DeriveAction, ReactNode, SchemaState } from "./consts";
+import type { DeriveAction, Entry, MainState, ReactNode, SchemaState } from "./consts";
 
 const Title = styled.h3`
   padding: 0 0 1rem 0.25rem;

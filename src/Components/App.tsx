@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 // NOTE sweetalert2's ESM export does not setup styles properly, manually importing
 import "sweetalert2/dist/sweetalert2.css";
 
-import { injectGlobal, css as stylesheet } from "@emotion/css";
+import { css as stylesheet, injectGlobal } from "@emotion/css";
 import styled from "@emotion/styled";
 import { faCirclePlay, faExternalLink, faGlobe, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

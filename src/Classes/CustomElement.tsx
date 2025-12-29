@@ -4,9 +4,11 @@ import styled from "@emotion/styled";
 
 import { isArray, isTemplateStringsArray } from "../utils";
 
-import type { ReactNode } from "../consts";
-import type { Property } from "csstype";
 import type { HTMLAttributes, ReactElement } from "react";
+
+import type { Property } from "csstype";
+
+import type { ReactNode } from "../consts";
 
 const Missing = styled.span`
   &:after {

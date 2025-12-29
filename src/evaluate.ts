@@ -6,10 +6,11 @@ import { tshetUinhTextLabelURLPrefix } from "./consts";
 import { evaluateOption, getArticle, setArticle } from "./options";
 import { fetchFile, isArray, normalizeFileName, notifyError } from "./utils";
 
-import type { CustomNode, NestedCustomNode } from "./Classes/CustomElement";
-import type { MainState, ReactNode } from "./consts";
 import type { 音韻地位 } from "tshet-uinh";
 import type { 原始推導函數, 推導函數 } from "tshet-uinh-deriver-tools";
+
+import type { CustomNode, NestedCustomNode } from "./Classes/CustomElement";
+import type { MainState, ReactNode } from "./consts";
 
 type Require = (音韻地位: 音韻地位, 字頭?: string | null) => RequireFunction;
 type RequireFunction = (sample: string) => SchemaFromRequire;

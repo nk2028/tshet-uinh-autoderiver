@@ -7,6 +7,7 @@ import Swal from "./Classes/SwalReact";
 import Spinner from "./Components/Spinner";
 
 import type { SyntheticEvent } from "react";
+
 import type { SweetAlertOptions } from "sweetalert2";
 
 export function isArray(arg: unknown): arg is readonly unknown[] {

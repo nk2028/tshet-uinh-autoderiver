@@ -28,6 +28,7 @@
       }
     ],
 
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "import/order": [
       "error",
       {
@@ -40,7 +41,10 @@
           }
         ],
         "pathGroupsExcludedImportTypes": ["@**/**"],
+        "sortTypesGroup": true,
         "newlines-between": "always",
+        "newlines-between-types": "always",
+        "named": true,
         "alphabetize": { "order": "asc", "orderImportKind": "asc", "caseInsensitive": true },
         "warnOnUnassignedImports": true
       }

@@ -18,8 +18,9 @@ import initialState, { stateStorageLocation } from "../state";
 import TooltipLabel from "./TooltipLabel";
 import { stopPropagation } from "../utils";
 
-import type { MainState, DeriveAction, ReactNode } from "../consts";
 import type { MutableRefObject } from "react";
+
+import type { DeriveAction, MainState, ReactNode } from "../consts";
 
 const dummyOutput = document.createElement("output");
 
