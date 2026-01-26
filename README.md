@@ -1,6 +1,6 @@
 # Tshet-uinh Autoderiver 切韻音系自動推導器
 
-Tshet-uinh Autoderiver is an online tool that automatically generates phonological reconstructions of the Tshet-uinh phonological system, as well as extrapolated historical and modern phonological systems derived from it.
+Tshet-uinh Autoderiver is an online tool for generating phonological reconstructions of the Tshet-uinh phonological system, as well as extrapolated historical and modern phonological systems derived from it.
 
 This tool is part of the nk2028 organisation’s suite of computational linguistics projects, which aim to advance research in historical Chinese phonology and beyond.
 

@@ -1,7 +1,7 @@
 {
   "name": "tshet-uinh-autoderiver",
   "version": "0.2.0",
-  "description": "An automatic tool to generate derivatives of the Qieyun phonological system",
+  "description": "An online linguistic tool for generating phonological reconstructions of the Qieyun system, as well as extrapolated historical and modern phonological systems derived from it",
   "private": true,
   "type": "module",
   "scripts": {
