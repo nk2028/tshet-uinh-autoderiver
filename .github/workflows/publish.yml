@@ -21,13 +21,13 @@ jobs:
       - name: Install coscmd
         run: pip install coscmd
       - name: Configure coscmd
-        run: coscmd config -a ${{ secrets.SecretId }} -s "${{ secrets.SecretKey }}" -b ${{ vars.BUCKET }} -r ${{ vars.REGION }}
+        run: coscmd config -a ${{ secrets.TENCENTCLOUD_BUCKET_SECRET_ID }} -s "${{ secrets.TENCENTCLOUD_BUCKET_SECRET_KEY }}" -b nk2028-1305783649 -r ap-guangzhou
       - name: Publish static files to COS
         run: |
           cd ./build/
           #coscmd upload -rs --delete -f ./ / --ignore index.html
           #find . -mindepth 1 ! -name index.html -exec rm -rf {} +
-          coscmd upload -rs --delete -f ./assets /assets
+          coscmd upload -rs --delete -f ./assets /tshet-uinh-autoderiver/assets
           rm -rf assets
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
