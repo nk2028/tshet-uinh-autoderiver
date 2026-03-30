@@ -277,39 +277,43 @@ function showAbout(t: TFunction) {
     <>
       <h2>{t("app.info.about.title")}</h2>
       <p>
-        切韻音系自動推導器（下稱「本頁面」）由{" "}
+        切韻音系自動推導器由{" "}
         <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/">
           nk2028
         </a>{" "}
         開發。我們開發有關語言學的項目，尤其是有關歷史漢語語音學，異體字和日語語言學的項目。
       </p>
       <p>
-        歡迎加入 QQ 音韻學答疑羣（羣號 526333751）和{" "}
+        有關推導器的使用及更多音韻學方面討論，歡迎加入{" "}
+        <a target="_blank" rel="noreferrer" href="https://qm.qq.com/q/q50w3CdZuM">
+          QQ 音韻學討論羣（羣號 739872788）
+        </a>
+        和{" "}
         <a target="_blank" rel="noreferrer" href="https://t.me/nk2028_discuss">
           Telegram nk2028 社羣（@nk2028_discuss）
         </a>
         。
       </p>
       <p>
-        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-autoderiver">
-          本頁面原始碼
-        </a>
-        公開於 GitHub。
-      </p>
-      <p>
-        推導器預置的
+        推導器的
         <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-examples">
-          樣例推導方案程式碼
+          預置推導方案程式碼
         </a>
         及
         <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/obsolete-romanizations-examples">
-          過時推導方案
+          過時推導方案程式碼
         </a>
-        亦可於 GitHub 瀏覽。
+        可於 GitHub 瀏覽。
+      </p>
+      <p>
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-autoderiver">
+          推導器原始碼
+        </a>
+        亦公開於 GitHub。
       </p>
       <h2>私隱權政策</h2>
       <p>
-        本頁面是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對您的私隱非常重視。本頁面的開發者不會透過本頁面收集您的任何資料。
+        切韻音系自動推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對您的私隱非常重視。本頁面的開發者不會透過本頁面收集您的任何資料。
       </p>
       <p>下面將具體介紹本頁面能在何種程度上保障您的私隱權。</p>
       <b>您鍵入的內容</b>
