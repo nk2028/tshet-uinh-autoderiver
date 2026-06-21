@@ -608,14 +608,6 @@ const LangMenu = styled.ul`
   position: absolute;
   top: 100%;
   left: 0;
-  &::before {
-    content: "";
-    position: absolute;
-    top: -0.375rem;
-    left: 0;
-    right: 0;
-    height: 0.375rem;
-  }
   background: white;
   border: 1px solid #ddd;
   border-radius: 0.375rem;
@@ -626,10 +618,6 @@ const LangMenu = styled.ul`
   z-index: 100;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   white-space: nowrap;
-
-  ${LangSwitcher}:hover & {
-    display: block;
-  }
 `;
 const LangMenuItem = styled.li<{ $active: boolean }>`
   padding: 0.375rem 0.75rem;
@@ -699,7 +687,10 @@ export default function App() {
                 <ShowButton title={t("app.info.userGuide.title")} onClick={useCallback(() => showHelp(t), [t])}>
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
-                <LangSwitcher ref={langSwitcherRef}>
+                <LangSwitcher
+                  ref={langSwitcherRef}
+                  onMouseEnter={() => setLangMenuOpen(true)}
+                  onMouseLeave={() => setLangMenuOpen(false)}>
                   <LangSwitcherBtn
                     type="button"
                     aria-label={t("app.language")}
@@ -721,6 +712,7 @@ export default function App() {
                       }}
                       onKeyDown={e => {
                         if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
                           i18n.changeLanguage("zh");
                           setLangMenuOpen(false);
                         }
@@ -738,6 +730,7 @@ export default function App() {
                       }}
                       onKeyDown={e => {
                         if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
                           i18n.changeLanguage("en");
                           setLangMenuOpen(false);
                         }
