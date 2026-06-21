@@ -611,8 +611,12 @@ const LangSwitcherBtn = styled.button`
 `;
 const LangIconSvg = () => (
   <svg viewBox="0 0 18 15" width="0.9em" height="0.75em" fill="currentColor" aria-hidden="true">
-    <text x="0" y="11" fontSize="12" fontWeight="600">文</text>
-    <text x="9.5" y="14.5" fontSize="8.5" fontWeight="700">A</text>
+    <text x="0" y="11" fontSize="12" fontWeight="600">
+      文
+    </text>
+    <text x="9.5" y="14.5" fontSize="8.5" fontWeight="700">
+      A
+    </text>
   </svg>
 );
 const LangMenu = styled.ul`
@@ -717,13 +721,19 @@ export default function App() {
                     <LangMenuItem
                       lang="zh-HK"
                       $active={i18n.language === "zh"}
-                      onClick={() => { i18n.changeLanguage("zh"); setLangMenuOpen(false); }}>
+                      onClick={() => {
+                        i18n.changeLanguage("zh");
+                        setLangMenuOpen(false);
+                      }}>
                       中文
                     </LangMenuItem>
                     <LangMenuItem
                       lang="en-GB"
                       $active={i18n.language === "en"}
-                      onClick={() => { i18n.changeLanguage("en"); setLangMenuOpen(false); }}>
+                      onClick={() => {
+                        i18n.changeLanguage("en");
+                        setLangMenuOpen(false);
+                      }}>
                       English
                     </LangMenuItem>
                   </LangMenu>
