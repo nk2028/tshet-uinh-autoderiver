@@ -589,25 +589,9 @@ const LangSwitcher = styled.div`
   height: 1.5rem;
   margin-left: 0.5rem;
 `;
-const LangSwitcherBtn = styled.button`
-  display: inline-flex;
-  align-items: center;
+const LangSwitcherBtn = styled(ShowButton)`
+  margin-left: 0;
   justify-content: center;
-  border-radius: 9999px;
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 1.25rem;
-  color: #666;
-  border: 0.125rem solid #666;
-  cursor: pointer;
-  transition:
-    color 150ms,
-    border-color 150ms;
-  &:hover,
-  &:focus {
-    color: #0078e7;
-    border-color: #0078e7;
-  }
 `;
 const LangIconSvg = () => (
   <svg viewBox="0 0 18 15" width="0.9em" height="0.75em" fill="currentColor" aria-hidden="true">
@@ -653,8 +637,10 @@ const LangMenuItem = styled.li<{ $active: boolean }>`
   font-size: 0.875rem;
   color: ${({ $active }) => ($active ? "#0078e7" : "#333")};
   font-weight: ${({ $active }) => ($active ? "600" : "normal")};
-  &:hover {
+  &:hover,
+  &:focus {
     background: #f0f4f8;
+    outline: none;
   }
 `;
 const FontPreload = styled.span`
@@ -674,11 +660,11 @@ export default function App() {
 
   useEffect(() => {
     if (!langMenuOpen) return;
-    const handler = (e: MouseEvent) => {
+    const handler = (e: PointerEvent) => {
       if (!langSwitcherRef.current?.contains(e.target as Node)) setLangMenuOpen(false);
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("pointerdown", handler);
+    return () => document.removeEventListener("pointerdown", handler);
   }, [langMenuOpen]);
 
   useEffect(() => {
@@ -714,25 +700,47 @@ export default function App() {
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
                 <LangSwitcher ref={langSwitcherRef}>
-                  <LangSwitcherBtn onClick={() => setLangMenuOpen((v: boolean) => !v)}>
+                  <LangSwitcherBtn
+                    type="button"
+                    aria-label={t("app.language")}
+                    aria-haspopup="menu"
+                    aria-controls="lang-menu"
+                    aria-expanded={langMenuOpen}
+                    onClick={() => setLangMenuOpen((v: boolean) => !v)}>
                     <LangIconSvg />
                   </LangSwitcherBtn>
-                  <LangMenu style={langMenuOpen ? { display: "block" } : undefined}>
+                  <LangMenu id="lang-menu" role="menu" style={langMenuOpen ? { display: "block" } : undefined}>
                     <LangMenuItem
+                      role="menuitem"
+                      tabIndex={0}
                       lang="zh-HK"
                       $active={i18n.language === "zh"}
                       onClick={() => {
                         i18n.changeLanguage("zh");
                         setLangMenuOpen(false);
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          i18n.changeLanguage("zh");
+                          setLangMenuOpen(false);
+                        }
                       }}>
                       中文
                     </LangMenuItem>
                     <LangMenuItem
+                      role="menuitem"
+                      tabIndex={0}
                       lang="en-GB"
                       $active={i18n.language === "en"}
                       onClick={() => {
                         i18n.changeLanguage("en");
                         setLangMenuOpen(false);
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          i18n.changeLanguage("en");
+                          setLangMenuOpen(false);
+                        }
                       }}>
                       English
                     </LangMenuItem>

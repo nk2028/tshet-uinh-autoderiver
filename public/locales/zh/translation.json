@@ -4,6 +4,7 @@
   "app.defaultFileName": "無標題",
   "app.info.about.title": "關於",
   "app.info.userGuide.title": "使用說明",
+  "app.language": "語言",
 
   "action.createSchema": "新增或載入推導方案",
   "action.deleteSchema": "刪除推導方案",
