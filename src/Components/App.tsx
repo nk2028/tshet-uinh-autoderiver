@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import "purecss/build/pure.css";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ import "sweetalert2/dist/sweetalert2.css";
 
 import { css as stylesheet, injectGlobal } from "@emotion/css";
 import styled from "@emotion/styled";
-import { faCirclePlay, faExternalLink, faGlobe, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlay, faExternalLink, faInfo, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Main from "./Main";
@@ -582,23 +582,76 @@ const LinkToLegacy = styled.span`
     }
   }
 `;
-const LanguageDropdownWrapper = styled.label`
-  font-size: 1.25rem;
+const LangSwitcher = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 1.5rem;
+  margin-left: 0.5rem;
+`;
+const LangSwitcherBtn = styled.button`
   display: inline-flex;
   align-items: center;
-  vertical-align: bottom;
-  gap: 0.5rem;
-`;
-const LanguageIcon = styled(FontAwesomeIcon)`
+  justify-content: center;
   border-radius: 9999px;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.25rem;
   color: #666;
   border: 0.125rem solid #666;
-  padding: 0.125rem;
+  cursor: pointer;
+  transition:
+    color 150ms,
+    border-color 150ms;
+  &:hover,
+  &:focus {
+    color: #0078e7;
+    border-color: #0078e7;
+  }
 `;
-const LanguageDropdown = styled.select`
-  margin: -0.125rem 0;
+const LangIconSvg = () => (
+  <svg viewBox="0 0 18 15" width="0.9em" height="0.75em" fill="currentColor" aria-hidden="true">
+    <text x="0" y="11" fontSize="12" fontWeight="600">文</text>
+    <text x="9.5" y="14.5" fontSize="8.5" fontWeight="700">A</text>
+  </svg>
+);
+const LangMenu = styled.ul`
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  &::before {
+    content: "";
+    position: absolute;
+    top: -0.375rem;
+    left: 0;
+    right: 0;
+    height: 0.375rem;
+  }
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  min-width: 5rem;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+
+  ${LangSwitcher}:hover & {
+    display: block;
+  }
+`;
+const LangMenuItem = styled.li<{ $active: boolean }>`
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: ${({ $active }) => ($active ? "#0078e7" : "#333")};
+  font-weight: ${({ $active }) => ($active ? "600" : "normal")};
+  &:hover {
+    background: #f0f4f8;
+  }
 `;
 const FontPreload = styled.span`
   position: absolute;
@@ -612,6 +665,17 @@ const FontPreload = styled.span`
 export default function App() {
   const { t, i18n } = useTranslation();
   const evaluateHandlerRef = useRef(noop);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const langSwitcherRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!langMenuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (!langSwitcherRef.current?.contains(e.target as Node)) setLangMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [langMenuOpen]);
 
   useEffect(() => {
     const langCode = i18n.language === "en" ? "en-GB" : "zh-HK";
@@ -645,20 +709,26 @@ export default function App() {
                 <ShowButton title={t("app.info.userGuide.title")} onClick={useCallback(() => showHelp(t), [t])}>
                   <FontAwesomeIcon icon={faQuestion} fixedWidth />
                 </ShowButton>
+                <LangSwitcher ref={langSwitcherRef}>
+                  <LangSwitcherBtn onClick={() => setLangMenuOpen((v: boolean) => !v)}>
+                    <LangIconSvg />
+                  </LangSwitcherBtn>
+                  <LangMenu style={langMenuOpen ? { display: "block" } : undefined}>
+                    <LangMenuItem
+                      lang="zh-HK"
+                      $active={i18n.language === "zh"}
+                      onClick={() => { i18n.changeLanguage("zh"); setLangMenuOpen(false); }}>
+                      中文
+                    </LangMenuItem>
+                    <LangMenuItem
+                      lang="en-GB"
+                      $active={i18n.language === "en"}
+                      onClick={() => { i18n.changeLanguage("en"); setLangMenuOpen(false); }}>
+                      English
+                    </LangMenuItem>
+                  </LangMenu>
+                </LangSwitcher>
               </Buttons>
-              <LanguageDropdownWrapper className="pure-form">
-                <LanguageIcon icon={faGlobe} />
-                <LanguageDropdown
-                  onChange={event => i18n.changeLanguage(event.currentTarget.value)}
-                  value={i18n.language}>
-                  <option value="zh" lang="zh-HK">
-                    中文
-                  </option>
-                  <option value="en" lang="en-GB">
-                    English
-                  </option>
-                </LanguageDropdown>
-              </LanguageDropdownWrapper>
             </Heading>
           </nav>
         </header>
