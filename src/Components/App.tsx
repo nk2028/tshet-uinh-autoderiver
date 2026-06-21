@@ -718,6 +718,7 @@ export default function App() {
                       中文
                     </LangMenuItem>
                     <LangMenuItem
+                      role="button"
                       tabIndex={0}
                       lang="en-GB"
                       $active={i18n.language === "en"}
