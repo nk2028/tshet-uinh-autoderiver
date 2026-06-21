@@ -71,8 +71,8 @@
     "typescript": "^5.6.2",
     "vite": "^5.4.8"
   },
-  "author": "Project NK2028",
-  "license": "CC0-1.0",
+  "author": "nk2028",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/nk2028/tshet-uinh-autoderiver/issues"
   },
