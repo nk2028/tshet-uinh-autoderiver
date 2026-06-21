@@ -701,6 +701,7 @@ export default function App() {
                   </LangSwitcherBtn>
                   <LangMenu id="lang-menu" style={langMenuOpen ? { display: "block" } : undefined}>
                     <LangMenuItem
+                      role="button"
                       tabIndex={0}
                       lang="zh-HK"
                       $active={i18n.language === "zh"}
