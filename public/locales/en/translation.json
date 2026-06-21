@@ -4,6 +4,7 @@
   "app.defaultFileName": "Unnamed",
   "app.info.about.title": "About",
   "app.info.userGuide.title": "User Guide",
+  "app.language": "Language",
 
   "action.createSchema": "Add or Load Derivation Scheme",
   "action.deleteSchema": "Delete Derivation Scheme",
