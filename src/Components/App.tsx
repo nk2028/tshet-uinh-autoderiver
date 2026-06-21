@@ -694,15 +694,13 @@ export default function App() {
                   <LangSwitcherBtn
                     type="button"
                     aria-label={t("app.language")}
-                    aria-haspopup="menu"
                     aria-controls="lang-menu"
                     aria-expanded={langMenuOpen}
                     onClick={() => setLangMenuOpen((v: boolean) => !v)}>
                     <LangIconSvg />
                   </LangSwitcherBtn>
-                  <LangMenu id="lang-menu" role="menu" style={langMenuOpen ? { display: "block" } : undefined}>
+                  <LangMenu id="lang-menu" style={langMenuOpen ? { display: "block" } : undefined}>
                     <LangMenuItem
-                      role="menuitem"
                       tabIndex={0}
                       lang="zh-HK"
                       $active={i18n.language === "zh"}
@@ -720,7 +718,6 @@ export default function App() {
                       中文
                     </LangMenuItem>
                     <LangMenuItem
-                      role="menuitem"
                       tabIndex={0}
                       lang="en-GB"
                       $active={i18n.language === "en"}
