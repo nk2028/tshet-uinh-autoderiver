@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react";
 
 import type { UserConfig } from "vite";
 
-const base = "/tshet-uinh-autoderiver/";
+const base = "/tshet-uinh-deriver/";
 
 export function makeConfig(assetLocation = base) {
   if (!assetLocation.endsWith("/")) {

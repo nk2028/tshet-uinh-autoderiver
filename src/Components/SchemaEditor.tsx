@@ -480,7 +480,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       (async () => {
         try {
           const handles = await showOpenFilePicker({
-            id: "autoderiver-open-file",
+            id: "deriver-open-file",
             types: [
               {
                 description: "JavaScript file",
@@ -523,7 +523,7 @@ export default function SchemaEditor({ state, setState, generalOptions, evaluate
       (async () => {
         try {
           const handle = await showSaveFilePicker({
-            id: "autoderiver-save-file",
+            id: "deriver-save-file",
             types: [
               {
                 description: "JavaScript file",

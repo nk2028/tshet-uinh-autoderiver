@@ -3,7 +3,7 @@ import { defaultArticle } from "./consts";
 
 import type { MainState } from "./consts";
 
-export const stateStorageLocation = "autoderiver/0.2/state";
+export const stateStorageLocation = "deriver/0.2/state";
 
 function defaultState(): MainState {
   return {

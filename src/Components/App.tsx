@@ -277,7 +277,7 @@ function showAbout(t: TFunction) {
     <>
       <h2>{t("app.info.about.title")}</h2>
       <p>
-        切韻音系自動推導器由{" "}
+        切韻音系推導器由{" "}
         <a target="_blank" rel="noreferrer" href="https://nk2028.shn.hk/">
           nk2028
         </a>{" "}
@@ -306,14 +306,14 @@ function showAbout(t: TFunction) {
         可於 GitHub 瀏覽。
       </p>
       <p>
-        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-autoderiver">
+        <a target="_blank" rel="noreferrer" href="https://github.com/nk2028/tshet-uinh-deriver">
           推導器原始碼
         </a>
         亦公開於 GitHub。
       </p>
       <h2>私隱權政策</h2>
       <p>
-        切韻音系自動推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對您的私隱非常重視。本頁面的開發者不會透過本頁面收集您的任何資料。
+        切韻音系推導器（下稱「本頁面」）是一項開放原始碼的網絡服務。作為本頁面的開發者，我們對您的私隱非常重視。本頁面的開發者不會透過本頁面收集您的任何資料。
       </p>
       <p>下面將具體介紹本頁面能在何種程度上保障您的私隱權。</p>
       <b>您鍵入的內容</b>
