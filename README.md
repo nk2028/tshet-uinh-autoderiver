@@ -1,12 +1,12 @@
-# Tshet-uinh Autoderiver
+# Tshet-uinh Deriver
 
-Tshet-uinh Autoderiver is an online linguistic tool for generating phonological reconstructions of the Qieyun system, as well as extrapolated historical and modern phonological systems derived from it.
+Tshet-uinh Deriver is an online linguistic tool for generating phonological reconstructions of the Qieyun system, as well as extrapolated historical and modern phonological systems derived from it.
 
 This tool is part of the nk2028 organisation’s suite of computational linguistics projects, which aim to advance research in historical Chinese phonology and beyond.
 
 ## Try It Online
 
-The tool is available as a web-based interface at <https://nk2028.shn.hk/tshet-uinh-autoderiver/>.
+The tool is available as a web-based interface at <https://nk2028.shn.hk/tshet-uinh-deriver/>.
 
 ## nk2028 Libraries Used
 
@@ -28,15 +28,15 @@ The tool is available as a web-based interface at <https://nk2028.shn.hk/tshet-u
 
 ---
 
-# 切韻音系自動推導器
+# 切韻音系推導器
 
-切韻音系自動推導器是一個線上語言學工具，可生成切韻音系的語音擬測，以及由此衍生的歷史音系和現代方言音系。
+切韻音系推導器是一個線上語言學工具，可生成切韻音系的語音擬測，以及由此衍生的歷史音系和現代方言音系。
 
 本工具是 nk2028 組織計算語言學項目群的一部分，致力於推動漢語歷史音韻學研究。
 
 ## 在線試用
 
-工具的網頁版本位於 <https://nk2028.shn.hk/tshet-uinh-autoderiver/>。
+工具的網頁版本位於 <https://nk2028.shn.hk/tshet-uinh-deriver/>。
 
 ## 使用的 nk2028 庫
 

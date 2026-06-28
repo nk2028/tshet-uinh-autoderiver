@@ -1,5 +1,5 @@
 {
-  "name": "tshet-uinh-autoderiver",
+  "name": "tshet-uinh-deriver",
   "version": "0.2.0",
   "description": "An online linguistic tool for generating phonological reconstructions of the Qieyun system, as well as extrapolated historical and modern phonological systems derived from it",
   "private": true,
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nk2028/tshet-uinh-autoderiver.git"
+    "url": "git+https://github.com/nk2028/tshet-uinh-deriver.git"
   },
   "keywords": [
     "historical-linguistics",
@@ -74,7 +74,7 @@
   "author": "nk2028",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nk2028/tshet-uinh-autoderiver/issues"
+    "url": "https://github.com/nk2028/tshet-uinh-deriver/issues"
   },
-  "homepage": "https://nk2028.shn.hk/tshet-uinh-autoderiver/"
+  "homepage": "https://nk2028.shn.hk/tshet-uinh-deriver/"
 }
