@@ -19,12 +19,28 @@ self.TshetUinh = TshetUinh;
 loader.config({ monaco });
 
 const defaults = monaco.languages.typescript.javascriptDefaults;
+defaults.setDiagnosticsOptions({
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: false,
+  onlyVisible: true,
+  diagnosticCodesToIgnore: [1108], // A 'return' statement can only be used within a function body.
+});
 defaults.setCompilerOptions({
   target: monaco.languages.typescript.ScriptTarget.ESNext,
   allowJs: true,
   allowNonTsExtensions: true,
   baseUrl: "./",
   lib: ["esnext"],
+
+  checkJs: true,
+  strict: true,
+  allowUnusedLabels: false,
+  allowUnreachableCode: false,
+  noImplicitOverride: true,
+  noImplicitReturns: true,
+  exactOptionalPropertyTypes: true,
+  noFallthroughCasesInSwitch: true,
 });
 defaults.setExtraLibs(Object.entries(libs).map(([filePath, content]) => ({ filePath, content })));
 
